@@ -1,11 +1,11 @@
 import React from 'react';
 
-function Login() {
+function Products() {
     return (
         <div>
-            Login Page Content Here
+            Products
         </div>
     );
 }
 
-export default Login;
+export default Products;
