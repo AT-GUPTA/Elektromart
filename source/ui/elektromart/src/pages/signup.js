@@ -1,6 +1,6 @@
 import React from 'react';
 
-function signup() {
+function Signup() {
     return (
         <div>
             Signup Page Content Here
@@ -8,4 +8,4 @@ function signup() {
     );
 }
 
-export default Login;
+export default Signup;
