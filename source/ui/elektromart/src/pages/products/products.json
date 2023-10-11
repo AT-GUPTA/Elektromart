@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "name": "iPhone 13 Pro",
+    "description": "The iPhone 13 Pro is Apple's latest flagship smartphone, featuring a stunning Super Retina XDR display, A15 Bionic chip, and advanced camera system.",
+    "vendor": "Apple Inc.",
+    "slug": "iphone-13-pro",
+    "sku": "SKU12345",
+    "price": 999.99
+  },
+  {
+    "id": 2,
+    "name": "Samsung Galaxy S21 Ultra",
+    "description": "The Samsung Galaxy S21 Ultra is a high-end Android smartphone with a massive display, powerful Exynos processor, and versatile camera setup.",
+    "vendor": "Samsung Electronics",
+    "slug": "galaxy-s21-ultra",
+    "sku": "SKU67890",
+    "price": 1099.99
+  },
+  {
+    "id": 3,
+    "name": "Google Pixel 6 Pro",
+    "description": "The Google Pixel 6 Pro is known for its exceptional camera quality, stock Android experience, and fast performance.",
+    "vendor": "Google LLC",
+    "slug": "pixel-6-pro",
+    "sku": "SKU54321",
+    "price": 899.99
+  },
+  {
+    "id": 4,
+    "name": "OnePlus 9 Pro",
+    "description": "The OnePlus 9 Pro is a flagship killer with a smooth 120Hz display, Snapdragon 888 processor, and Hasselblad camera collaboration.",
+    "vendor": "OnePlus Technology Co., Ltd.",
+    "slug": "oneplus-9-pro",
+    "sku": "SKU24680",
+    "price": 899.00
+  },
+  {
+    "id": 5,
+    "name": "Xiaomi Mi 11",
+    "description": "The Xiaomi Mi 11 is a budget-friendly flagship phone with a high-resolution display, Snapdragon 888 chipset, and a capable camera system.",
+    "vendor": "Xiaomi Corporation",
+    "slug": "xiaomi-mi-11",
+    "sku": "SKU13579",
+    "price": 699.99
+  },
+  {
+    "id": 6,
+    "name": "Sony Xperia 1 III",
+    "description": "The Sony Xperia 1 III is a flagship device known for its 4K OLED display, Snapdragon 888 processor, and excellent audio capabilities.",
+    "vendor": "Sony Corporation",
+    "slug": "xperia-1-iii",
+    "sku": "SKU78901",
+    "price": 1099.00
+  },
+  {
+    "id": 7,
+    "name": "Huawei P40 Pro",
+    "description": "The Huawei P40 Pro boasts a Leica camera system, powerful Kirin 990 chipset, and a large AMOLED display.",
+    "vendor": "Huawei Technologies Co., Ltd.",
+    "slug": "huawei-p40-pro",
+    "sku": "SKU65432",
+    "price": 899.99
+  },
+  {
+    "id": 8,
+    "name": "LG G8 ThinQ",
+    "description": "The LG G8 ThinQ offers an OLED display, Snapdragon 855 processor, and advanced audio features like Crystal Sound OLED.",
+    "vendor": "LG Electronics Inc.",
+    "slug": "lg-g8-thinq",
+    "sku": "SKU23456",
+    "price": 599.00
+  },
+  {
+    "id": 9,
+    "name": "Asus ROG Phone 5",
+    "description": "The Asus ROG Phone 5 is a gaming smartphone with a high-refresh-rate AMOLED display, Snapdragon 888 chipset, and gaming-oriented features.",
+    "vendor": "ASUSTeK Computer Inc.",
+    "slug": "asus-rog-phone-5",
+    "sku": "SKU98765",
+    "price": 799.99
+  },
+  {
+    "id": 10,
+    "name": "Motorola Moto G Power",
+    "description": "The Motorola Moto G Power is known for its long-lasting battery life, clean Android experience, and affordable price point.",
+    "vendor": "Motorola Solutions, Inc.",
+    "slug": "moto-g-power",
+    "sku": "SKU11111",
+    "price": 249.99
+  },
+  {
+    "id": 11,
+    "name": "Nokia 8.3 5G",
+    "description": "The Nokia 8.3 5G offers 5G connectivity, a Qualcomm Snapdragon 765G chipset, and a pure Android experience.",
+    "vendor": "HMD Global Oy",
+    "slug": "nokia-8-3-5g",
+    "sku": "SKU22222",
+    "price": 499.00
+  },
+  {
+    "id": 12,
+    "name": "OnePlus Nord N200",
+    "description": "The OnePlus Nord N200 is an affordable 5G phone with a 90Hz display, Snapdragon 480 processor, and OxygenOS software.",
+    "vendor": "OnePlus Technology Co., Ltd.",
+    "slug": "oneplus-nord-n200",
+    "sku": "SKU33333",
+    "price": 249.99
+  },
+  {
+    "id": 13,
+    "name": "Xiaomi Redmi Note 10",
+    "description": "The Xiaomi Redmi Note 10 offers a high-resolution display, Snapdragon 678 chipset, and a versatile camera setup.",
+    "vendor": "Xiaomi Corporation",
+    "slug": "redmi-note-10",
+    "sku": "SKU44444",
+    "price": 199.99
+  },
+  {
+    "id": 14,
+    "name": "Oppo Find X3 Pro",
+    "description": "The Oppo Find X3 Pro is a flagship device with a high-refresh-rate display, Snapdragon 888 processor, and advanced camera features.",
+    "vendor": "Guangdong Oppo Mobile Telecommunications Corp., Ltd.",
+    "slug": "oppo-find-x3-pro",
+    "sku": "SKU55555",
+    "price": 1099.00
+  },
+  {
+    "id": 15,
+    "name": "Realme 8 Pro",
+    "description": "The Realme 8 Pro is a budget-friendly smartphone with a high-resolution display, Snapdragon 720G chipset, and a 108MP camera.",
+    "vendor": "Realme Mobile Telecommunications (Shenzhen) Co., Ltd.",
+    "slug": "realme-8-pro",
+    "sku": "SKU66666",
+    "price": 249.99
+  },
+  {
+    "id": 16,
+    "name": "Sony Xperia 5 III",
+    "description": "The Sony Xperia 5 III is a compact flagship device known for its 120Hz OLED display, Snapdragon 888 processor, and advanced camera capabilities.",
+    "vendor": "Sony Corporation",
+    "slug": "xperia-5-iii",
+    "sku": "SKU77777",
+    "price": 999.00
+  },
+  {
+    "id": 17,
+    "name": "Motorola Razr 5G",
+    "description": "The Motorola Razr 5G is a foldable smartphone with a nostalgic design, Snapdragon 765G chipset, and innovative foldable screen technology.",
+    "vendor": "Motorola Solutions, Inc.",
+    "slug": "motorola-razr-5g",
+    "sku": "SKU88888",
+    "price": 1399.99
+  },
+  {
+    "id": 18,
+    "name": "Xiaomi Mi 11 Ultra",
+    "description": "The Xiaomi Mi 11 Ultra is a flagship smartphone with a massive camera bump, Snapdragon 888 chipset, and a high-quality display.",
+    "vendor": "Xiaomi Corporation",
+    "slug": "xiaomi-mi-11-ultra",
+    "sku": "SKU99999",
+    "price": 1199.00
+  },
+  {
+    "id": 19,
+    "name": "OnePlus 9",
+    "description": "The OnePlus 9 is a mid-range flagship with a 120Hz display, Snapdragon 888 chipset, and Hasselblad camera collaboration.",
+    "vendor": "OnePlus Technology Co., Ltd.",
+    "slug": "oneplus-9",
+    "sku": "SKU10000",
+    "price": 699.00
+  },
+  {
+    "id": 20,
+    "name": "Vivo X60 Pro",
+    "description": "The Vivo X60 Pro is known for its gimbal stabilization camera, Exynos 1080 chipset, and stylish design.",
+    "vendor": "Vivo Communication Technology Co. Ltd.",
+    "slug": "vivo-x60-pro",
+    "sku": "SKU10101",
+    "price": 799.99
+  }
+]

@@ -12,15 +12,15 @@ function Navigation({children}) {
         <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
           <ul className="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link" href="#">Admin</a>
+              <a class="nav-link" href="/admin">Admin</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Product Catalog</a>
+              <a class="nav-link" href="/products">Product Catalog</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Cart</a>
+              <a class="nav-link" href="/cart">Cart</a>
             </li><li class="nav-item">
-              <a class="nav-link" href="#">Login/Sign up</a>
+              <a class="nav-link" href="/login">Login/Sign up</a>
             </li>
           </ul>
         </div>
