@@ -32,7 +32,7 @@ function App() {
                         <Route path="/admin" component={Admin} exact/>
                         <Route path="/products" element={<Products/>} exact/>
                         <Route path="/products/:id" element={<ProductDetail/>}/>
-                        <Route path="/cart" component={Cart} exact/>
+                        <Route path="/cart" element={<Cart/>} exact/>
                     </Routes>
                 </Router>
             </Layout>

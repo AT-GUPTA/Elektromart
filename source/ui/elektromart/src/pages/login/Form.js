@@ -83,7 +83,7 @@ const Form = ({authentication}) => {
                     </label>
                     <input
                         id="userpass"
-                        type="password"
+                        type={passwordFieldType}
                         className="form-control input-box"
                         maxLength="16"
                         minLength="8"
@@ -92,6 +92,9 @@ const Form = ({authentication}) => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
+                    <button type="button" onClick={togglePasswordVisibility} className="btn">
+                        {showPassword ? <i className="bi bi-eye"></i> : <i className="bi bi-eye-slash"></i>}
+                    </button>
                 </div>
                 <div className="fw-light mt-3">
                     Don't have an account?&nbsp;
