@@ -1,0 +1,23 @@
+.remove {
+    max-width: 25px !important;
+    padding-right: 30px;
+}
+
+.custom-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #4CAF50; /* Green background color */
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.bb {
+    border-bottom: 2px solid #ccc; /* You can customize the border style and color */
+}
+
+.ub {
+    border-top: 2px solid #ccc; /* You can customize the border style and color */
+}
