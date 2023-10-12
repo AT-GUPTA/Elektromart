@@ -43,7 +43,7 @@ function SingleProduct() {
   };
 
   const addToCart = () => {
-    // You can implement your addToCart logic here
+    // Implement your addToCart logic here
     // For example, dispatch an action to add the product to the cart
     console.log(`Added ${quantity} ${product.name}(s) to the cart.`);
   };
@@ -110,13 +110,7 @@ function SingleProduct() {
               <div className="quantity">
               <label>Quantity:</label>
           <div className="quantity-control">
-            <button className="quantity-button decrement" onClick={handleDecrement}>
-              <i className="fas fa-minus"></i>
-            </button>
             <input type="number" value={quantity} onChange={handleQuantityChange} />
-            <button className="quantity-button increment" onClick={handleIncrement}>
-              <i className="fas fa-plus"></i>
-            </button>
           </div>
               </div>
               <Button variant="primary" onClick={addToCart}>

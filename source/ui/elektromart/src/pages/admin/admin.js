@@ -1,125 +1,198 @@
 import React, { useState } from 'react';
 import './admin.css';
 
-function Admin() {
+const Admin = () => {
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   const [showEditProductForm, setShowEditProductForm] = useState(false);
   const [showAddAdminForm, setShowAddAdminForm] = useState(false);
 
-  const [product, setProduct] = useState({
-    name: '',
-    imageUrl: '',
-    price: '',
-    discount: '',
-    featured: false,
-    id: '',
+  const [productData, setProductData] = useState({
+    productName: '',
+    productImageUrl: '',
+    productPrice: 0,
+    discount: 0,
+    isFeatured: false,
+    id: Math.floor(Math.random() * 1000), // Generate a random ID
   });
 
-  const [adminEmail, setAdminEmail] = useState('');
+  const [editProductId, setEditProductId] = useState(''); // ID for editing a product
+
+  const [adminData, setAdminData] = useState({
+    adminEmail: '',
+    adminName: '',
+    adminToken: '',
+  });
 
   const handleAddProductClick = () => {
     setShowAddProductForm(true);
-    setShowEditProductForm(false);
-    setShowAddAdminForm(false);
   };
 
   const handleEditProductClick = () => {
     setShowEditProductForm(true);
-    setShowAddProductForm(false);
-    setShowAddAdminForm(false);
   };
 
   const handleAddAdminClick = () => {
     setShowAddAdminForm(true);
-    setShowAddProductForm(false);
-    setShowEditProductForm(false);
   };
 
-  const handleAdminEmailChange = (event) => {
-    setAdminEmail(event.target.value);
-  };
-
-  const handleAddProductSubmit = (event) => {
-    event.preventDefault();
-    // Generate a unique ID for the product (you can use a library like uuid)
-    const generatedId = Math.random().toString(36).substring(7);
-    setProduct((prevProduct) => ({
-      ...prevProduct,
-      id: generatedId,
-    }));
-    // Here, you can handle the submission of the product data
-    console.log('Product data submitted:', product);
-    // Clear the form and hide it
-    setProduct({
-      name: '',
-      imageUrl: '',
-      price: '',
-      discount: '',
-      featured: false,
-      id: '',
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setProductData({
+      ...productData,
+      [name]: name === 'isFeatured' ? e.target.checked : value,
     });
-    setShowAddProductForm(false);
   };
 
-  const handleEditProductSubmit = (event) => {
-    event.preventDefault();
-    // Here, you can handle the submission of the edited product data
-    console.log('Edited product data submitted:', product);
-    // Clear the form and hide it
-    setProduct({
-      name: '',
-      imageUrl: '',
-      price: '',
-      discount: '',
-      featured: false,
-      id: '',
+  const handleEditProductIdChange = (e) => {
+    setEditProductId(e.target.value);
+  };
+
+  const handleAddAdminChange = (e) => {
+    const { name, value } = e.target;
+    setAdminData({
+      ...adminData,
+      [name]: value,
     });
-    setShowEditProductForm(false);
   };
 
-  const handleAddAdminSubmit = (event) => {
-    event.preventDefault();
-    // Here, you can handle the submission of the new admin's email
-    console.log('New admin email submitted:', adminEmail);
-    // Clear the form and hide it
-    setAdminEmail('');
-    setShowAddAdminForm(false);
+  const handleAddProductSubmit = (e) => {
+    e.preventDefault();
+    // Handle the submission of the new product data here
+    console.log('Product data submitted:', productData);
+    // You can send the data to your API or state management system
+    // Generate a new random ID for the next product
+    setProductData({
+      productName: '',
+      productImageUrl: '',
+      productPrice: 0,
+      discount: 0,
+      isFeatured: false,
+      id: Math.floor(Math.random() * 1000),
+    });
+  };
+
+  const handleEditProductSubmit = (e) => {
+    e.preventDefault();
+    // Handle the submission of the edited product data here
+    console.log('Editing product with ID:', editProductId);
+    // You can send the data to your API or state management system
+    setEditProductId(''); // Clear the input field
+  };
+
+  const handleAddAdminSubmit = (e) => {
+    e.preventDefault();
+    // Handle the submission of the new admin data here
+    console.log('New admin data submitted:', adminData);
+    // You can send the data to your API or state management system
+    // Reset the form
+    setAdminData({
+      adminEmail: '',
+      adminName: '',
+      adminToken: '',
+    });
   };
 
   return (
     <div className="admin-container">
-      <h1>Admin Interface</h1>
+      <h2>Admin Panel</h2>
       <button onClick={handleAddProductClick}>Add New Product</button>
       <button onClick={handleEditProductClick}>Edit a Product</button>
-      <button onClick={handleAddAdminClick}>Add New Admin</button>
+      <button onClick={handleAddAdminClick}>Add a New Admin</button>
 
-      {/* Add New Product Form */}
       {showAddProductForm && (
-        <form className="add-product-form" onSubmit={handleAddProductSubmit}>
-          {/* ... (same form as before) */}
+        <form className="product-form" onSubmit={handleAddProductSubmit}>
+          <label>
+            Product Name:
+            <input
+              type="text"
+              name="productName"
+              value={productData.productName}
+              onChange={handleFormChange}
+            />
+          </label>
+          <label>
+            Product Image URL:
+            <input
+              type="text"
+              name="productImageUrl"
+              value={productData.productImageUrl}
+              onChange={handleFormChange}
+            />
+          </label>
+          <label>
+            Product Price:
+            <input
+              type="number"
+              name="productPrice"
+              value={productData.productPrice}
+              onChange={handleFormChange}
+            />
+          </label>
+          <label>
+            Discount:
+            <input
+              type="number"
+              name="discount"
+              value={productData.discount}
+              onChange={handleFormChange}
+            />
+          </label>
+          <label>
+            Featured:
+            <input
+              type="checkbox"
+              name="isFeatured"
+              checked={productData.isFeatured}
+              onChange={handleFormChange}
+            />
+          </label>
           <button type="submit">Add Product</button>
         </form>
       )}
 
-      {/* Edit Product Form */}
       {showEditProductForm && (
-        <form className="edit-product-form" onSubmit={handleEditProductSubmit}>
-          {/* ... (same form as before) */}
+        <form className="product-form" onSubmit={handleEditProductSubmit}>
+          <label>
+            Product ID to Edit:
+            <input
+              type="text"
+              name="editProductId"
+              value={editProductId}
+              onChange={handleEditProductIdChange}
+            />
+          </label>
+          {/* Include fields to edit product information here */}
           <button type="submit">Edit Product</button>
         </form>
       )}
 
-      {/* Add New Admin Form */}
       {showAddAdminForm && (
-        <form className="add-admin-form" onSubmit={handleAddAdminSubmit}>
+        <form className="admin-form" onSubmit={handleAddAdminSubmit}>
           <label>
             Admin Email:
             <input
               type="email"
               name="adminEmail"
-              value={adminEmail}
-              onChange={handleAdminEmailChange}
-              required
+              value={adminData.adminEmail}
+              onChange={handleAddAdminChange}
+            />
+          </label>
+          <label>
+            Admin Name:
+            <input
+              type="text"
+              name="adminName"
+              value={adminData.adminName}
+              onChange={handleAddAdminChange}
+            />
+          </label>
+          <label>
+            Admin Token:
+            <input
+              type="text"
+              name="adminToken"
+              value={adminData.adminToken}
+              onChange={handleAddAdminChange}
             />
           </label>
           <button type="submit">Add Admin</button>
@@ -127,6 +200,6 @@ function Admin() {
       )}
     </div>
   );
-}
+};
 
 export default Admin;
