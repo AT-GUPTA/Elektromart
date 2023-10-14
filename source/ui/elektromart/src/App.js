@@ -3,7 +3,8 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Login from './pages/login/Login';
 import Signup from './pages/signup/Signup';
 import Home from './pages/home/home'
-import Admin from './pages/admin';
+import Admin from './pages/admin/admin';
+import SingleProduct from './pages/singleProduct/singleProduct';
 import Products from './pages/products/products';
 import ProductDetail from './pages/products/productDetail';
 import Cart from './pages/cart/cart';
@@ -29,8 +30,8 @@ function App() {
                         <Route exact path="/signup" element={<Signup/>}/>
                         <Route path="/home" element={<Home/>} exact/>
                         <Route path="/" element={<Home/>} exact/>
-                        <Route path="/admin" component={Admin} exact/>
-                        <Route path="/products" element={<Products/>} exact/>
+                        <Route path="/admin" element={<Admin/>} exact/>
+                        <Route path="/product/:productId" element={<SingleProduct />} />                        <Route path="/products" element={<Products/>} exact/>
                         <Route path="/products/:id" element={<ProductDetail/>}/>
                         <Route path="/cart" element={<Cart/>} exact/>
                     </Routes>
