@@ -1,32 +1,50 @@
 import React from 'react';
+import "../../styles/navbar.css";
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Import Bootstrap JavaScript
 
 
-function Navigation({children}) {
+function Navigation() {
   return (
-    <nav class="navbar navbar-expand-lg bg-body-tertiary px-5">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/home">Elektromart</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
-          <ul className="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/admin">Admin</a>
+    <div>
+      <header className="banner" role="banner">
+        <nav className="navbar" role="navigation" aria-label="menu">
+          <a href="/home" className="logo">
+            <img src="/images/elektromart.png" />
+          </a>
+          <ul className="menuNav">
+            <li className="dropdown nav-link nav-link-fade-up transition-all duration-700">
+              <a href="/products">Products</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/products">Product Catalog</a>
+            <li className="dropdown nav-link nav-link-fade-up">
+              <a href="/products">Featured</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/cart">Cart</a>
-            </li><li class="nav-item">
-              <a class="nav-link" href="/login">Login/Sign up</a>
-            </li>
+            <p className='navLine absolute bg-red-600 w-1 font-extralight h-9 z-50'></p>
+            <a href="/cart" className="navIcon">
+              <i className="bi bi-cart"></i>
+            </a>
+            <div className="navItem dropdown" style={{paddingTop: "15px"}}>
+              <a
+                href="#"
+                className="navIcon dropdown-toggle"
+                id="accountDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i className="bi bi-person-circle"></i>
+              </a>
+              <div className="dropdown-menu" aria-labelledby="accountDropdown">
+                <a className="dropdown-item" href="/login">Customer Login</a>
+                <a className="dropdown-item" href="/admin">Admin</a>
+              </div>
+            </div>
           </ul>
-        </div>
-      </div>
-    </nav>
-
+        </nav>
+      </header>
+    </div>
   );
 }
 
