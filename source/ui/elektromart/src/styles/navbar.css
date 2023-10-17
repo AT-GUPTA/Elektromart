@@ -5,7 +5,7 @@
     align-items: center;
     height: 8rem;
     justify-content: flex-start;
-    gap: 50rem;
+    gap: 30%;
   }
 
   .navbar a {

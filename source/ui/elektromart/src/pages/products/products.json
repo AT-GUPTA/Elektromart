@@ -6,7 +6,8 @@
     "vendor": "Apple Inc.",
     "slug": "iphone-13-pro",
     "sku": "SKU12345",
-    "price": 999.99
+    "price": 999.99,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 2,
@@ -15,7 +16,8 @@
     "vendor": "Samsung Electronics",
     "slug": "galaxy-s21-ultra",
     "sku": "SKU67890",
-    "price": 1099.99
+    "price": 1099.99,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 3,
@@ -24,7 +26,8 @@
     "vendor": "Google LLC",
     "slug": "pixel-6-pro",
     "sku": "SKU54321",
-    "price": 899.99
+    "price": 899.99,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 4,
@@ -33,7 +36,8 @@
     "vendor": "OnePlus Technology Co., Ltd.",
     "slug": "oneplus-9-pro",
     "sku": "SKU24680",
-    "price": 899.00
+    "price": 899.00,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 5,
@@ -42,7 +46,8 @@
     "vendor": "Xiaomi Corporation",
     "slug": "xiaomi-mi-11",
     "sku": "SKU13579",
-    "price": 699.99
+    "price": 699.99,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 6,
@@ -51,7 +56,8 @@
     "vendor": "Sony Corporation",
     "slug": "xperia-1-iii",
     "sku": "SKU78901",
-    "price": 1099.00
+    "price": 1099.00,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 7,
@@ -60,7 +66,8 @@
     "vendor": "Huawei Technologies Co., Ltd.",
     "slug": "huawei-p40-pro",
     "sku": "SKU65432",
-    "price": 899.99
+    "price": 899.99,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 8,
@@ -69,7 +76,8 @@
     "vendor": "LG Electronics Inc.",
     "slug": "lg-g8-thinq",
     "sku": "SKU23456",
-    "price": 599.00
+    "price": 599.00,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 9,
@@ -78,7 +86,8 @@
     "vendor": "ASUSTeK Computer Inc.",
     "slug": "asus-rog-phone-5",
     "sku": "SKU98765",
-    "price": 799.99
+    "price": 799.99,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 10,
@@ -87,7 +96,8 @@
     "vendor": "Motorola Solutions, Inc.",
     "slug": "moto-g-power",
     "sku": "SKU11111",
-    "price": 249.99
+    "price": 249.99,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 11,
@@ -96,7 +106,8 @@
     "vendor": "HMD Global Oy",
     "slug": "nokia-8-3-5g",
     "sku": "SKU22222",
-    "price": 499.00
+    "price": 499.00,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 12,
@@ -105,7 +116,8 @@
     "vendor": "OnePlus Technology Co., Ltd.",
     "slug": "oneplus-nord-n200",
     "sku": "SKU33333",
-    "price": 249.99
+    "price": 249.99,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 13,
@@ -114,7 +126,8 @@
     "vendor": "Xiaomi Corporation",
     "slug": "redmi-note-10",
     "sku": "SKU44444",
-    "price": 199.99
+    "price": 199.99,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 14,
@@ -123,7 +136,8 @@
     "vendor": "Guangdong Oppo Mobile Telecommunications Corp., Ltd.",
     "slug": "oppo-find-x3-pro",
     "sku": "SKU55555",
-    "price": 1099.00
+    "price": 1099.00,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 15,
@@ -132,7 +146,8 @@
     "vendor": "Realme Mobile Telecommunications (Shenzhen) Co., Ltd.",
     "slug": "realme-8-pro",
     "sku": "SKU66666",
-    "price": 249.99
+    "price": 249.99,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 16,
@@ -141,7 +156,8 @@
     "vendor": "Sony Corporation",
     "slug": "xperia-5-iii",
     "sku": "SKU77777",
-    "price": 999.00
+    "price": 999.00,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 17,
@@ -150,7 +166,8 @@
     "vendor": "Motorola Solutions, Inc.",
     "slug": "motorola-razr-5g",
     "sku": "SKU88888",
-    "price": 1399.99
+    "price": 1399.99,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 18,
@@ -159,7 +176,8 @@
     "vendor": "Xiaomi Corporation",
     "slug": "xiaomi-mi-11-ultra",
     "sku": "SKU99999",
-    "price": 1199.00
+    "price": 1199.00,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 19,
@@ -168,7 +186,8 @@
     "vendor": "OnePlus Technology Co., Ltd.",
     "slug": "oneplus-9",
     "sku": "SKU10000",
-    "price": 699.00
+    "price": 699.00,
+    "image": "/images/iphone.jpg"
   },
   {
     "id": 20,
@@ -177,6 +196,7 @@
     "vendor": "Vivo Communication Technology Co. Ltd.",
     "slug": "vivo-x60-pro",
     "sku": "SKU10101",
-    "price": 799.99
+    "price": 799.99,
+    "image": "/images/iphone.jpg"
   }
 ]
