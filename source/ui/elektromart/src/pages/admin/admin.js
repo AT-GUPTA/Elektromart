@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./admin.css";
+import products from "../products/products.json";
 
 const Admin = () => {
   const [showAddProductForm, setShowAddProductForm] = useState(false);
@@ -16,7 +17,7 @@ const Admin = () => {
   });
 
   const [editProductId, setEditProductId] = useState("");
-  const [productList, setProductList] = useState([]);
+  const [productList, setProductList] = useState(products); // Use the imported products
 
   const [adminData, setAdminData] = useState({
     adminEmail: "",
@@ -51,10 +52,32 @@ const Admin = () => {
   };
 
   const handleEditProductIdChange = (e) => {
-    setEditProductId(e.target.value);
-    const selectedProduct = productList.find((product) => product.id === e.target.value);
+    const selectedProductId = e.target.value;
+    setEditProductId(selectedProductId);
+  
+    // Find the selected product in the products array
+    const selectedProduct = products.find((product) => product.id === selectedProductId);
+  
     if (selectedProduct) {
-      setProductData({ ...selectedProduct });
+      // Autofill the product data fields with the selected product's details
+      setProductData({
+        productName: selectedProduct.name,
+        productImageUrl: selectedProduct.image,
+        productPrice: selectedProduct.price.toFixed(2),
+        discount: "",
+        isFeatured: false,
+        id: selectedProduct.id,
+      });
+    } else {
+      // If the selected product is not found, clear the product data fields
+      setProductData({
+        productName: "",
+        productImageUrl: "",
+        productPrice: "",
+        discount: "",
+        isFeatured: false,
+        id: "",
+      });
     }
   };
 
@@ -187,7 +210,7 @@ const Admin = () => {
         </form>
       )}
 
-      {showEditProductForm && (
+{showEditProductForm && (
         <form className="product-form" onSubmit={handleEditProductSubmit}>
           {/* Product selection dropdown */}
           <div className="input-group mt-3">
@@ -203,9 +226,9 @@ const Admin = () => {
               required
             >
               <option value="">-- Select a product --</option>
-              {productList.map((product) => (
+              {products.map((product) => (
                 <option key={product.id} value={product.id}>
-                  {product.productName}
+                  {product.name}
                 </option>
               ))}
             </select>
