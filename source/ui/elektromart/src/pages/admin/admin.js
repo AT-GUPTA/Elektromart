@@ -210,7 +210,7 @@ const Admin = () => {
         </form>
       )}
 
-{showEditProductForm && (
+      {showEditProductForm && (
         <form className="product-form" onSubmit={handleEditProductSubmit}>
           {/* Product selection dropdown */}
           <div className="input-group mt-3">
@@ -308,69 +308,69 @@ const Admin = () => {
         </form>
       )}
 
-{showAddAdminForm && (
-  <form className="admin-form" onSubmit={handleAddAdminSubmit}>
-    <div className="input-group mt-3">
-      <label htmlFor="adminUsername" className="input-group-text">
-        Username:
-      </label>
-      <input
-        id="adminUsername"
-        type="text"
-        className="form-control"
-        name="adminUsername"
-        value={adminData.adminUsername}
-        onChange={handleAddAdminChange}
-        required
-      />
-    </div>
-    <div className="input-group mt-3">
-      <label htmlFor="adminEmail" className="input-group-text">
-        Admin Email:
-      </label>
-      <input
-        id="adminEmail"
-        type="email"
-        className="form-control"
-        name="adminEmail"
-        value={adminData.adminEmail}
-        onChange={handleAddAdminChange}
-        required
-      />
-    </div>
-    <div className="input-group mt-3">
-      <label htmlFor="adminPassword" className="input-group-text">
-        Password:
-      </label>
-      <input
-        id="adminPassword"
-        type="password"
-        className="form-control"
-        name="adminPassword"
-        value={adminData.adminPassword}
-        onChange={handleAddAdminChange}
-        required
-      />
-    </div>
-    <div className="input-group mt-3">
-      <label htmlFor="adminConfirmPassword" className="input-group-text">
-        Confirm Password:
-      </label>
-      <input
-        id="adminConfirmPassword"
-        type="password"
-        className="form-control"
-        name="adminConfirmPassword"
-        value={adminData.adminConfirmPassword}
-        onChange={handleAddAdminChange}
-        required
-      />
-    </div>
-    <button type="submit" className="btn btn-primary mt-3">
-      Add Admin
-    </button>
-  </form>
-)}
+      {showAddAdminForm && (
+        <form className="admin-form" onSubmit={handleAddAdminSubmit}>
+          <div className="input-group mt-3">
+            <label htmlFor="adminUsername" className="input-group-text">
+              Username:
+            </label>
+            <input
+              id="adminUsername"
+              type="text"
+              className="form-control"
+              name="adminUsername"
+              value={adminData.adminUsername}
+              onChange={handleAddAdminChange}
+              required
+            />
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="adminEmail" className="input-group-text">
+              Admin Email:
+            </label>
+            <input
+              id="adminEmail"
+              type="email"
+              className="form-control"
+              name="adminEmail"
+              value={adminData.adminEmail}
+              onChange={handleAddAdminChange}
+              required
+            />
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="adminPassword" className="input-group-text">
+              Password:
+            </label>
+            <input
+              id="adminPassword"
+              type="password"
+              className="form-control"
+              name="adminPassword"
+              value={adminData.adminPassword}
+              onChange={handleAddAdminChange}
+              required
+            />
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="adminConfirmPassword" className="input-group-text">
+              Confirm Password:
+            </label>
+            <input
+              id="adminConfirmPassword"
+              type="password"
+              className="form-control"
+              name="adminConfirmPassword"
+              value={adminData.adminConfirmPassword}
+              onChange={handleAddAdminChange}
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-primary mt-3">
+            Add Admin
+          </button>
+        </form>
+      )}
     </div>
   );
 };
