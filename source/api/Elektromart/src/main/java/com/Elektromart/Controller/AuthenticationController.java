@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/auth/*")
-public class AuthorizationController extends HttpServlet {
+public class AuthenticationController extends HttpServlet {
 
     private final UserDao userDao = new UserDao();
     @Override
@@ -36,9 +36,9 @@ public class AuthorizationController extends HttpServlet {
             String username = req.getParameter("username");
             String password = req.getParameter("password");
 
-            User newUser = new User(username, password, false); //todo: add email and role
-            boolean success = userDao.addUser(newUser);//todo: add email and role
-
+//            User newUser = new User(username, password, false); //todo: add email and role
+//            boolean success = userDao.addUser(newUser);//todo: add email and role
+            boolean success = false;
             if (success) {
                 resp.sendRedirect("/login");//todo change response object
             } else {
