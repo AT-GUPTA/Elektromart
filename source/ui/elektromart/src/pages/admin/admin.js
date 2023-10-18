@@ -9,13 +9,14 @@ const Admin = () => {
   const [productData, setProductData] = useState({
     productName: "",
     productImageUrl: "",
-    productPrice: 0,
-    discount: 0,
+    productPrice: "",
+    discount: "",
     isFeatured: false,
     id: Math.floor(Math.random() * 1000),
   });
 
   const [editProductId, setEditProductId] = useState("");
+  const [productList, setProductList] = useState([]);
 
   const [adminData, setAdminData] = useState({
     adminEmail: "",
@@ -51,6 +52,10 @@ const Admin = () => {
 
   const handleEditProductIdChange = (e) => {
     setEditProductId(e.target.value);
+    const selectedProduct = productList.find((product) => product.id === e.target.value);
+    if (selectedProduct) {
+      setProductData({ ...selectedProduct });
+    }
   };
 
   const handleAddAdminChange = (e) => {
@@ -67,8 +72,8 @@ const Admin = () => {
     setProductData({
       productName: "",
       productImageUrl: "",
-      productPrice: 0,
-      discount: 0,
+      productPrice: "",
+      discount: "",
       isFeatured: false,
       id: Math.floor(Math.random() * 1000),
     });
@@ -78,6 +83,14 @@ const Admin = () => {
     e.preventDefault();
     console.log("Editing product with ID:", editProductId);
     setEditProductId("");
+    setProductData({
+      productName: "",
+      productImageUrl: "",
+      productPrice: "",
+      discount: "",
+      isFeatured: false,
+      id: Math.floor(Math.random() * 1000),
+    });
   };
 
   const handleAddAdminSubmit = (e) => {
@@ -99,146 +112,242 @@ const Admin = () => {
 
       {showAddProductForm && (
         <form className="product-form" onSubmit={handleAddProductSubmit}>
-          <label>
-            Product Name:
+          {/* Product fields similar to Sign Up form */}
+          <div className="input-group mt-3">
+            <label htmlFor="productName" className="input-group-text">
+              Product Name:
+            </label>
             <input
+              id="productName"
               type="text"
+              className="form-control"
               name="productName"
               value={productData.productName}
               onChange={handleFormChange}
+              required
             />
-          </label>
-          <label>
-            Product Image URL:
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="productImageUrl" className="input-group-text">
+              Product Image URL:
+            </label>
             <input
+              id="productImageUrl"
               type="text"
+              className="form-control"
               name="productImageUrl"
               value={productData.productImageUrl}
               onChange={handleFormChange}
+              required
             />
-          </label>
-          <label>
-            Product Price:
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="productPrice" className="input-group-text">
+              Product Price:
+            </label>
             <input
+              id="productPrice"
               type="number"
+              className="form-control"
               name="productPrice"
               value={productData.productPrice}
               onChange={handleFormChange}
+              required
             />
-          </label>
-          <label>
-            Discount:
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="discount" className="input-group-text">
+              Discount:
+            </label>
             <input
+              id="discount"
               type="number"
+              className="form-control"
               name="discount"
               value={productData.discount}
               onChange={handleFormChange}
             />
-          </label>
-          <label>
-            Featured:
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="isFeatured" className="input-group-text">
+              Featured:
+            </label>
             <input
+              id="isFeatured"
               type="checkbox"
+              className="form-check-input"
               name="isFeatured"
               checked={productData.isFeatured}
               onChange={handleFormChange}
             />
-          </label>
-          <button type="submit">Add Product</button>
+          </div>
+          <button type="submit" className="btn btn-primary mt-3">
+            Add Product
+          </button>
         </form>
       )}
 
       {showEditProductForm && (
         <form className="product-form" onSubmit={handleEditProductSubmit}>
-          <label>
-            Product ID:
-            <input
-              type="text"
+          {/* Product selection dropdown */}
+          <div className="input-group mt-3">
+            <label htmlFor="editProductId" className="input-group-text">
+              Select Product:
+            </label>
+            <select
+              id="editProductId"
+              className="form-select"
               name="editProductId"
               value={editProductId}
               onChange={handleEditProductIdChange}
-            />
-          </label>
-          <label>
-            Product Name:
+              required
+            >
+              <option value="">-- Select a product --</option>
+              {productList.map((product) => (
+                <option key={product.id} value={product.id}>
+                  {product.productName}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* Product fields */}
+          <div className="input-group mt-3">
+            <label htmlFor="productName" className="input-group-text">
+              Product Name:
+            </label>
             <input
+              id="productName"
               type="text"
+              className="form-control"
               name="productName"
               value={productData.productName}
               onChange={handleFormChange}
+              required
             />
-          </label>
-          <label>
-            Product Image URL:
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="productImageUrl" className="input-group-text">
+              Product Image URL:
+            </label>
             <input
+              id="productImageUrl"
               type="text"
+              className="form-control"
               name="productImageUrl"
               value={productData.productImageUrl}
               onChange={handleFormChange}
+              required
             />
-          </label>
-          <label>
-            Product Price:
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="productPrice" className="input-group-text">
+              Product Price:
+            </label>
             <input
+              id="productPrice"
               type="number"
+              className="form-control"
               name="productPrice"
               value={productData.productPrice}
               onChange={handleFormChange}
+              required
             />
-          </label>
-          <label>
-            Discount:
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="discount" className="input-group-text">
+              Discount:
+            </label>
             <input
+              id="discount"
               type="number"
+              className="form-control"
               name="discount"
               value={productData.discount}
               onChange={handleFormChange}
             />
-          </label>
-          <label>
-            Featured:
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="isFeatured" className="input-group-text">
+              Featured:
+            </label>
             <input
+              id="isFeatured"
               type="checkbox"
+              className="form-check-input"
               name="isFeatured"
               checked={productData.isFeatured}
               onChange={handleFormChange}
             />
-          </label>
-          <button type="submit">Edit Product</button>
+          </div>
+          <button type="submit" className="btn btn-primary mt-3">
+            Edit Product
+          </button>
         </form>
       )}
-      {showAddAdminForm && (
-        <form className="admin-form" onSubmit={handleAddAdminSubmit}>
-          <label>
-            Admin Email:
-            <input
-              type="email"
-              name="adminEmail"
-              value={adminData.adminEmail}
-              onChange={handleAddAdminChange}
-            />
-          </label>
-          <label>
-            Admin Name:
-            <input
-              type="text"
-              name="adminName"
-              value={adminData.adminName}
-              onChange={handleAddAdminChange}
-            />
-          </label>
-          <label>
-            Admin Token:
-            <input
-              type="text"
-              name="adminToken"
-              value={adminData.adminToken}
-              onChange={handleAddAdminChange}
-            />
-          </label>
-          <button type="submit">Add Admin</button>
-        </form>
-      )}
+
+{showAddAdminForm && (
+  <form className="admin-form" onSubmit={handleAddAdminSubmit}>
+    <div className="input-group mt-3">
+      <label htmlFor="adminUsername" className="input-group-text">
+        Username:
+      </label>
+      <input
+        id="adminUsername"
+        type="text"
+        className="form-control"
+        name="adminUsername"
+        value={adminData.adminUsername}
+        onChange={handleAddAdminChange}
+        required
+      />
+    </div>
+    <div className="input-group mt-3">
+      <label htmlFor="adminEmail" className="input-group-text">
+        Admin Email:
+      </label>
+      <input
+        id="adminEmail"
+        type="email"
+        className="form-control"
+        name="adminEmail"
+        value={adminData.adminEmail}
+        onChange={handleAddAdminChange}
+        required
+      />
+    </div>
+    <div className="input-group mt-3">
+      <label htmlFor="adminPassword" className="input-group-text">
+        Password:
+      </label>
+      <input
+        id="adminPassword"
+        type="password"
+        className="form-control"
+        name="adminPassword"
+        value={adminData.adminPassword}
+        onChange={handleAddAdminChange}
+        required
+      />
+    </div>
+    <div className="input-group mt-3">
+      <label htmlFor="adminConfirmPassword" className="input-group-text">
+        Confirm Password:
+      </label>
+      <input
+        id="adminConfirmPassword"
+        type="password"
+        className="form-control"
+        name="adminConfirmPassword"
+        value={adminData.adminConfirmPassword}
+        onChange={handleAddAdminChange}
+        required
+      />
+    </div>
+    <button type="submit" className="btn btn-primary mt-3">
+      Add Admin
+    </button>
+  </form>
+)}
     </div>
   );
 };
