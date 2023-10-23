@@ -21,7 +21,7 @@ CREATE TABLE Cart (
 
 DROP TABLE IF EXISTS CartProduct;
 CREATE TABLE CartProduct (
-                             cart_id INT NOT NULL,
+                             cart_id VARCHAR NOT NULL,
                              product_id INT NOT NULL,
                              quantity INT NOT NULL default 1,
                              PRIMARY KEY (cart_id, product_id),
