@@ -22,11 +22,11 @@ const Form = ({authentication}) => {
             body: JSON.stringify(user),
         });
 
-        const jsonMessage = await res.json();
-        console.log(jsonMessage);
-        const jsonObj = JSON.parse(JSON.stringify(jsonMessage));
-        const message = jsonObj["message"];
-        const isLoggedIn = message !== "FAILURE";
+        const jsonResponse = await res.json();
+        const status = jsonResponse["status"];
+        const message = jsonResponse["message"];
+        const isLoggedIn = status === "SUCCESS";
+
         if (isLoggedIn) {
             authentication(true);
             Swal.fire({

@@ -26,16 +26,17 @@ const Form = () => {
     const passwordsMatch = () => password === confirmPassword;
 
     const addUser = async (user) => {
-        const res = await fetch(`http://localhost:8080/users`, {
+        const res = await fetch(`http://localhost:8080/user/signup`, {
             method: "POST",
             headers: {"Content-type": "application/json"},
             body: JSON.stringify(user),
         });
 
-        const jsonMessage = await res.json();
-        const jsonObj = JSON.parse(JSON.stringify(jsonMessage));
-        const message = jsonObj["message"];
-        const isAccountCreated = message === "Account created!";
+        const jsonResponse = await res.json();
+        const status = jsonResponse["status"];
+        const message = jsonResponse["message"];
+        const isAccountCreated = status === "SUCCESS";
+
         if (isAccountCreated) {
             Swal.fire({
                 title: "Success!",
