@@ -13,13 +13,14 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.0",
     "react-dom": "^18.2.0",
-    "react-notifications": "^1.7.4",
     "react-router-dom": "^6.16.0",
     "react-scripts": "^5.0.1",
     "sweetalert2": "^11.7.32",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "start-legacy": "react-scripts --openssl-legacy-provider start",
+    "build-legacy": "react-scripts --openssl-legacy-provider build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
