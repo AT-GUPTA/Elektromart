@@ -13,6 +13,6 @@ public class User {
     private String email;
     private Long roleId;
     private String status;
-    private boolean authorized;
+    private String cartId;
 
 }

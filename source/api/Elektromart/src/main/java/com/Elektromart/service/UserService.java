@@ -15,7 +15,7 @@ public class UserService {
         return null;
     }
 
-    public boolean createUser(User newUser) {
+    public User createUser(User newUser) {
         return userDao.createUser(newUser);
     }
 }

@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 
 @WebServlet("/user/*")
 public class AuthenticationController extends HttpServlet {
@@ -21,7 +23,6 @@ public class AuthenticationController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getPathInfo();
-
         if ("/login".equals(path)) {
             String email = req.getParameter("email");
             String password = req.getParameter("password");
@@ -36,6 +37,7 @@ public class AuthenticationController extends HttpServlet {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("status", "SUCCESS")
                         .add("message", user.getUserId().toString())
+                        .add("cartId", user.getCartId())
                         .build();
                 resp.getWriter().write(jsonResponse.toString());
             } else {
@@ -57,31 +59,43 @@ public class AuthenticationController extends HttpServlet {
                     .build();
             resp.getWriter().write(jsonResponse.toString());
         } else if ("/signup".equals(path)) {
-            String username = req.getParameter("username");
-            String email = req.getParameter("email");
-            String password = req.getParameter("password");
+            BufferedReader reader = req.getReader();
+            StringBuilder requestBody = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                requestBody.append(line);
+            }
+            JsonObject jsonInput = Json.createReader(new StringReader(requestBody.toString())).readObject();
+
+            String username = jsonInput.getString("username");
+            String email = jsonInput.getString("email");
+            String password = jsonInput.getString("password");
+
 
             User newUser = new User();
             newUser.setUsername(username);
             newUser.setEmail(email);
             newUser.setPassword(password);
-
-            boolean isAccountCreated = userService.createUser(newUser);
+            newUser.setRoleId(1L);
+            newUser.setStatus("ACTIVE");
+            newUser = userService.createUser(newUser);
+            boolean isAccountCreated = newUser != null;
 
             resp.setContentType("application/json");
+            JsonObject jsonResponse;
             if (isAccountCreated) {
-                JsonObject jsonResponse = Json.createObjectBuilder()
+                jsonResponse = Json.createObjectBuilder()
                         .add("status", "SUCCESS")
+                        .add("cartId", newUser.getCartId())
                         .add("message", "Account created!")
                         .build();
-                resp.getWriter().write(jsonResponse.toString());
             } else {
-                JsonObject jsonResponse = Json.createObjectBuilder()
+                jsonResponse = Json.createObjectBuilder()
                         .add("status", "FAILURE")
                         .add("message", "Account creation failed.")
                         .build();
-                resp.getWriter().write(jsonResponse.toString());
             }
+            resp.getWriter().write(jsonResponse.toString());
         }
     }
 }

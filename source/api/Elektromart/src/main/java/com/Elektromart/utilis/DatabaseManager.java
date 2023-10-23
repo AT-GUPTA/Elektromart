@@ -14,6 +14,15 @@ public class DatabaseManager {
     private static final String DB_PASSWORD;
 
     static {
+        try {
+            // Explicitly load the H2 database driver
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static {
         Properties properties = new Properties();
         try (InputStream input = DatabaseManager.class.getClassLoader().getResourceAsStream("application.properties")) {
             if (input == null) {

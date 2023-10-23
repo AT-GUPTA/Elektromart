@@ -26,7 +26,8 @@ const Form = () => {
     const passwordsMatch = () => password === confirmPassword;
 
     const addUser = async (user) => {
-        const res = await fetch(`http://localhost:8080/user/signup`, {
+        console.log(JSON.stringify(user));
+        const res = await fetch(`http://localhost:8080/Elektromart_war/user/signup`, {
             method: "POST",
             headers: {"Content-type": "application/json"},
             body: JSON.stringify(user),
@@ -36,6 +37,7 @@ const Form = () => {
         const status = jsonResponse["status"];
         const message = jsonResponse["message"];
         const isAccountCreated = status === "SUCCESS";
+        localStorage.setItem("cart_id", jsonResponse["cartId"]);
 
         if (isAccountCreated) {
             Swal.fire({

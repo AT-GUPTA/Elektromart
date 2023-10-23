@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 public class UserDao {
 
@@ -27,7 +28,7 @@ public class UserDao {
                 user.setEmail(rs.getString("email"));
                 user.setRoleId(rs.getLong("roleId"));
                 user.setStatus(rs.getString("status"));
-                user.setAuthorized(rs.getBoolean("authorized"));
+                user.setCartId(rs.getString("cartId"));
                 return user;
             }
         } catch (Exception e) {
@@ -36,28 +37,40 @@ public class UserDao {
         return null;
     }
 
-    public boolean createUser(User newUser) {
-        String query = "INSERT INTO users (username, email, password, roleId, status, authorized) VALUES (?, ?, ?, ?, ?, ?)";
+    public User createUser(User newUser) {
+        String cartId = UUID.randomUUID().toString(); // Generate a random cart ID
+
+        String query = "INSERT INTO Cart (id) VALUES (?)"; // Insert a new cart record
         try (Connection connection = DatabaseManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            
-            String hashedPassword = BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt());
+             PreparedStatement cartStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, newUser.getUsername());
-            preparedStatement.setString(2, newUser.getEmail());
-            preparedStatement.setString(3, hashedPassword);
-            preparedStatement.setLong(4, newUser.getRoleId());
-            preparedStatement.setString(5, newUser.getStatus());
-            preparedStatement.setBoolean(6, newUser.isAuthorized()); // assuming isAuthorized is a getter for the authorized field
+            cartStatement.setString(1, cartId);
+            int cartInsertResult = cartStatement.executeUpdate();
 
-            int affectedRows = preparedStatement.executeUpdate();
-            return affectedRows > 0;
+            if (cartInsertResult > 0) {
+                String hashedPassword = BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt());
+
+                query = "INSERT INTO Users (username, email, password, role_id, status, cart_id) VALUES (?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement userStatement = connection.prepareStatement(query)) {
+                    userStatement.setString(1, newUser.getUsername());
+                    userStatement.setString(2, newUser.getEmail());
+                    userStatement.setString(3, hashedPassword);
+                    userStatement.setLong(4, newUser.getRoleId());
+                    userStatement.setString(5, newUser.getStatus());
+                    userStatement.setString(6, cartId);
+
+                    int userInsertResult = userStatement.executeUpdate();
+
+                    if (userInsertResult > 0) {
+                        // User creation successful, return the cart ID along with user information
+                        newUser.setCartId(cartId);
+                        return newUser;
+                    }
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
-
-
-    // Other CRUD operations as needed
 }
