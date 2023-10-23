@@ -14,20 +14,22 @@ CREATE TABLE Product (
 
 DROP TABLE IF EXISTS Cart;
 CREATE TABLE Cart (
-                      id INT AUTO_INCREMENT PRIMARY KEY,
-                      user_id BIGINT UNIQUE NOT NULL
+                      id VARCHAR NOT NULL PRIMARY KEY,
+                      user_id BIGINT DEFAULT NULL,
+                      temp_id VARCHAR(255) DEFAULT NULL
 );
 
-DROP TABLE IF EXISTS CartProduct
+DROP TABLE IF EXISTS CartProduct;
 CREATE TABLE CartProduct (
-                             cart_id INT NOT NULL,
+                             cart_id VARCHAR NOT NULL,
                              product_id INT NOT NULL,
+                             quantity INT NOT NULL default 1,
                              PRIMARY KEY (cart_id, product_id),
                              FOREIGN KEY (cart_id) REFERENCES Cart(id),
                              FOREIGN KEY (product_id) REFERENCES Product(id)
 );
 
-DROP TABLE IF EXISTS Role
+DROP TABLE IF EXISTS Role;
 CREATE TABLE Role (
                       role_id int AUTO_INCREMENT PRIMARY KEY,
                       role_name VARCHAR(255) UNIQUE NOT NULL
@@ -36,7 +38,7 @@ CREATE TABLE Role (
 INSERT INTO Role (role_name) VALUES ('customer'), ('staff');
 
 
-DROP TABLE IF EXISTS Users
+DROP TABLE IF EXISTS Users;
 CREATE TABLE Users (
                        user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                        username VARCHAR(255) UNIQUE NOT NULL,
@@ -44,5 +46,7 @@ CREATE TABLE Users (
                        email VARCHAR(255) UNIQUE NOT NULL,
                        role_id BIGINT,
                        status VARCHAR(255),
-                       FOREIGN KEY (role_id) REFERENCES Role(role_id)
+                       cart_id VARCHAR(255),
+                       FOREIGN KEY (role_id) REFERENCES Role(role_id),
+                       FOREIGN KEY (cart_id) REFERENCES Cart(id)
 );

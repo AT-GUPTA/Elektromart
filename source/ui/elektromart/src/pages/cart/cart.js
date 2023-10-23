@@ -12,6 +12,17 @@ const Cart = () => {
         // Load cart items from local storage
         const loadedCartItems = JSON.parse(localStorage.getItem('cartContent')) || [];
         setCartItems(loadedCartItems);
+        /*
+        const cartId = localStorage.getItem("cartId");
+        fetch(`http://localhost:8080/cart/getCart?cartId=${cartId}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            loadedCartItems = data;
+            setCartItems(loadedCartItems);
+        })
+        .catch(error => console.error("Error fetching cart:", error));
+         */
     }, []);
 
     const handleIncreaseQty = (id) => {

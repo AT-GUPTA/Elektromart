@@ -16,17 +16,20 @@ const Form = ({authentication}) => {
     const passwordFieldType = showPassword ? "text" : "password";
 
     const loginVerification = async (user) => {
-        const res = await fetch(`http://localhost:8080/user/login`, {
+        const res = await fetch(`http://localhost:8080/Elektromart_war/user/login`, {
             method: "POST",
+            mode: "cors",
             headers: {"Content-type": "application/json"},
             body: JSON.stringify(user),
         });
 
-        const jsonMessage = await res.json();
-        console.log(jsonMessage);
-        const jsonObj = JSON.parse(JSON.stringify(jsonMessage));
-        const message = jsonObj["message"];
-        const isLoggedIn = message !== "FAILURE";
+        const jsonResponse = await res.json();
+        const status = jsonResponse["status"];
+        const message = jsonResponse["message"];
+        const isLoggedIn = status === "SUCCESS";
+
+        localStorage.setItem("cart_id", jsonResponse["cartId"]);
+
         if (isLoggedIn) {
             authentication(true);
             Swal.fire({
