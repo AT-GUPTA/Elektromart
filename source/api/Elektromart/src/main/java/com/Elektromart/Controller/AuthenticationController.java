@@ -23,14 +23,22 @@ public class AuthenticationController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getPathInfo();
+        BufferedReader reader = req.getReader();
+        StringBuilder requestBody = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            requestBody.append(line);
+        }
         if ("/login".equals(path)) {
-            String email = req.getParameter("email");
-            String password = req.getParameter("password");
+            JsonObject jsonInput = Json.createReader(new StringReader(requestBody.toString())).readObject();
+            String email = jsonInput.getString("email");
+            String password = jsonInput.getString("password");
             User user = userService.authenticateUser(email, password);
             if (user != null) {
                 HttpSession session = req.getSession();
                 session.setAttribute("id", user.getUserId());
                 session.setAttribute("email", user.getEmail());
+                session.setAttribute("role", user.getRoleId());
                 session.setAttribute("authorized", true);
                 // Here you can also use a JSON response with relevant status.
                 resp.setContentType("application/json");
@@ -38,6 +46,7 @@ public class AuthenticationController extends HttpServlet {
                         .add("status", "SUCCESS")
                         .add("message", user.getUserId().toString())
                         .add("cartId", user.getCartId())
+                        .add("roleId", user.getRoleId().toString())
                         .build();
                 resp.getWriter().write(jsonResponse.toString());
             } else {
@@ -59,12 +68,6 @@ public class AuthenticationController extends HttpServlet {
                     .build();
             resp.getWriter().write(jsonResponse.toString());
         } else if ("/signup".equals(path)) {
-            BufferedReader reader = req.getReader();
-            StringBuilder requestBody = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                requestBody.append(line);
-            }
             JsonObject jsonInput = Json.createReader(new StringReader(requestBody.toString())).readObject();
 
             String username = jsonInput.getString("username");

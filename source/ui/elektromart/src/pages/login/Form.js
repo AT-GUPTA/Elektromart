@@ -3,7 +3,7 @@ import "./Form.css";
 import {Link, useNavigate} from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Form = ({authentication}) => {
+const Form = ({authentication, setRoleId}) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -27,23 +27,25 @@ const Form = ({authentication}) => {
         const status = jsonResponse["status"];
         const message = jsonResponse["message"];
         const isLoggedIn = status === "SUCCESS";
+        const roleId = jsonResponse["roleId"];
 
         localStorage.setItem("cart_id", jsonResponse["cartId"]);
 
         if (isLoggedIn) {
             authentication(true);
+            setRoleId(roleId);
             Swal.fire({
                 title: "Login Success!",
                 text: "Hello User",
                 icon: "success",
-                confirmButtonText: "Plan Your Finance!",
+                confirmButtonText: "Continue Shopping!",
             }).then((result) => {
                 if (result.isConfirmed) {
                     if (message === 0) {
-                        navigate("/portfolio");
+                        navigate("/home");
                     } else {
                         localStorage.setItem("id", JSON.stringify(message));
-                        navigate("/dashboard");
+                        navigate("/home");
                     }
                 }
             });

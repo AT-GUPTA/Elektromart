@@ -1,36 +1,38 @@
 import React, {useEffect, useState} from 'react';
-import cartContent from './cartContent.json';
 import {Link} from "react-router-dom";
 import './cart.css';
 
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
+    const [loading, setLoading] = useState(true); // Added loading state
 
     useEffect(() => {
-        localStorage.setItem('cartContent', JSON.stringify(cartContent));
-        // Load cart items from local storage
-        const loadedCartItems = JSON.parse(localStorage.getItem('cartContent')) || [];
-        setCartItems(loadedCartItems);
-        /*
-        const cartId = localStorage.getItem("cartId");
-        fetch(`http://localhost:8080/cart/getCart?cartId=${cartId}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            loadedCartItems = data;
-            setCartItems(loadedCartItems);
-        })
-        .catch(error => console.error("Error fetching cart:", error));
-         */
+        const cartId = localStorage.getItem("cart_id");
+        fetch(`http://localhost:8080/Elektromart_war/cart/getCart?cartId=${cartId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                setCartItems(data['cartContent']);
+                setLoading(false); // Set loading to false on successful fetch
+            })
+            .catch(error => {
+                console.error("Error fetching cart:", error);
+                setLoading(false); // Set loading to false even on error
+            });
     }, []);
+
+    // If loading is true, show loading message
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     const handleIncreaseQty = (id) => {
         const updatedCartItems = cartItems.map(item =>
             item.id === id ? {...item, quantity: item.quantity + 1} : item
         );
         setCartItems(updatedCartItems);
-        localStorage.setItem('cartContent', JSON.stringify(updatedCartItems));
+        // todo add api call to update cart
     };
 
     const handleDecreaseQty = (id) => {
@@ -38,18 +40,19 @@ const Cart = () => {
             item.id === id && item.quantity > 1 ? {...item, quantity: item.quantity - 1} : item
         );
         setCartItems(updatedCartItems);
-        localStorage.setItem('cartContent', JSON.stringify(updatedCartItems));
+        // todo add api call to update cart
     };
 
     const handleRemoveItem = (id) => {
         const updatedCartItems = cartItems.filter(item => item.id !== id);
         setCartItems(updatedCartItems);
-        localStorage.setItem('cartContent', JSON.stringify(updatedCartItems));
+        // todo add api call to update cart
     };
 
     // Calculate subtotal
-    const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
+    const subtotal = Array.isArray(cartItems)
+        ? cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+        : 0;
     // Define a fixed tax rate (you can replace this with your actual tax calculation)
     const taxRate = 0.1; // 10% tax rate
 
