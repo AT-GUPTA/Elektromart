@@ -14,7 +14,7 @@ body {
   position: relative; 
 }
 
-button {
+.adminButton {
   margin: 10px;
   background-color: #2f4550;
   color: #f4f4f9;
@@ -28,9 +28,19 @@ button {
   z-index: 1;
 }
 
-button:hover {
+.downloadLink {
+  margin-left: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.adminButton:hover {
   background-color: #586f7c;
   transform: scale(1.05);
+}
+
+.downloadButton {
+  background-color: #198754 !important;
 }
 
 .product-form,
