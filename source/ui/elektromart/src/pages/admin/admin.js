@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import "./admin.css";
 import products from "../products/products.json";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Admin = () => {
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   const [showEditProductForm, setShowEditProductForm] = useState(false);
   const [showAddAdminForm, setShowAddAdminForm] = useState(false);
+  const [showAllProducts, setShowAllProducts] = useState(false);
 
   const [productData, setProductData] = useState({
     productName: "",
@@ -29,18 +31,28 @@ const Admin = () => {
     setShowAddProductForm(true);
     setShowEditProductForm(false);
     setShowAddAdminForm(false);
+    setShowAllProducts(false)
   };
 
   const handleEditProductClick = () => {
     setShowAddProductForm(false);
     setShowEditProductForm(true);
     setShowAddAdminForm(false);
+    setShowAllProducts(false)
+  };
+
+  const handleViewAllProductClick = () => {
+    setShowAddProductForm(false);
+    setShowEditProductForm(false);
+    setShowAddAdminForm(false);
+    setShowAllProducts(true)
   };
 
   const handleAddAdminClick = () => {
     setShowAddProductForm(false);
     setShowEditProductForm(false);
     setShowAddAdminForm(true);
+    setShowAllProducts(false)
   };
 
   const handleFormChange = (e) => {
@@ -129,9 +141,10 @@ const Admin = () => {
   return (
     <div className="admin-container">
       <h2>Admin Panel</h2>
-      <button onClick={handleAddProductClick}>Add New Product</button>
-      <button onClick={handleEditProductClick}>Edit a Product</button>
-      <button onClick={handleAddAdminClick}>Add a New Admin</button>
+      <button className="adminButton" onClick={handleAddProductClick}>Add New Product</button>
+      <button className="adminButton" onClick={handleEditProductClick}>Edit a Product</button>
+      <button className="adminButton" onClick={handleViewAllProductClick}>View all Products</button>
+      <button className="adminButton" onClick={handleAddAdminClick}>Add a New Admin</button>
 
       {showAddProductForm && (
         <form className="product-form" onSubmit={handleAddProductSubmit}>
@@ -306,6 +319,45 @@ const Admin = () => {
             Edit Product
           </button>
         </form>
+      )}
+
+    {showAllProducts && (
+         <div className="container">
+         {showAllProducts && (
+           <div>
+             <h1 className="d-flex align-items-center">
+              All Products
+              <a className="downloadLink" href="http://localhost:8080/Elektromart_war/products/download" download="products.json">
+                <i className="bi bi-download"></i>
+              </a>
+             </h1>
+             <table className="table table-striped">
+               <thead>
+                 <tr>
+                   <th>ID</th>
+                   <th>Name</th>
+                   <th>Description</th>
+                   <th>Vendor</th>
+                   <th>SKU</th>
+                   <th>Price</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 {productList.map((product) => (
+                   <tr key={product.id}>
+                     <td>{product.id}</td>
+                     <td>{product.name}</td>
+                     <td>{product.description}</td>
+                     <td>{product.vendor}</td>
+                     <td>{product.sku}</td>
+                     <td>${product.price.toFixed(2)}</td>
+                   </tr>
+                 ))}
+               </tbody>
+             </table>
+           </div>
+         )}
+       </div>
       )}
 
       {showAddAdminForm && (
