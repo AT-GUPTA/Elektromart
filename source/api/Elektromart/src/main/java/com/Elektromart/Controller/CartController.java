@@ -32,8 +32,6 @@ public class CartController extends HttpServlet {
                     .add("cartContent", cartContent)
                     .build();
             resp.getWriter().write(jsonResponse.toString());
-            // todo Convert cart object to JSON and send as response.
         }
-        //todo handle other routes for changeItemQuantity and delete-from-cart
     }
 }

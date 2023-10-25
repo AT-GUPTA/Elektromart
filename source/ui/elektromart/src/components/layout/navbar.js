@@ -40,6 +40,7 @@ function Navigation({isAuth, roleId}) {
                                 {isAuth ? (
                                     <a className="dropdown-item" href="#" onClick={() => {
                                         localStorage.removeItem("isAuth");
+                                        localStorage.removeItem("cart_id");
                                         Swal.fire({
                                             title: "Logged Out Successfully!",
                                             text: "You've been successfully logged out",
