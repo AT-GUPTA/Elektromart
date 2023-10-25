@@ -27,33 +27,69 @@ const Cart = () => {
         return <div>Loading...</div>;
     }
 
+    const updateQuantityAPI = (cartId, productSlug, quantity) => {
+        fetch(`http://localhost:8080/Elektromart_war/cart/change-quantity`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `cartId=${cartId}&productSlug=${productSlug}&quantity=${quantity}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status !== 'SUCCESS') {
+                    console.error("Error updating quantity:", data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error updating quantity:", error);
+            });
+    };
+
     const handleIncreaseQty = (id) => {
+        const cartId = localStorage.getItem("cart_id");
+        updateQuantityAPI(cartId, product.productSlug, product.quantity + 1);
+
         const updatedCartItems = cartItems.map(item =>
             item.id === id ? {...item, quantity: item.quantity + 1} : item
         );
         setCartItems(updatedCartItems);
-        // todo add api call to update cart
     };
 
     const handleDecreaseQty = (id) => {
-        const updatedCartItems = cartItems.map(item =>
-            item.id === id && item.quantity > 1 ? {...item, quantity: item.quantity - 1} : item
-        );
+        const cartId = localStorage.getItem("cart_id");
+        if (product.quantity > 1) {
+            updateQuantityAPI(cartId, product.productSlug, product.quantity - 1);
+        }
         setCartItems(updatedCartItems);
-        // todo add api call to update cart
     };
 
-    const handleRemoveItem = (id) => {
+    const handleRemoveItem = (product) => {
+        const cartId = localStorage.getItem("cart_id");
+        fetch(`http://localhost:8080/Elektromart_war/cart/delete-cart-product`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `cartId=${cartId}&productSlug=${product.productSlug}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status !== 'SUCCESS') {
+                    console.error("Error removing product:", data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error removing product:", error);
+            });
         const updatedCartItems = cartItems.filter(item => item.id !== id);
         setCartItems(updatedCartItems);
-        // todo add api call to update cart
     };
 
     // Calculate subtotal
     const subtotal = Array.isArray(cartItems)
         ? cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
         : 0;
-    // Define a fixed tax rate (you can replace this with your actual tax calculation)
     const taxRate = 0.1; // 10% tax rate
 
     // Calculate tax amount
