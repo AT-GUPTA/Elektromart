@@ -22,11 +22,11 @@ CREATE TABLE Cart (
 DROP TABLE IF EXISTS CartProduct;
 CREATE TABLE CartProduct (
                              cart_id VARCHAR NOT NULL,
-                             product_id INT NOT NULL,
+                             product_slug VARCHAR(100) UNIQUE NOT NULL,
                              quantity INT NOT NULL default 1,
-                             PRIMARY KEY (cart_id, product_id),
+                             PRIMARY KEY (cart_id, product_slug),
                              FOREIGN KEY (cart_id) REFERENCES Cart(id),
-                             FOREIGN KEY (product_id) REFERENCES Product(id)
+                             FOREIGN KEY (product_slug) REFERENCES Product(url_slug)
 );
 
 DROP TABLE IF EXISTS Role;
