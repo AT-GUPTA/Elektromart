@@ -10,7 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductDao {
+public class  ProductDao {
+
     public List<Product> getProducts() {
         String SQL = "SELECT * FROM Product";
         List<Product> products = new ArrayList<>();
@@ -29,8 +30,8 @@ public class ProductDao {
                 product.setSku(rs.getString("sku"));
                 product.setPrice(rs.getFloat("price"));
                 product.setDiscountPercent(rs.getInt("discount_percent"));
-                product.setIsFeatured(rs.getString("is_featured"));
-                product.setIsDelete(rs.getString("is_delete"));
+                product.setFeatured(rs.getBoolean("is_featured"));
+                product.setDelete(rs.getBoolean("is_delete"));
 
                 products.add(product);
             }
@@ -45,7 +46,7 @@ public class ProductDao {
         String query = "INSERT INTO Product (name, description, vendor, url_slug, sku, price, discount_percent, is_featured, is_delete) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, newProduct.getName());
             preparedStatement.setString(2, newProduct.getDescription());
@@ -54,11 +55,16 @@ public class ProductDao {
             preparedStatement.setString(5, newProduct.getSku());
             preparedStatement.setFloat(6, newProduct.getPrice());
             preparedStatement.setInt(7, newProduct.getDiscountPercent());
-            preparedStatement.setString(8, newProduct.getIsFeatured());
-            preparedStatement.setString(9, newProduct.getIsDelete());
+            preparedStatement.setBoolean(8, newProduct.isFeatured());
+            preparedStatement.setBoolean(9, newProduct.isDelete());
 
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        newProduct.setId(generatedKeys.getInt(1));
+                    }
+                }
                 return newProduct;
             }
         } catch (SQLException e) {
@@ -79,8 +85,8 @@ public class ProductDao {
             preparedStatement.setString(5, updatedProduct.getSku());
             preparedStatement.setFloat(6, updatedProduct.getPrice());
             preparedStatement.setInt(7, updatedProduct.getDiscountPercent());
-            preparedStatement.setString(8, updatedProduct.getIsFeatured());
-            preparedStatement.setString(9, updatedProduct.getIsDelete());
+            preparedStatement.setBoolean(8, updatedProduct.isFeatured());
+            preparedStatement.setBoolean(9, updatedProduct.isDelete());
             preparedStatement.setInt(10, updatedProduct.getId());
 
             int rowsAffected = preparedStatement.executeUpdate();
@@ -88,7 +94,7 @@ public class ProductDao {
                 return updatedProduct;
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception according to your application's error handling strategy
+            e.printStackTrace();
         }
         return null; // Return null if the product editing fails
     }
@@ -110,15 +116,17 @@ public class ProductDao {
                     product.setSku(resultSet.getString("sku"));
                     product.setPrice(resultSet.getFloat("price"));
                     product.setDiscountPercent(resultSet.getInt("discount_percent"));
-                    product.setIsFeatured(resultSet.getString("is_featured"));
-                    product.setIsDelete(resultSet.getString("is_delete"));
+                    product.setFeatured(resultSet.getBoolean("is_featured"));
+                    product.setDelete(resultSet.getBoolean("is_delete"));
                     return product;
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception according to your application's error handling strategy
+            e.printStackTrace();
         }
         return null; // Return null if the product retrieval fails
     }
+
 }
+
 

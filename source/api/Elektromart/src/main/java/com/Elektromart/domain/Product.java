@@ -1,5 +1,6 @@
 package com.elektromart.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,10 @@ public class Product {
     private String sku;
     private float price;
     private int discountPercent;
-    private String isFeatured;
-    private String isDelete;
+
+    @JsonProperty("isFeatured")
+    private boolean isFeatured;
+
+    @JsonProperty("isDelete")
+    private boolean isDelete;
 }

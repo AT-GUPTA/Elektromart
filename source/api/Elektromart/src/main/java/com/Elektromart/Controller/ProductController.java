@@ -63,7 +63,7 @@ public class ProductController extends HttpServlet {
         try {
             String path = req.getPathInfo();
 
-            if (path == null) {
+            if ("/".equals(path) ||path == null) {
                 // POST /products for creating a new product
                 Product newProduct = objectMapper.readValue(req.getInputStream(), Product.class);
                 Product createdProduct = productService.createProduct(newProduct);
