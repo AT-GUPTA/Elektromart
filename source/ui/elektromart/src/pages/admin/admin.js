@@ -3,12 +3,18 @@ import "./admin.css";
 //import products from "../products/products.json";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+function uuidv4() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
 const Admin = () => {
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   const [showEditProductForm, setShowEditProductForm] = useState(false);
   const [showAddAdminForm, setShowAddAdminForm] = useState(false);
   const [showAllProducts, setShowAllProducts] = useState(false);
-
 
   const [productData, setProductData] = useState({
     name: "",
@@ -99,6 +105,13 @@ const Admin = () => {
 
   const handleAddProductSubmit = (e) => {
     e.preventDefault();
+    const randomSKU = uuidv4();
+
+    setProductData({
+      ...productData,
+      sku: randomSKU,
+      urlSlug: productData.name.toLowerCase().replace(/ /g, "-"), // Generate urlSlug based on product name
+    });
     // Make a POST request to create a new product
     fetch("http://localhost:8080/Elektromart/products/", {
       method: "POST",
@@ -249,32 +262,26 @@ const Admin = () => {
             />
           </div>
           <div className="input-group mt-3">
-            <label htmlFor="productSKU" className="input-group-text">
-              Product SKU:
+            <label htmlFor="productSKU">
             </label>
             <input
               id="productSKU"
-              type="text"
+              type="hidden"
               className="form-control"
               name="sku"
               value={productData.sku}
               onChange={handleFormChange}
-              required
             />
           </div>
-
           <div className="input-group mt-3">
-            <label htmlFor="productImageUrl" className="input-group-text">
-              Product Image URL:
-            </label>
+            <label htmlFor="urlSlug"></label>
             <input
-              id="productImageUrl"
-              type="text"
+              id="urlSlug"
+              type="hidden"
               className="form-control"
               name="urlSlug"
               value={productData.urlSlug}
               onChange={handleFormChange}
-              required
             />
           </div>
           <div className="input-group mt-3">
@@ -403,11 +410,11 @@ const Admin = () => {
           </div>
 
           <div className="input-group mt-3">
-            <label htmlFor="productImageUrl" className="input-group-text">
-              Product Image URL:
+            <label htmlFor="urlSlug" className="input-group-text">
+              URL Slug:
             </label>
             <input
-              id="productImageUrl"
+              id="urlSlug"
               type="text"
               className="form-control"
               name="urlSlug"
