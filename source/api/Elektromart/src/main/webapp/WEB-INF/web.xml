@@ -43,5 +43,9 @@
         <servlet-name>H2Console</servlet-name>
         <url-pattern>/console/*</url-pattern>
     </servlet-mapping>
+    <listener>
+        <listener-class>com.elektromart.utilis.AppInitializer</listener-class>
+    </listener>
+
 </web-app>
 

@@ -3,7 +3,7 @@ import "../login/Form.css";
 import {Link, useNavigate} from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Form = () => {
+const Form = ({role}) => {
     const [username, setUserName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -71,7 +71,7 @@ const Form = () => {
             });
             return;
         }
-        addUser({username, email, password});
+        addUser({username, email, password, role});
     };
 
     return (
@@ -160,6 +160,7 @@ const Form = () => {
                         value={"Sign Up!"}
                     />
                 </div>
+                <hr></hr>
             </form>
         </div>
     );

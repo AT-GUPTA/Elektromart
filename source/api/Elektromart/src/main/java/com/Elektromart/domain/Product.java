@@ -21,4 +21,6 @@ public class Product {
 
     @JsonProperty("isDelete")
     private boolean isDelete;
+
+    private int quantity;
 }

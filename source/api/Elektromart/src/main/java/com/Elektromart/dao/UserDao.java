@@ -12,12 +12,12 @@ import java.util.UUID;
 
 public class UserDao {
 
-    public User findByEmail(String email) {
-        String query = "SELECT * FROM users WHERE email = ?";
+    public User findByUsername(String username) {
+        String query = "SELECT * FROM users WHERE username = ?";
         try (Connection connection = DatabaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, email);
+            preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
@@ -38,7 +38,7 @@ public class UserDao {
     }
 
     public User createUser(User newUser) {
-        String cartId = UUID.randomUUID().toString(); // Generate a random cart ID
+        String cartId = UUID.randomUUID().toString();
 
         String query = "INSERT INTO Cart (id) VALUES (?)"; // Insert a new cart record
         try (Connection connection = DatabaseManager.getConnection();
@@ -66,8 +66,17 @@ public class UserDao {
                         newUser.setCartId(cartId);
                         return newUser;
                     }
+                } catch (SQLException e) {
+                    // Check if error is because of UNIQUE constraint violation
+                    if (e.getErrorCode() == 1062) { // 1062 -- MySQL error code for duplicate entry
+                        throw new IllegalArgumentException("Username or Email already exists.");
+                    } else {
+                        throw e; // If not, just re-throw the exception
+                    }
                 }
             }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         } catch (SQLException e) {
             e.printStackTrace();
         }

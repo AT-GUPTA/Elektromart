@@ -23,8 +23,8 @@ public class CartController extends HttpServlet {
             case "/get-cart":
                 getCart(req, resp);
                 break;
-            case "/create-cart":
-                createCart(resp);
+            case "/get-product-quantity":
+                getCartProductQuantity(req, resp);
                 break;
             default:
                 break;
@@ -37,6 +37,8 @@ public class CartController extends HttpServlet {
         switch (path) {
             case "/change-quantity" -> changeCartProductQuantity(req, resp);
             case "/delete-cart-product" -> deleteProductFromCart(req, resp);
+            case "/add-product-to-cart" -> addProductToCart(req, resp);
+            case "/create-cart" -> createCart(resp);
             default -> {
             }
         }
@@ -53,6 +55,33 @@ public class CartController extends HttpServlet {
                 .build();
         writeResponse(resp, jsonResponse);
     }
+
+    private void getCartProductQuantity(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String cartId = req.getParameter("cartId");
+        String productSlug = req.getParameter("productSlug");
+
+        int quantity = cartService.getProductQuantity(cartId, productSlug);
+
+        resp.setContentType("application/json");
+        JsonObject jsonResponse = Json.createObjectBuilder()
+                .add("status", "SUCCESS")
+                .add("message", "Product quantity fetched successfully.")
+                .add("quantity", quantity)
+                .build();
+        writeResponse(resp, jsonResponse);
+    }
+
+    private void addProductToCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String cartId = req.getParameter("cartId");
+        String productSlug = req.getParameter("productSlug");
+        int quantity = Integer.parseInt(req.getParameter("quantity"));
+
+        boolean result = cartService.addProductToCart(cartId, productSlug, quantity);
+        resp.setContentType("application/json");
+        JsonObject jsonResponse = buildJsonResponse(result ? "SUCCESS" : "FAILURE", result ? "Product added to cart successfully." : "Couldn't add product to cart.");
+        writeResponse(resp, jsonResponse);
+    }
+
 
     private void createCart(HttpServletResponse resp) throws IOException {
         String cartId = cartService.createCart();

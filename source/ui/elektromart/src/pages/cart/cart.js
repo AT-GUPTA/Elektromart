@@ -9,7 +9,7 @@ const Cart = () => {
 
     useEffect(() => {
         const cartId = localStorage.getItem("cart_id");
-        fetch(`http://localhost:8080/Elektromart_war/cart/getCart?cartId=${cartId}`)
+        fetch(`http://localhost:8080/Elektromart_war/cart/get-cart?cartId=${cartId}`)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -138,7 +138,7 @@ const Cart = () => {
                 {cartItems.map((item, index) => (
                     <div className="row mb-3 border-bottom pb-3" key={index}>
                         <div className="col-2">
-                            <img className="img-fluid" src={item.imageUrl} alt={item.name}/>
+                            <img className="img-fluid" src={"../../images/iphone.jpg"} alt={item.name}/>
                         </div>
                         <div className="col">
                             <div className="row text-muted">{item.name}</div>
