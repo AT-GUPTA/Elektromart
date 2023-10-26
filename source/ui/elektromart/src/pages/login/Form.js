@@ -32,7 +32,7 @@ const Form = ({authentication, setRoleId}) => {
         localStorage.setItem("cart_id", jsonResponse["cartId"]);
 
         if (isLoggedIn) {
-            authentication(true);
+            authentication(true, roleId);
             setRoleId(roleId);
             Swal.fire({
                 title: "Login Success!",

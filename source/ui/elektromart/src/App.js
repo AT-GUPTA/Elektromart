@@ -26,11 +26,11 @@ function App() {
         return initialValue || null;
     });
 
-    const allowAuth = async (doAllow, roleId = null) => {
+    const allowAuth = async (doAllow, roleId) => {
         setIsAuth(doAllow);
         setRoleId(roleId);
         localStorage.setItem("isAuth", JSON.stringify(doAllow));
-        localStorage.setItem("roleId", JSON.stringify(roleId)); // Store the roleId, not doAllow
+        localStorage.setItem("roleId", JSON.stringify(roleId));
     };
 
     const logout = () => {
