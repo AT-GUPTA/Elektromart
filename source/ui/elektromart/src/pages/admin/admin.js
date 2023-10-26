@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./admin.css";
-import products from "../products/products.json";
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import products from "../products/products.json";
+import "bootstrap/dist/css/bootstrap.min.css";
 
+function uuidv4() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
 const Admin = () => {
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   const [showEditProductForm, setShowEditProductForm] = useState(false);
@@ -10,16 +17,32 @@ const Admin = () => {
   const [showAllProducts, setShowAllProducts] = useState(false);
 
   const [productData, setProductData] = useState({
-    productName: "",
-    productImageUrl: "",
-    productPrice: "",
-    discount: "",
+    name: "",
+    description: "",
+    vendor: "",
+    urlSlug: "",
+    sku: "",
+    price: "",
+    discountPercent: "",
     isFeatured: false,
-    id: Math.floor(Math.random() * 1000),
+    isDelete: false,
   });
 
-  const [editProductId, setEditProductId] = useState("");
-  const [productList, setProductList] = useState(products); // Use the imported products
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    // Fetch products from the API endpoint
+    fetch("http://localhost:8080/Elektromart/products/")
+      .then((response) => response.json())
+      .then((data) => {
+        setProducts(data);
+        setProductList(data); // Update product list here
+      })
+      .catch((error) => console.error("Error fetching products: ", error));
+  }, []);
+
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [productList, setProductList] = useState(products);
 
   const [adminData, setAdminData] = useState({
     adminEmail: "",
@@ -31,28 +54,28 @@ const Admin = () => {
     setShowAddProductForm(true);
     setShowEditProductForm(false);
     setShowAddAdminForm(false);
-    setShowAllProducts(false)
+    setShowAllProducts(false);
   };
 
   const handleEditProductClick = () => {
     setShowAddProductForm(false);
     setShowEditProductForm(true);
     setShowAddAdminForm(false);
-    setShowAllProducts(false)
+    setShowAllProducts(false);
   };
 
   const handleViewAllProductClick = () => {
     setShowAddProductForm(false);
     setShowEditProductForm(false);
     setShowAddAdminForm(false);
-    setShowAllProducts(true)
+    setShowAllProducts(true);
   };
 
   const handleAddAdminClick = () => {
     setShowAddProductForm(false);
     setShowEditProductForm(false);
     setShowAddAdminForm(true);
-    setShowAllProducts(false)
+    setShowAllProducts(false);
   };
 
   const handleFormChange = (e) => {
@@ -62,34 +85,13 @@ const Admin = () => {
       [name]: name === "isFeatured" ? e.target.checked : value,
     });
   };
-
-  const handleEditProductIdChange = (e) => {
-    const selectedProductId = e.target.value;
-    setEditProductId(selectedProductId);
-  
-    // Find the selected product in the products array
-    const selectedProduct = products.find((product) => product.id === selectedProductId);
-  
+  const handleProductSelect = (productId) => {
+    const selectedProduct = products.find(
+      (product) => product.id === productId
+    );
     if (selectedProduct) {
-      // Autofill the product data fields with the selected product's details
-      setProductData({
-        productName: selectedProduct.name,
-        productImageUrl: selectedProduct.image,
-        productPrice: selectedProduct.price.toFixed(2),
-        discount: "",
-        isFeatured: false,
-        id: selectedProduct.id,
-      });
-    } else {
-      // If the selected product is not found, clear the product data fields
-      setProductData({
-        productName: "",
-        productImageUrl: "",
-        productPrice: "",
-        discount: "",
-        isFeatured: false,
-        id: "",
-      });
+      setSelectedProduct(selectedProduct);
+      setProductData(selectedProduct);
     }
   };
 
@@ -103,29 +105,89 @@ const Admin = () => {
 
   const handleAddProductSubmit = (e) => {
     e.preventDefault();
-    console.log("Product data submitted:", productData);
+    const randomSKU = uuidv4();
+
     setProductData({
-      productName: "",
-      productImageUrl: "",
-      productPrice: "",
-      discount: "",
-      isFeatured: false,
-      id: Math.floor(Math.random() * 1000),
+      ...productData,
+      sku: randomSKU,
+      urlSlug: productData.name.toLowerCase().replace(/ /g, "-"), // Generate urlSlug based on product name
     });
+    // Make a POST request to create a new product
+    fetch("http://localhost:8080/Elektromart/products/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(productData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Close the modal for adding a new product
+          setShowAddProductForm(false);
+
+          return response.json(); // Parse the response if it's OK
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => {
+        setProducts([...products, data]);
+        setProductData({
+          name: "",
+          description: "",
+          vendor: "",
+          urlSlug: "",
+          sku: "",
+          price: "",
+          discountPercent: "",
+          isFeatured: false,
+          isDelete: false,
+        });
+      })
+      .catch((error) => console.error("Error adding product: ", error));
   };
 
   const handleEditProductSubmit = (e) => {
     e.preventDefault();
-    console.log("Editing product with ID:", editProductId);
-    setEditProductId("");
-    setProductData({
-      productName: "",
-      productImageUrl: "",
-      productPrice: "",
-      discount: "",
-      isFeatured: false,
-      id: Math.floor(Math.random() * 1000),
-    });
+    if (!selectedProduct) {
+      return;
+    }
+
+    // Make a POST request to update the selected product
+    fetch(`http://localhost:8080/Elektromart/products/${selectedProduct.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(productData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Clear the selected product and form fields
+          setSelectedProduct(null);
+          setProductData({
+            name: "",
+            description: "",
+            vendor: "",
+            urlSlug: "",
+            sku: "",
+            price: "",
+            discountPercent: "",
+            isFeatured: false,
+            isDelete: false,
+          });
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => {
+        // Update the products state with the updated product
+        const updatedProducts = products.map((product) =>
+          product.id === data.id ? data : product
+        );
+        setProducts(updatedProducts);
+        setShowEditProductForm(false); // Close the edit product form
+      })
+      .catch((error) => console.error("Error editing product: ", error));
   };
 
   const handleAddAdminSubmit = (e) => {
@@ -141,14 +203,22 @@ const Admin = () => {
   return (
     <div className="admin-container">
       <h2>Admin Panel</h2>
-      <button className="adminButton" onClick={handleAddProductClick}>Add New Product</button>
-      <button className="adminButton" onClick={handleEditProductClick}>Edit a Product</button>
-      <button className="adminButton" onClick={handleViewAllProductClick}>View all Products</button>
-      <button className="adminButton" onClick={handleAddAdminClick}>Add a New Admin</button>
+      <button className="adminButton" onClick={handleAddProductClick}>
+        Add New Product
+      </button>
+      <button className="adminButton" onClick={handleEditProductClick}>
+        Edit a Product
+      </button>
+      <button className="adminButton" onClick={handleViewAllProductClick}>
+        View all Products
+      </button>
+      <button className="adminButton" onClick={handleAddAdminClick}>
+        Add a New Admin
+      </button>
 
       {showAddProductForm && (
         <form className="product-form" onSubmit={handleAddProductSubmit}>
-          {/* Product fields similar to Sign Up form */}
+          {/* Product fields */}
           <div className="input-group mt-3">
             <label htmlFor="productName" className="input-group-text">
               Product Name:
@@ -157,24 +227,61 @@ const Admin = () => {
               id="productName"
               type="text"
               className="form-control"
-              name="productName"
-              value={productData.productName}
+              name="name" // Match the key in productData
+              value={productData.name}
+              onChange={handleFormChange}
+              required
+            />
+          </div>
+
+          <div className="input-group mt-3">
+            <label htmlFor="productDescription" className="input-group-text">
+              Product Description:
+            </label>
+            <textarea
+              id="productDescription"
+              className="form-control"
+              name="description"
+              value={productData.description}
               onChange={handleFormChange}
               required
             />
           </div>
           <div className="input-group mt-3">
-            <label htmlFor="productImageUrl" className="input-group-text">
-              Product Image URL:
+            <label htmlFor="productVendor" className="input-group-text">
+              Product Vendor:
             </label>
             <input
-              id="productImageUrl"
+              id="productVendor"
               type="text"
               className="form-control"
-              name="productImageUrl"
-              value={productData.productImageUrl}
+              name="vendor"
+              value={productData.vendor}
               onChange={handleFormChange}
               required
+            />
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="productSKU">
+            </label>
+            <input
+              id="productSKU"
+              type="hidden"
+              className="form-control"
+              name="sku"
+              value={productData.sku}
+              onChange={handleFormChange}
+            />
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="urlSlug"></label>
+            <input
+              id="urlSlug"
+              type="hidden"
+              className="form-control"
+              name="urlSlug"
+              value={productData.urlSlug}
+              onChange={handleFormChange}
             />
           </div>
           <div className="input-group mt-3">
@@ -185,22 +292,22 @@ const Admin = () => {
               id="productPrice"
               type="number"
               className="form-control"
-              name="productPrice"
-              value={productData.productPrice}
+              name="price"
+              value={productData.price}
               onChange={handleFormChange}
               required
             />
           </div>
           <div className="input-group mt-3">
-            <label htmlFor="discount" className="input-group-text">
-              Discount:
+            <label htmlFor="productDiscount" className="input-group-text">
+              Discount Percent:
             </label>
             <input
-              id="discount"
+              id="productDiscount"
               type="number"
               className="form-control"
-              name="discount"
-              value={productData.discount}
+              name="discountPercent"
+              value={productData.discountPercent}
               onChange={handleFormChange}
             />
           </div>
@@ -222,7 +329,6 @@ const Admin = () => {
           </button>
         </form>
       )}
-
       {showEditProductForm && (
         <form className="product-form" onSubmit={handleEditProductSubmit}>
           {/* Product selection dropdown */}
@@ -234,8 +340,8 @@ const Admin = () => {
               id="editProductId"
               className="form-select"
               name="editProductId"
-              value={editProductId}
-              onChange={handleEditProductIdChange}
+              value={selectedProduct ? selectedProduct.id : ""}
+              onChange={(e) => handleProductSelect(parseInt(e.target.value))}
               required
             >
               <option value="">-- Select a product --</option>
@@ -255,22 +361,64 @@ const Admin = () => {
               id="productName"
               type="text"
               className="form-control"
-              name="productName"
-              value={productData.productName}
+              name="name"
+              value={productData.name}
               onChange={handleFormChange}
               required
             />
           </div>
           <div className="input-group mt-3">
-            <label htmlFor="productImageUrl" className="input-group-text">
-              Product Image URL:
+            <label htmlFor="productDescription" className="input-group-text">
+              Product Description:
+            </label>
+            <textarea
+              id="productDescription"
+              className="form-control"
+              name="description"
+              value={productData.description}
+              onChange={handleFormChange}
+              required
+            />
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="productVendor" className="input-group-text">
+              Product Vendor:
             </label>
             <input
-              id="productImageUrl"
+              id="productVendor"
               type="text"
               className="form-control"
-              name="productImageUrl"
-              value={productData.productImageUrl}
+              name="vendor"
+              value={productData.vendor}
+              onChange={handleFormChange}
+              required
+            />
+          </div>
+          <div className="input-group mt-3">
+            <label htmlFor="productSKU" className="input-group-text">
+              Product SKU:
+            </label>
+            <input
+              id="productSKU"
+              type="text"
+              className="form-control"
+              name="sku"
+              value={productData.sku}
+              onChange={handleFormChange}
+              required
+            />
+          </div>
+
+          <div className="input-group mt-3">
+            <label htmlFor="urlSlug" className="input-group-text">
+              URL Slug:
+            </label>
+            <input
+              id="urlSlug"
+              type="text"
+              className="form-control"
+              name="urlSlug"
+              value={productData.urlSlug}
               onChange={handleFormChange}
               required
             />
@@ -283,22 +431,22 @@ const Admin = () => {
               id="productPrice"
               type="number"
               className="form-control"
-              name="productPrice"
-              value={productData.productPrice}
+              name="price"
+              value={productData.price}
               onChange={handleFormChange}
               required
             />
           </div>
           <div className="input-group mt-3">
-            <label htmlFor="discount" className="input-group-text">
-              Discount:
+            <label htmlFor="productDiscount" className="input-group-text">
+              Discount Percent:
             </label>
             <input
-              id="discount"
+              id="productDiscount"
               type="number"
               className="form-control"
-              name="discount"
-              value={productData.discount}
+              name="discountPercent"
+              value={productData.discountPercent}
               onChange={handleFormChange}
             />
           </div>
@@ -321,43 +469,47 @@ const Admin = () => {
         </form>
       )}
 
-    {showAllProducts && (
-         <div className="container">
-         {showAllProducts && (
-           <div>
-             <h1 className="d-flex align-items-center">
-              All Products
-              <a className="downloadLink" href="http://localhost:8080/Elektromart_war/products/download" download="products.json">
-                <i className="bi bi-download"></i>
-              </a>
-             </h1>
-             <table className="table table-striped">
-               <thead>
-                 <tr>
-                   <th>ID</th>
-                   <th>Name</th>
-                   <th>Description</th>
-                   <th>Vendor</th>
-                   <th>SKU</th>
-                   <th>Price</th>
-                 </tr>
-               </thead>
-               <tbody>
-                 {productList.map((product) => (
-                   <tr key={product.id}>
-                     <td>{product.id}</td>
-                     <td>{product.name}</td>
-                     <td>{product.description}</td>
-                     <td>{product.vendor}</td>
-                     <td>{product.sku}</td>
-                     <td>${product.price.toFixed(2)}</td>
-                   </tr>
-                 ))}
-               </tbody>
-             </table>
-           </div>
-         )}
-       </div>
+      {showAllProducts && (
+        <div className="container">
+          {showAllProducts && (
+            <div>
+              <h1 className="d-flex align-items-center">
+                All Products
+                <a
+                  className="downloadLink"
+                  href="http://localhost:8080/Elektromart_war/products/download"
+                  download="products.json"
+                >
+                  <i className="bi bi-download"></i>
+                </a>
+              </h1>
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Vendor</th>
+                    <th>SKU</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {productList.map((product) => (
+                    <tr key={product.id}>
+                      <td>{product.id}</td>
+                      <td>{product.name}</td>
+                      <td>{product.description}</td>
+                      <td>{product.vendor}</td>
+                      <td>{product.sku}</td>
+                      <td>${product.price.toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       )}
 
       {showAddAdminForm && (

@@ -5,12 +5,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Card, Button } from "react-bootstrap";
 
 function SingleProduct() {
-  const { productId } = useParams();
+  const { urlSlug } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/Elektromart/products/${productId}`)
+    fetch(`http://localhost:8080/Elektromart/products/${urlSlug}`)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -23,7 +23,7 @@ function SingleProduct() {
       .catch((error) => {
         console.error("Error fetching product data: ", error);
       });
-  }, [productId]);
+  }, [urlSlug]);
 
   const handleQuantityChange = (event) => {
     setQuantity(event.target.value);

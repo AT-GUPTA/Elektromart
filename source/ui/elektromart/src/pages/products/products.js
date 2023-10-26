@@ -23,7 +23,7 @@ function Products() {
       <h1>Product List</h1>
       <div className="row">
         {products.map((product) => (
-          <div className="col-md-4 mb-4" key={product.id}>
+          <div className="col-md-4 mb-4" key={product.urlSlug}>
             <div className="card">
               <img
               src ={"../../images/iphone.jpg"}
@@ -37,7 +37,7 @@ function Products() {
                 <p className="card-text">Vendor: {product.vendor}</p>
                 <div className="d-flex justify-content-between align-items-center">
                   <p>Price: ${product.price.toFixed(2)}</p>
-                  <Link to={`/product/${product.id}`} className="btn btn-primary productsButton">
+                  <Link to={`/product/${product.urlSlug}`} className="btn btn-primary productsButton">
                     Buy
                   </Link>
                 </div>

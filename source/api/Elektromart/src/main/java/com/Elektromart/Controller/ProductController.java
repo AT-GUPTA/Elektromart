@@ -40,6 +40,20 @@ public class ProductController extends HttpServlet {
                 } else {
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found");
                 }
+            }
+            else if (path.matches("/.+")) {
+                // GET /products/{urlSlug}
+                String urlSlug = path.substring(1);
+                List<Product> products = productService.getProducts();
+                Product product = products.stream().filter(e -> e.getUrlSlug().equalsIgnoreCase(urlSlug)).toList().get(0);
+
+                if (product != null) {
+                    String productJson = objectMapper.writeValueAsString(product);
+                    resp.setContentType("application/json");
+                    resp.getWriter().write(productJson);
+                } else {
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found");
+                }
             } else if ("/download".equals(path)) {
                 // GET /products/download
                 List<Product> products = productService.getProducts();
