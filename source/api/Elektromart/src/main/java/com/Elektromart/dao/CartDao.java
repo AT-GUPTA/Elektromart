@@ -1,13 +1,33 @@
 package com.elektromart.dao;
 
 import com.elektromart.domain.Cart;
+import com.elektromart.domain.Product;
 import com.elektromart.utilis.DatabaseManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CartDao {
+
+    public boolean addProductToCart(String cartId, String productSlug, int quantity) {
+        String SQL = "INSERT INTO CartProduct(cart_id, product_slug, quantity) VALUES(?, ?, ?)";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL)) {
+
+            stmt.setString(1, cartId);
+            stmt.setString(2, productSlug);
+            stmt.setInt(3, quantity);
+            stmt.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     public Cart getCartById(String cartId) {
         String SQL = "SELECT * FROM Cart WHERE id = ?";
@@ -29,7 +49,9 @@ public class CartDao {
         return null;
     }
 
-    public ResultSet getCartProducts(String cartId) {
+    public List<Product> getCartProducts(String cartId) {
+        List<Product> products = new ArrayList<>();
+
         String SQL = "SELECT p.id, p.url_slug, p.name, p.description, p.price, cp.quantity " +
                 "FROM CartProduct cp JOIN Product p ON cp.product_slug = p.url_slug " +
                 "WHERE cp.cart_id = ?";
@@ -38,12 +60,44 @@ public class CartDao {
              PreparedStatement stmt = conn.prepareStatement(SQL)) {
 
             stmt.setString(1, cartId);
-            return stmt.executeQuery();
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Product product = new Product();
+                    product.setId(rs.getInt("id"));
+                    product.setUrlSlug(rs.getString("url_slug"));
+                    product.setName(rs.getString("name"));
+                    product.setDescription(rs.getString("description"));
+                    product.setPrice(rs.getFloat("price"));
+                    product.setQuantity(rs.getInt("quantity"));
+
+                    products.add(product);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  // Consider using a logger here.
+        }
+
+        return products;
+    }
+
+
+    public int getProductQuantity(String cartId, String productSlug) {
+        String SQL = "SELECT quantity FROM CartProduct WHERE cart_id = ? AND product_slug = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL)) {
+
+            stmt.setString(1, cartId);
+            stmt.setString(2, productSlug);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("quantity");
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return 0;
     }
+
 
     public boolean changeItemQuantity(String cartId, String productSlug, int quantity) {
         String SQL = "UPDATE CartProduct SET quantity = ? WHERE cart_id = ? AND product_slug = ?";

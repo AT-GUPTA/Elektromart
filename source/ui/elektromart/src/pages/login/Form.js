@@ -4,7 +4,7 @@ import {Link, useNavigate} from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Form = ({authentication, setRoleId}) => {
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +32,7 @@ const Form = ({authentication, setRoleId}) => {
         localStorage.setItem("cart_id", jsonResponse["cartId"]);
 
         if (isLoggedIn) {
-            authentication(true);
+            authentication(true, roleId);
             setRoleId(roleId);
             Swal.fire({
                 title: "Login Success!",
@@ -52,7 +52,7 @@ const Form = ({authentication, setRoleId}) => {
         } else {
             await Swal.fire({
                 title: "Login Failure",
-                text: "Invalid email or password",
+                text: "Invalid username or password",
                 icon: "warning",
                 confirmButtonText: "Try Again",
             });
@@ -61,24 +61,24 @@ const Form = ({authentication, setRoleId}) => {
 
     const loginHandler = (e) => {
         e.preventDefault();
-        loginVerification({email, password});
+        loginVerification({username, password});
     };
 
     return (
         <div className="mx-4 my-2">
             <form method="post" onSubmit={loginHandler}>
                 <div className="input-group col-lg mt-3 my-md-none">
-                    <label htmlFor="useremail" className="input-group-text">
+                    <label htmlFor="username" className="input-group-text">
                         <i className="bi bi-envelope"></i>
                     </label>
                     <input
-                        id="useremail"
-                        type="email"
+                        id="username"
+                        type="text"
                         className="form-control input-box"
                         maxLength="40"
-                        placeholder="Email Address"
+                        placeholder="Username"
                         autoComplete="off"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value)}
                         required
                     />
                 </div>

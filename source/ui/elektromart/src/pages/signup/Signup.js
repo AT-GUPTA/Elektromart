@@ -8,7 +8,7 @@ const Signup = () => {
             <div className="signup-box container text-bg-light rounded-5">
                 <h3 className="text-center pt-2 mt-2 fw-semibold">Sign Up</h3>
                 <hr/>
-                <Form/>
+                <Form role="1"/>
             </div>
         </div>
     );

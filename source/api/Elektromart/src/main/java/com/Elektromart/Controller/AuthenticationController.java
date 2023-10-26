@@ -31,9 +31,9 @@ public class AuthenticationController extends HttpServlet {
         }
         if ("/login".equals(path)) {
             JsonObject jsonInput = Json.createReader(new StringReader(requestBody.toString())).readObject();
-            String email = jsonInput.getString("email");
+            String username = jsonInput.getString("username");
             String password = jsonInput.getString("password");
-            User user = userService.authenticateUser(email, password);
+            User user = userService.authenticateUser(username, password);
             if (user != null) {
                 HttpSession session = req.getSession();
                 session.setAttribute("id", user.getUserId());
@@ -73,31 +73,32 @@ public class AuthenticationController extends HttpServlet {
             String username = jsonInput.getString("username");
             String email = jsonInput.getString("email");
             String password = jsonInput.getString("password");
-
+            String role = jsonInput.getString("role");
 
             User newUser = new User();
             newUser.setUsername(username);
             newUser.setEmail(email);
             newUser.setPassword(password);
-            newUser.setRoleId(1L);
+            newUser.setRoleId(Long.valueOf(role));
             newUser.setStatus("ACTIVE");
-            newUser = userService.createUser(newUser);
-            boolean isAccountCreated = newUser != null;
 
             resp.setContentType("application/json");
             JsonObject jsonResponse;
-            if (isAccountCreated) {
+
+            try {
+                newUser = userService.createUser(newUser);
                 jsonResponse = Json.createObjectBuilder()
                         .add("status", "SUCCESS")
                         .add("cartId", newUser.getCartId())
                         .add("message", "Account created!")
                         .build();
-            } else {
+            } catch (IllegalArgumentException e) {
                 jsonResponse = Json.createObjectBuilder()
                         .add("status", "FAILURE")
-                        .add("message", "Account creation failed.")
+                        .add("message", e.getMessage())
                         .build();
             }
+
             resp.getWriter().write(jsonResponse.toString());
         }
     }

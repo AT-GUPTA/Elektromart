@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Swal from "sweetalert2";
 
-function Navigation({isAuth, roleId}) {
+function Navigation({isAuth, roleId, logout}) {
     return (
         <div>
             <header className="banner" role="banner">
@@ -14,9 +14,9 @@ function Navigation({isAuth, roleId}) {
                         <img src="/images/elektromart.png"/>
                     </a>
                     <ul className="menuNav">
-                       <li className="dropdown nav-link nav-link-fade-up">
-                        <a href="/home">Home</a>
-                      </li>
+                        <li className="dropdown nav-link nav-link-fade-up">
+                            <a href="/home">Home</a>
+                        </li>
                         <li className="dropdown nav-link nav-link-fade-up transition-all duration-700">
                             <a href="/products">Products</a>
                         </li>
@@ -39,8 +39,7 @@ function Navigation({isAuth, roleId}) {
                             <div className="dropdown-menu" aria-labelledby="accountDropdown">
                                 {isAuth ? (
                                     <a className="dropdown-item" href="#" onClick={() => {
-                                        localStorage.removeItem("isAuth");
-                                        localStorage.removeItem("cart_id");
+                                        logout();
                                         Swal.fire({
                                             title: "Logged Out Successfully!",
                                             text: "You've been successfully logged out",

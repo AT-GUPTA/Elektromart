@@ -5,3 +5,7 @@
     transform: translate(-50%, -50%);
     width: 40% !important;
 }
+
+.signup-box-admin {
+    width: 50% !important;
+}
