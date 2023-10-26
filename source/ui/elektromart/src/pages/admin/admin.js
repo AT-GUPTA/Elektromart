@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./admin.css";
 //import products from "../products/products.json";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Swal from "sweetalert2";
+
 
 function uuidv4() {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -49,6 +51,54 @@ const Admin = () => {
     adminName: "",
     adminToken: "",
   });
+
+  useEffect(() => {
+    const downloadLink = document.getElementById('downloadLink');
+
+    if (showAllProducts && downloadLink) {
+      downloadLink.addEventListener('click', handleDownloadClick);
+    }
+
+    return () => {
+      if (downloadLink) {
+        downloadLink.removeEventListener('click', handleDownloadClick);
+      }
+    };
+  }, [showAllProducts]);
+
+  const handleDownloadClick = async (e) => {
+    try {
+      const response = await fetch('http://localhost:8080/Elektromart_war/products/download');
+      
+      console.log(response.ok ? 'Download successful' : 'Download failed');
+      if (!response.ok) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'An error occurred while downloading the products.',
+        });
+      } else {
+        const blob = await response.blob();
+        const blobURL = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = blobURL;
+        a.download = 'products.json';
+        document.body.appendChild(a);
+        a.click();
+
+        URL.revokeObjectURL(blobURL);
+
+        document.body.removeChild(a);
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'An error occurred while downloading the products.',
+        });
+    }
+  };
 
   const handleAddProductClick = () => {
     setShowAddProductForm(true);
@@ -475,11 +525,9 @@ const Admin = () => {
             <div>
               <h1 className="d-flex align-items-center">
                 All Products
-                <a
-                  className="downloadLink"
-                  href="http://localhost:8080/Elektromart_war/products/download"
-                  download="products.json"
-                >
+                <a className="downloadLink" id="downloadLink" href="#">
+                    <i className="bi bi-download"></i>
+                </a>
                   <i className="bi bi-download"></i>
                 </a>
               </h1>

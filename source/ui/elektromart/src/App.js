@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
 import Login from './pages/login/Login';
 import Signup from './pages/signup/Signup';
 import Home from './pages/home/home'
@@ -35,10 +35,13 @@ function App() {
                         <Route exact path="/signup" element={<Signup/>}/>
                         <Route path="/home" element={<Home/>} exact/>
                         <Route path="/" element={<Home/>} exact/>
+                        <Route
+                            path="/admin"
+                            element={isAuth ? <Admin /> : <Navigate to="/home" replace={true} />}
+                        />
                         <Route path="/admin" element={<Admin/>} exact/>
-                        <Route path="/product/:urlSlug" element={<SingleProduct/>}/> <Route path="/products"
-                                                                                              element={<Products/>}
-                                                                                              exact/>
+                        <Route path="/product/:urlSlug" element={<SingleProduct/>}/> 
+                        <Route path="/products" element={<Products/>} exact/>
                         <Route path="/products/:id" element={<ProductDetail/>}/>
                         <Route path="/cart" element={<Cart/>} exact/>
                     </Routes>

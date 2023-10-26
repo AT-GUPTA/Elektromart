@@ -1,8 +1,9 @@
 import React from 'react';
+import '../../styles/featured.css'
 
 function Featured() {
     return (
-        <div className='mt-5'>
+        <div className='mt-5 featured-container'>
             <div className='d-flex justify-content-center'>
             <h2><u>Featured Products</u></h2>
             </div>
