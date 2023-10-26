@@ -1,10 +1,10 @@
 import React from 'react';
 import Navigation from './navbar';
 
-function Layout({children}) {
+function Layout({isAuth, children}) {
     return (
         <>
-        <Navigation />
+        <Navigation isAuth={isAuth}/>
         <div className="container mt-5">
             {children}
         </div>

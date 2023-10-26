@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Import Bootstrap JavaScript
 
 
-function Navigation() {
+function Navigation({isAuth}) {
   return (
     <div>
       <header className="banner" role="banner">
@@ -14,11 +14,11 @@ function Navigation() {
             <img src="/images/elektromart.png" />
           </a>
           <ul className="menuNav">
+          <li className="dropdown nav-link nav-link-fade-up">
+              <a href="/home">Home</a>
+            </li>
             <li className="dropdown nav-link nav-link-fade-up transition-all duration-700">
               <a href="/products">Products</a>
-            </li>
-            <li className="dropdown nav-link nav-link-fade-up">
-              <a href="/products">Featured</a>
             </li>
             <p className='navLine absolute bg-red-600 w-1 font-extralight h-9 z-50'></p>
             <a href="/cart" className="navIcon">
@@ -38,7 +38,7 @@ function Navigation() {
               </a>
               <div className="dropdown-menu" aria-labelledby="accountDropdown">
                 <a className="dropdown-item" href="/login">Customer Login</a>
-                <a className="dropdown-item" href="/admin">Admin</a>
+                {isAuth && <a className="dropdown-item" href="/admin">Admin</a>}
               </div>
             </div>
           </ul>

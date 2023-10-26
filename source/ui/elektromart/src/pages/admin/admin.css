@@ -7,7 +7,7 @@ body {
 .admin-container {
   text-align: center;
   margin: 20px;
-  background-color: #586f7c;
+  background-color: lightblue;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -32,6 +32,7 @@ body {
   margin-left: 10px;
   text-decoration: none;
   color: inherit;
+  margin-left: 20px;
 }
 
 .adminButton:hover {
