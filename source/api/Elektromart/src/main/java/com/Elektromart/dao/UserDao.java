@@ -22,13 +22,13 @@ public class UserDao {
 
             if (rs.next()) {
                 User user = new User();
-                user.setUserId(rs.getLong("userId"));
+                user.setUserId(rs.getLong("user_id"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 user.setEmail(rs.getString("email"));
-                user.setRoleId(rs.getLong("roleId"));
+                user.setRoleId(rs.getLong("role_id"));
                 user.setStatus(rs.getString("status"));
-                user.setCartId(rs.getString("cartId"));
+                user.setCartId(rs.getString("cart_id"));
                 return user;
             }
         } catch (Exception e) {

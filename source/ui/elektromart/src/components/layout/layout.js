@@ -1,13 +1,13 @@
 import React from 'react';
 import Navigation from './navbar';
 
-function Layout({isAuth, children}) {
+function Layout({children, isAuth, roleId}) {
     return (
         <>
-        <Navigation isAuth={isAuth}/>
-        <div className="container mt-5">
-            {children}
-        </div>
+            <Navigation isAuth={isAuth} roleId={roleId}/>
+            <div className="container mt-5">
+                {children}
+            </div>
         </>
     );
 }

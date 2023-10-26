@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "productSlug": "ip13p",
     "name": "iPhone 13 Pro",
     "description": "The iPhone 13 Pro is Apple's latest flagship smartphone, featuring a stunning Super Retina XDR display, A15 Bionic chip, and advanced camera system.",
     "price": 999.99,
@@ -9,6 +10,7 @@
   },
   {
     "id": 2,
+    "productSlug": "ip13p",
     "name": "Samsung Galaxy S21",
     "description": "The Samsung Galaxy S21 offers a sleek design, high-quality display, and a powerful processor for a smooth user experience.",
     "price": 799.99,
