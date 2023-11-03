@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import './cart.css';
-
+import Swal from "sweetalert2";
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -38,11 +38,26 @@ const Cart = () => {
             .then(response => response.json())
             .then(data => {
                 if (data.status !== 'SUCCESS') {
-                    console.error("Error updating quantity:", data.message);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: "Error updating cart. Please try again.",
+                    });
                 }
+
+                Swal.fire({
+                    icon: "success",
+                    title: "sucess!",
+                    text: "Cart updated successfully.",
+                    timer: 1000,
+                });
             })
             .catch(error => {
-                console.error("Error updating quantity:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: "Error updating cart. Please try again.",
+                });
             });
     };
 
@@ -80,11 +95,25 @@ const Cart = () => {
             .then(response => response.json())
             .then(data => {
                 if (data.status !== 'SUCCESS') {
-                    console.error("Error removing product:", data.message);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: "Error updating cart. Please try again.",
+                    });
                 }
+
+                Swal.fire({
+                    icon: "success",
+                    title: "success!",
+                    text: "Cart updated successfully.",
+                });
             })
             .catch(error => {
-                console.error("Error removing product:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: "Error updating cart. Please try again.",
+                });
             });
 
         const updatedCartItems = cartItems.filter(item => item.id !== product.id);
@@ -145,7 +174,7 @@ const Cart = () => {
                             <div className="row"><Link to={`/products/${item.id}`}>{item.name}</Link></div>
                         </div>
                         <div className="col text-center">
-                            $ {item.price}
+                            $ {item.price.toFixed(2)}
                         </div>
                         <div className="col">
                             <div className="d-flex justify-content-center">

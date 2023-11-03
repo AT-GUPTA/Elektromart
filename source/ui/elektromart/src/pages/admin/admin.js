@@ -18,6 +18,7 @@ const Admin = () => {
     const [showEditProductForm, setShowEditProductForm] = useState(false);
     const [showAddAdminForm, setShowAddAdminForm] = useState(false);
     const [showAllProducts, setShowAllProducts] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const [productData, setProductData] = useState({
         name: "",
@@ -32,6 +33,16 @@ const Admin = () => {
     });
 
     const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        if (errorMessage) {
+            Swal.fire({
+                icon: "error",
+                title: "Error!",
+                text: errorMessage,
+            });
+        }
+    }, [errorMessage]);
 
     useEffect(() => {
         // Fetch products from the API endpoint
@@ -68,16 +79,12 @@ const Admin = () => {
     }, [showAllProducts]);
 
     const handleDownloadClick = async (e) => {
-        try {
+       
             const response = await fetch('http://localhost:8080/Elektromart_war/products/download');
 
             console.log(response.ok ? 'Download successful' : 'Download failed');
             if (!response.ok) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'An error occurred while downloading the products.',
-                });
+               setErrorMessage('Download failed');
             } else {
                 const blob = await response.blob();
                 const blobURL = URL.createObjectURL(blob);
@@ -92,13 +99,7 @@ const Admin = () => {
 
                 document.body.removeChild(a);
             }
-        } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'An error occurred while downloading the products.',
-            });
-        }
+            
     };
 
     const handleAddProductClick = () => {
@@ -177,8 +178,9 @@ const Admin = () => {
                     setShowAddProductForm(false);
 
                     return response.json(); // Parse the response if it's OK
+                } else {
+                    setErrorMessage("Something went wrong when adding a new product.");
                 }
-                throw new Error("Network response was not ok.");
             })
             .then((data) => {
                 setProducts([...products, data]);
@@ -227,8 +229,9 @@ const Admin = () => {
                         isDelete: false,
                     });
                     return response.json();
+                } else {
+                    setErrorMessage("Something went wrong when editing a product.");
                 }
-                throw new Error("Network response was not ok.");
             })
             .then((data) => {
                 // Update the products state with the updated product

@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
+import Alert from 'react-bootstrap/Alert';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link} from 'react-router-dom';
 import "../../styles/products.css";
 
 function Products() {
     const [products, setProducts] = useState([]);
+    const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
         // Fetch products from the API endpoint
@@ -14,14 +16,22 @@ function Products() {
                 setProducts(data);
             })
             .catch((error) => {
-                console.error('Error fetching products: ', error);
+                setHasError(true);
             });
     }, []);
+
+    const variant = 'danger';
 
     return (
         <div className="container mt-5">
             <h1>Product List</h1>
-            <div className="row">
+            {hasError && 
+                <Alert key={variant} variant={variant}>
+                    Could not fetch the products. Please try again later!
+                </Alert>
+            }
+            {!hasError && 
+                <div className="row">
                 {products.map((product) => (
                     <div className="col-md-4 mb-4" key={product.urlSlug}>
                         <div className="card">
@@ -46,6 +56,8 @@ function Products() {
                     </div>
                 ))}
             </div>
+            }
+          
         </div>
     );
 }
