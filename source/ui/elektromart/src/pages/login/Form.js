@@ -16,7 +16,7 @@ const Form = ({authentication, setRoleId}) => {
     const passwordFieldType = showPassword ? "text" : "password";
 
     const loginVerification = async (user) => {
-        const res = await fetch(`http://localhost:8080/Elektromart_war/user/login`, {
+        const res = await fetch(`http://localhost:8080/api/user/login`, {
             method: "POST",
             mode: "cors",
             headers: {"Content-type": "application/json"},

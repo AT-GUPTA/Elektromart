@@ -1,7 +1,6 @@
 package com.elektrodevs.elektromart.service;
 
 import com.elektrodevs.elektromart.dao.ProductDao;
-import com.elektrodevs.elektromart.dao.ProductRepository;
 import com.elektrodevs.elektromart.domain.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

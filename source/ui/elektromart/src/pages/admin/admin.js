@@ -46,7 +46,7 @@ const Admin = () => {
 
     useEffect(() => {
         // Fetch products from the API endpoint
-        fetch("http://localhost:8080/Elektromart_war/products/")
+        fetch("http://localhost:8080/api/products/")
             .then((response) => response.json())
             .then((data) => {
                 setProducts(data);
@@ -80,7 +80,7 @@ const Admin = () => {
 
     const handleDownloadClick = async (e) => {
        
-            const response = await fetch('http://localhost:8080/Elektromart_war/products/download');
+            const response = await fetch('http://localhost:8080/api/products/download');
 
             console.log(response.ok ? 'Download successful' : 'Download failed');
             if (!response.ok) {
@@ -165,7 +165,7 @@ const Admin = () => {
             urlSlug: productData.name.toLowerCase().replace(/ /g, "-"), // Generate urlSlug based on product name
         });
         // Make a POST request to create a new product
-        fetch("http://localhost:8080/Elektromart_war/products/", {
+        fetch("http://localhost:8080/api/products/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -206,7 +206,7 @@ const Admin = () => {
         }
 
         // Make a POST request to update the selected product
-        fetch(`http://localhost:8080/Elektromart_war/products/${selectedProduct.id}`, {
+        fetch(`http://localhost:8080/api/products/${selectedProduct.id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
