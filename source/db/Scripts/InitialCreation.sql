@@ -14,14 +14,14 @@ CREATE TABLE Product (
 
 DROP TABLE IF EXISTS Cart;
 CREATE TABLE Cart (
-                      id VARCHAR NOT NULL PRIMARY KEY,
+                      id VARCHAR(255) NOT NULL PRIMARY KEY,
                       user_id BIGINT DEFAULT NULL,
                       temp_id VARCHAR(255) DEFAULT NULL
 );
 
 DROP TABLE IF EXISTS CartProduct;
 CREATE TABLE CartProduct (
-                             cart_id VARCHAR NOT NULL,
+                             cart_id VARCHAR(255) NOT NULL,
                              product_slug VARCHAR(100) UNIQUE NOT NULL,
                              quantity INT NOT NULL default 1,
                              PRIMARY KEY (cart_id, product_slug),
@@ -44,7 +44,7 @@ CREATE TABLE Users (
                        username VARCHAR(255) UNIQUE NOT NULL,
                        password VARCHAR(100) NOT NULL,
                        email VARCHAR(255) UNIQUE NOT NULL,
-                       role_id BIGINT,
+                       role_id int,
                        status VARCHAR(255),
                        cart_id VARCHAR(255),
                        FOREIGN KEY (role_id) REFERENCES Role(role_id),
