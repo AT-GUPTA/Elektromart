@@ -9,7 +9,7 @@ const Cart = () => {
 
     useEffect(() => {
         const cartId = localStorage.getItem("cart_id");
-        fetch(`http://localhost:8080/Elektromart_war/cart/get-cart?cartId=${cartId}`)
+        fetch(`http://localhost:8080/api/cart/get-cart?cartId=${cartId}`)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -28,7 +28,7 @@ const Cart = () => {
     }
 
     const updateQuantityAPI = (cartId, productSlug, quantity) => {
-        fetch(`http://localhost:8080/Elektromart_war/cart/change-quantity`, {
+        fetch(`http://localhost:8080/api/cart/change-quantity`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -85,7 +85,7 @@ const Cart = () => {
 
     const handleRemoveItem = (product) => {
         const cartId = localStorage.getItem("cart_id");
-        fetch(`http://localhost:8080/Elektromart_war/cart/delete-cart-product`, {
+        fetch(`http://localhost:8080/api/cart/delete-cart-product`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

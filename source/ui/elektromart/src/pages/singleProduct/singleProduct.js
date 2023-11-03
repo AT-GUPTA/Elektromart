@@ -13,7 +13,7 @@ function SingleProduct() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`http://localhost:8080/Elektromart_war/products/${urlSlug}`)
+        fetch(`http://localhost:8080/api/products/${urlSlug}`)
             .then((response) => {
                 if (response.ok) {
                     return response.json();
@@ -33,7 +33,7 @@ function SingleProduct() {
 
         const cartId = localStorage.getItem("cart_id");
         if (cartId) {
-            fetch(`http://localhost:8080/Elektromart_war/cart/get-product-quantity?cartId=${cartId}&productSlug=${urlSlug}`)
+            fetch(`http://localhost:8080/api/cart/get-product-quantity?cartId=${cartId}&productSlug=${urlSlug}`)
                 .then(response => response.json())
                 .then(data => setQuantity(data.quantity))
                 .catch(error => {
@@ -52,7 +52,7 @@ function SingleProduct() {
         let cartId = localStorage.getItem("cart_id");
 
         if (!cartId) {
-            fetch(`http://localhost:8080/Elektromart_war/cart/create-cart`, {method: 'POST'})
+            fetch(`http://localhost:8080/api/cart/create-cart`, {method: 'POST'})
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "SUCCESS") {
@@ -76,7 +76,7 @@ function SingleProduct() {
             quantity: newQuantity
         });
 
-        fetch(`http://localhost:8080/Elektromart_war/cart/add-product-to-cart?${params}`, {
+        fetch(`http://localhost:8080/api/cart/add-product-to-cart?${params}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -120,7 +120,7 @@ function SingleProduct() {
 
     const updateProductInCart = (newQuantity) => {
         const cartId = localStorage.getItem("cart_id");
-        fetch(`http://localhost:8080/Elektromart_war/cart/change-quantity`, {
+        fetch(`http://localhost:8080/api/cart/change-quantity`, {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `cartId=${cartId}&productSlug=${product.urlSlug}&quantity=${quantity}`
@@ -144,7 +144,7 @@ function SingleProduct() {
 
     const deleteProduct = () => {
         const cartId = localStorage.getItem("cart_id");
-        fetch(`http://localhost:8080/Elektromart_war/cart/delete-cart-product`, {
+        fetch(`http://localhost:8080/api/cart/delete-cart-product`, {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `cartId=${cartId}&productSlug=${product.productSlug}`

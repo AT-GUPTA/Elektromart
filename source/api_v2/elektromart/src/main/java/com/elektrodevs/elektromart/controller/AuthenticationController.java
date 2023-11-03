@@ -5,15 +5,13 @@ import com.elektrodevs.elektromart.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class AuthenticationController {
@@ -40,6 +38,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(createJsonResponse("SUCCESS", "Logged out successfully.", null, null));
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signup")
     public ResponseEntity<?> handleSignup(@RequestBody Map<String, String> userDetails) {
         User newUser = new User();
