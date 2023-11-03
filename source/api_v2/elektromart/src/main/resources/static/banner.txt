@@ -1,0 +1,14 @@
+ Welcome to
+ ___________.__                 __                                       __
+ \_   _____/|  |   ____   _____/  |________  ____   _____ _____ ________/  |_
+  |    __)_ |  | _/ __ \_/ ___\   __\_  __ \/  _ \ /     \\__  \\_  __ \   __\
+  |        \|  |_\  ___/\  \___|  |  |  | \(  <_> )  Y Y  \/ __ \|  | \/|  |
+ /_______  /|____/\___  >\___  >__|  |__|   \____/|__|_|  (____  /__|   |__|
+         \/           \/     \/                         \/     \/
+ Co-developed by `Elektrodevs`
+ VCS: Git
+ License: MIT
+ UI: HTML, CSS, JS (React.js)
+ Server: Java (Spring Boot)
+ Database: MySQL (AWS RDS), JDBC
+ Created by Atul Gupta, 2023
