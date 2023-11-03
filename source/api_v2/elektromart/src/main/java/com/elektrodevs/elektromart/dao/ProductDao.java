@@ -3,11 +3,13 @@ package com.elektrodevs.elektromart.dao;
 import com.elektrodevs.elektromart.domain.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Random;
 
 @Repository
 @RequiredArgsConstructor
@@ -30,50 +32,101 @@ public class ProductDao {
     };
 
     public List<Product> getProducts() {
-        return jdbcTemplate.query("SELECT * FROM Product", productRowMapper);
+        String query = "SELECT * FROM Product";
+        try {
+            return jdbcTemplate.query(query, productRowMapper);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-
     public Product createProduct(Product newProduct) {
+        newProduct.setSku(generateSKU()); // Generate SKU
+        newProduct.setUrlSlug(generateUrlSlug(newProduct.getName())); // Generate URL Slug
+
         String query = "INSERT INTO Product (name, description, vendor, url_slug, sku, price, discount_percent, is_featured, is_delete) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(query,
-                newProduct.getName(),
-                newProduct.getDescription(),
-                newProduct.getVendor(),
-                newProduct.getUrlSlug(),
-                newProduct.getSku(),
-                newProduct.getPrice(),
-                newProduct.getDiscountPercent(),
-                newProduct.isFeatured(),
-                newProduct.isDelete());
+        try {
+            jdbcTemplate.update(query,
+                    newProduct.getName(),
+                    newProduct.getDescription(),
+                    newProduct.getVendor(),
+                    newProduct.getUrlSlug(), // Use generated URL slug
+                    newProduct.getSku(), // Use generated SKU
+                    newProduct.getPrice(),
+                    newProduct.getDiscountPercent(),
+                    newProduct.isFeatured(),
+                    newProduct.isDelete());
 
-        // Assuming we have a method to get the last insert ID
-        int lastInsertId = getLastInsertId();
-        newProduct.setId(lastInsertId);
+            int lastInsertId = getLastInsertId();
+            newProduct.setId(lastInsertId);
 
-        return newProduct;
+            return newProduct;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String generateSKU() {
+        StringBuilder sku = new StringBuilder("SKU-");
+        Random random = new Random();
+        String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        for (int i = 0; i < 9; i++) {
+            int index = random.nextInt(chars.length());
+            sku.append(chars.charAt(index));
+        }
+
+        // Append the last three parts (xx-xxx) of SKU
+        sku.append("-")
+                .append(String.format("%02d", random.nextInt(100)))
+                .append("-")
+                .append(String.format("%03d", random.nextInt(1000)));
+
+        return sku.toString();
+    }
+
+    private String generateUrlSlug(String productName) {
+        // Make the product name lowercase and replace spaces with dashes
+        return productName.toLowerCase().replaceAll(" ", "-");
     }
 
     public Product editProduct(Product updatedProduct) {
+        Product product = getProductById(updatedProduct.getId());
+        if(product == null){
+            return null;
+        }
         String query = "UPDATE Product SET name = ?, description = ?, vendor = ?, url_slug = ?, sku = ?, price = ?, " +
                 "discount_percent = ?, is_featured = ?, is_delete = ? WHERE id = ?";
-        jdbcTemplate.update(query,
-                updatedProduct.getName(),
-                updatedProduct.getDescription(),
-                updatedProduct.getVendor(),
-                updatedProduct.getUrlSlug(),
-                updatedProduct.getSku(),
-                updatedProduct.getPrice(),
-                updatedProduct.getDiscountPercent(),
-                updatedProduct.isFeatured(),
-                updatedProduct.isDelete(),
-                updatedProduct.getId());
-        return updatedProduct;
+        try{
+            jdbcTemplate.update(query,
+                    updatedProduct.getName(),
+                    updatedProduct.getDescription(),
+                    updatedProduct.getVendor(),
+                    updatedProduct.getUrlSlug(),
+                    updatedProduct.getSku(),
+                    updatedProduct.getPrice(),
+                    updatedProduct.getDiscountPercent(),
+                    updatedProduct.isFeatured(),
+                    updatedProduct.isDelete(),
+                    updatedProduct.getId());
+            return updatedProduct;
+        } catch (DataAccessException e){
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     public Product getProductById(int productId) {
-        return jdbcTemplate.queryForObject("SELECT * FROM Product WHERE id = ?", new Object[]{productId}, productRowMapper);
-    }
+        String query = "SELECT * FROM Product WHERE id = ?";
+        try {
+            return jdbcTemplate.queryForObject(query, new Object[]{productId}, productRowMapper);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }    }
 
     private int getLastInsertId() {
         return jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);

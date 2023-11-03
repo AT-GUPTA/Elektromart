@@ -13,7 +13,7 @@ function SingleProduct() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/products/${urlSlug}`)
+        fetch(`http://localhost:8080/api/products/slug/${urlSlug}`)
             .then((response) => {
                 if (response.ok) {
                     return response.json();

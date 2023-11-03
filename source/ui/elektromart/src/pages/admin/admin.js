@@ -5,14 +5,6 @@ import Swal from "sweetalert2";
 import Form from "../signup/Form";
 
 
-function uuidv4() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        var r = (Math.random() * 16) | 0,
-            v = c === "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-    });
-}
-
 const Admin = () => {
     const [showAddProductForm, setShowAddProductForm] = useState(false);
     const [showEditProductForm, setShowEditProductForm] = useState(false);
@@ -55,6 +47,10 @@ const Admin = () => {
             .catch((error) => console.error("Error fetching products: ", error));
     }, []);
 
+    useEffect(() => {
+        setProductList(products);
+    }, [products]);
+
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [productList, setProductList] = useState(products);
 
@@ -79,7 +75,7 @@ const Admin = () => {
     }, [showAllProducts]);
 
     const handleDownloadClick = async (e) => {
-       
+
             const response = await fetch('http://localhost:8080/api/products/download');
 
             console.log(response.ok ? 'Download successful' : 'Download failed');
@@ -99,7 +95,7 @@ const Admin = () => {
 
                 document.body.removeChild(a);
             }
-            
+
     };
 
     const handleAddProductClick = () => {
@@ -157,14 +153,7 @@ const Admin = () => {
 
     const handleAddProductSubmit = (e) => {
         e.preventDefault();
-        const randomSKU = uuidv4();
 
-        setProductData({
-            ...productData,
-            sku: randomSKU,
-            urlSlug: productData.name.toLowerCase().replace(/ /g, "-"), // Generate urlSlug based on product name
-        });
-        // Make a POST request to create a new product
         fetch("http://localhost:8080/api/products/", {
             method: "POST",
             headers: {
@@ -176,14 +165,66 @@ const Admin = () => {
                 if (response.ok) {
                     // Close the modal for adding a new product
                     setShowAddProductForm(false);
-
                     return response.json(); // Parse the response if it's OK
                 } else {
                     setErrorMessage("Something went wrong when adding a new product.");
                 }
             })
             .then((data) => {
+                // Product was added successfully, show a success message
+                Swal.fire({
+                    icon: "success",
+                    title: "Success!",
+                    text: "Product added successfully.",
+                });
+
                 setProducts([...products, data]);
+                setProductData({
+                    name: "",
+                    description: "",
+                    vendor: "",
+                    price: "",
+                    discountPercent: "",
+                    isFeatured: false,
+                    isDelete: false,
+                });
+            })
+            .catch((error) => console.error("Error adding product: ", error));
+    };
+
+    const handleEditProductSubmit = async (e) => {
+        e.preventDefault();
+        if (!selectedProduct) {
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `http://localhost:8080/api/products/${selectedProduct.id}`,
+                {
+                    method: "PUT", // Assuming you use PUT for editing
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(productData),
+                }
+            );
+            if (response.ok) {
+                const data = await response.json();
+
+                // Product was updated successfully, show a success message
+                Swal.fire({
+                    icon: "success",
+                    title: "Success!",
+                    text: "Product updated successfully.",
+                });
+
+                setProducts((prevProducts) =>
+                    prevProducts.map((product) =>
+                        product.id === data.id ? data : product
+                    )
+                );
+                setSelectedProduct(null);
                 setProductData({
                     name: "",
                     description: "",
@@ -195,53 +236,14 @@ const Admin = () => {
                     isFeatured: false,
                     isDelete: false,
                 });
-            })
-            .catch((error) => console.error("Error adding product: ", error));
-    };
-
-    const handleEditProductSubmit = (e) => {
-        e.preventDefault();
-        if (!selectedProduct) {
-            return;
+                setShowEditProductForm(false);
+            } else {
+                setErrorMessage("Something went wrong when editing a product.");
+            }
+        } catch (error) {
+            console.error("Error editing product: ", error);
+            setErrorMessage("Something went wrong when editing a product.");
         }
-
-        // Make a POST request to update the selected product
-        fetch(`http://localhost:8080/api/products/${selectedProduct.id}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(productData),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    // Clear the selected product and form fields
-                    setSelectedProduct(null);
-                    setProductData({
-                        name: "",
-                        description: "",
-                        vendor: "",
-                        urlSlug: "",
-                        sku: "",
-                        price: "",
-                        discountPercent: "",
-                        isFeatured: false,
-                        isDelete: false,
-                    });
-                    return response.json();
-                } else {
-                    setErrorMessage("Something went wrong when editing a product.");
-                }
-            })
-            .then((data) => {
-                // Update the products state with the updated product
-                const updatedProducts = products.map((product) =>
-                    product.id === data.id ? data : product
-                );
-                setProducts(updatedProducts);
-                setShowEditProductForm(false); // Close the edit product form
-            })
-            .catch((error) => console.error("Error editing product: ", error));
     };
 
     const handleAddAdminSubmit = (e) => {
@@ -313,29 +315,6 @@ const Admin = () => {
                             value={productData.vendor}
                             onChange={handleFormChange}
                             required
-                        />
-                    </div>
-                    <div className="input-group mt-3">
-                        <label htmlFor="productSKU">
-                        </label>
-                        <input
-                            id="productSKU"
-                            type="hidden"
-                            className="form-control"
-                            name="sku"
-                            value={productData.sku}
-                            onChange={handleFormChange}
-                        />
-                    </div>
-                    <div className="input-group mt-3">
-                        <label htmlFor="urlSlug"></label>
-                        <input
-                            id="urlSlug"
-                            type="hidden"
-                            className="form-control"
-                            name="urlSlug"
-                            value={productData.urlSlug}
-                            onChange={handleFormChange}
                         />
                     </div>
                     <div className="input-group mt-3">

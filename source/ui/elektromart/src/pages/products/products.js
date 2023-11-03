@@ -10,7 +10,7 @@ function Products() {
 
     useEffect(() => {
         // Fetch products from the API endpoint
-        fetch('http://localhost:8080/api/products')
+        fetch('http://localhost:8080/api/products/')
             .then((response) => response.json())
             .then((data) => {
                 setProducts(data);
