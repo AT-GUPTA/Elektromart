@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import "./singleProduct.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Swal from "sweetalert2";
 import {Button, Card} from "react-bootstrap";
 
 function SingleProduct() {
@@ -17,7 +18,11 @@ function SingleProduct() {
                 if (response.ok) {
                     return response.json();
                 }
-                throw new Error("Network response was not ok.");
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: "Could not fetch product data. Please try again later.",
+                });
             })
             .then((data) => {
                 setProduct(data);
@@ -31,7 +36,13 @@ function SingleProduct() {
             fetch(`http://localhost:8080/Elektromart_war/cart/get-product-quantity?cartId=${cartId}&productSlug=${urlSlug}`)
                 .then(response => response.json())
                 .then(data => setQuantity(data.quantity))
-                .catch(error => console.error("Error fetching product quantity: ", error));
+                .catch(error => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: "Could not fetch cart data. Please try again later.",
+                    });
+                });
         } else {
             setQuantity(0);
         }
@@ -75,12 +86,20 @@ function SingleProduct() {
             .then(data => {
                 if (data.status === "SUCCESS") {
                     setQuantity(newQuantity);
-                    setFeedbackMessage(`Added ${newQuantity} ${product.name}(s) to the cart.`);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: `Added ${newQuantity} ${product.name}(s) to the cart.`,
+                        timer: 1000,
+                    });
                 }
             })
             .catch(error => {
-                console.error("Error adding product to cart: ", error);
-                setFeedbackMessage("Error adding to cart. Please try again.");
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: `"Error adding to cart. Please try again."`,
+                });
             });
     };
 
@@ -105,18 +124,54 @@ function SingleProduct() {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `cartId=${cartId}&productSlug=${product.urlSlug}&quantity=${quantity}`
-        }).then(response => response.json())
-            .catch(error => console.error("Error updating product quantity in cart: ", error));
+        }).then(response => {
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: "Cart updated successfully.",
+                timer: 1000,
+            });
+             return response.json()
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: "Error updating cart. Please try again.",
+                });
+            });
     };
 
     const deleteProduct = () => {
         const cartId = localStorage.getItem("cart_id");
-        fetch(`http://localhost:8080/Elektromart_war/deleteProductFromCart`, {
+        fetch(`http://localhost:8080/Elektromart_war/cart/delete-cart-product`, {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: `cartId=${cartId}&productSlug=${product.urlSlug}`
-        }).then(response => response.json())
-            .catch(error => console.error("Error deleting product from cart: ", error));
+            body: `cartId=${cartId}&productSlug=${product.productSlug}`
+        }) .then(response => response.json())
+        .then(data => {
+            if (data.status !== 'SUCCESS') {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: "Error updating cart. Please try again.",
+                });
+            }
+
+            Swal.fire({
+                icon: "success",
+                title: "success!",
+                text: "Cart updated successfully.",
+                timer: 1000,
+            });
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: "error",
+                title: "Error!",
+                text: "Error updating cart. Please try again.",
+            });
+        });
     };
 
     const navigateToCart = () => {
