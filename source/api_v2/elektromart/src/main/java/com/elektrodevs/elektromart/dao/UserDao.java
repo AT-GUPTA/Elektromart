@@ -40,7 +40,7 @@ public class UserDao {
 
 
     public User getUser(String username) {
-        String query = "SELECT * FROM users WHERE username = ?";
+        String query = "SELECT * FROM Users WHERE username = ?";
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{username}, userRowMapper);
         } catch (EmptyResultDataAccessException e) {
@@ -77,7 +77,7 @@ public class UserDao {
     }
 
     public Integer getTotalUsers() {
-        String userCount = "SELECT COUNT(*) FROM users";
+        String userCount = "SELECT COUNT(*) FROM Users";
         return jdbcTemplate.queryForObject(userCount, Integer.class);
     }
 }
