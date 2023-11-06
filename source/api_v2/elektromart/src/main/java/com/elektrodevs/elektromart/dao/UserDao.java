@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -32,8 +33,13 @@ public class UserDao {
             return user;
         }
     };
+    public Optional<User> findByUsername(String username){
+        User user = getUser(username);
+        return Optional.ofNullable(user);
+    }
 
-    public User findByUsername(String username) {
+
+    public User getUser(String username) {
         String query = "SELECT * FROM users WHERE username = ?";
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{username}, userRowMapper);
@@ -68,5 +74,10 @@ public class UserDao {
             // Handle the case where the username or email already exists
             throw new IllegalArgumentException("Username or Email already exists.");
         }
+    }
+
+    public Integer getTotalUsers() {
+        String userCount = "SELECT COUNT(*) FROM users";
+        return jdbcTemplate.queryForObject(userCount, Integer.class);
     }
 }
