@@ -29,6 +29,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roleId(request.getRole())
+                .cartId(request.getCartId())
                 .build();
 
         user = userService.createUser(user);
@@ -38,8 +39,8 @@ public class AuthenticationService {
 
 
     public JwtAuthenticationResponse login(SignInRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+
         var user = userDao.findByUsername(request.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid username or password."));
         var jwt = jwtService.generateToken(user);

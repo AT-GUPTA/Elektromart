@@ -10,7 +10,9 @@ const Cart = () => {
     useEffect(() => {
         const cartId = localStorage.getItem("cart_id");
         fetch(`http://localhost:8080/api/cart/get-cart?cartId=${cartId}`)
-            .then(response => response.json())
+            .then(response => 
+                response.json()
+            )
             .then(data => {
                 console.log(data);
                 setCartItems(data['cartContent']);
@@ -28,6 +30,7 @@ const Cart = () => {
     }
 
     const updateQuantityAPI = (cartId, productSlug, quantity) => {
+        console.log("quantity",quantity);
         fetch(`http://localhost:8080/api/cart/change-quantity`, {
             method: 'POST',
             headers: {
@@ -63,7 +66,7 @@ const Cart = () => {
 
     const handleIncreaseQty = (product) => {
         const cartId = localStorage.getItem("cart_id");
-        updateQuantityAPI(cartId, product.productSlug, product.quantity + 1);
+        updateQuantityAPI(cartId, product.urlSlug, product.quantity + 1);
 
         const updatedCartItems = cartItems.map(item =>
             item.id === product.id ? {...item, quantity: item.quantity + 1} : item
@@ -74,7 +77,7 @@ const Cart = () => {
     const handleDecreaseQty = (product) => {
         const cartId = localStorage.getItem("cart_id");
         if (product.quantity > 1) {
-            updateQuantityAPI(cartId, product.productSlug, product.quantity - 1);
+            updateQuantityAPI(cartId, product.urlSlug, product.quantity - 1);
 
             const updatedCartItems = cartItems.map(item =>
                 item.id === product.id && item.quantity > 1 ? {...item, quantity: item.quantity - 1} : item
@@ -90,7 +93,7 @@ const Cart = () => {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `cartId=${cartId}&productSlug=${product.productSlug}`
+            body: `cartId=${cartId}&productSlug=${product.urlSlug}`
         })
             .then(response => response.json())
             .then(data => {

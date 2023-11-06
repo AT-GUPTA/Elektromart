@@ -20,7 +20,7 @@ const Form = ({authentication, setRoleId}) => {
             method: "POST",
             mode: "cors",
             headers: {"Content-type": "application/json"},
-            body: JSON.stringify(user),
+            body: JSON.stringify(user)
         });
 
         const jsonResponse = await res.json();

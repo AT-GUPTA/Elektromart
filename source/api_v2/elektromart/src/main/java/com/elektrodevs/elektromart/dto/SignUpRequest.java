@@ -14,4 +14,5 @@ public class SignUpRequest {
     Long role;
     String email;
     String password;
+    String cartId;
 }

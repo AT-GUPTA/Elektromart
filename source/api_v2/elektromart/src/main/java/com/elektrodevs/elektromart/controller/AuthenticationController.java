@@ -20,7 +20,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> handleLogin(@RequestBody SignInRequest request) {
+    public ResponseEntity<?> login(@RequestBody SignInRequest request) {
         try {
             JwtAuthenticationResponse result = authenticationService.login(request);
             if (result != null && result.getUser() != null){
@@ -34,7 +34,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> handleSignup(@RequestBody SignUpRequest request) {
+    public ResponseEntity<?> signup(@RequestBody SignUpRequest request) {
         try {
             JwtAuthenticationResponse result = authenticationService.signup(request);
             return ResponseEntity.ok(createJsonResponse("SUCCESS", "Account created!",result));

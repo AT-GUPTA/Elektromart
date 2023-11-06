@@ -64,7 +64,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         // Allow unauthenticated requests to signup and login
-                        .requestMatchers(HttpMethod.POST, "/api/auth/signup", "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/signup", "/auth/login").permitAll()
                         .requestMatchers("/cart/**", "/products/**").permitAll()
                         // Allow unauthenticated requests to /cart/
                         .requestMatchers("/cart/**").permitAll()

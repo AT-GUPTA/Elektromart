@@ -94,4 +94,15 @@ public class CartDao {
             return false;
         }
     }
+
+    public boolean createCart(String cartId) {
+        try {
+            String SQL = "INSERT INTO Cart(id) VALUES (?)";
+            jdbcTemplate.update(SQL, cartId);
+            return true;
+        }catch (DataAccessException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
