@@ -11,6 +11,8 @@ import Cart from './pages/cart/cart';
 import Layout from './components/layout/layout';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import swal from 'sweetalert2';
+import Orders from './pages/order/orders';
+import OrderDetail from './pages/order/orderDetail';
 
 function App() {
 
@@ -67,6 +69,8 @@ function App() {
                         <Route path="/products" element={<Products/>} exact/>
                         <Route path="/products/:id" element={<ProductDetail/>}/>
                         <Route path="/cart" element={<Cart/>} exact/>
+                        <Route path="/orders" element={<Orders/>} exact/>
+                        <Route path="/orders/:id" element={<OrderDetail/>} exact/>
                     </Routes>
                 </Router>
             </Layout>

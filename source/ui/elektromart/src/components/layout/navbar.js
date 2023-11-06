@@ -20,6 +20,9 @@ function Navigation({isAuth, roleId, logout}) {
                         <li className="dropdown nav-link nav-link-fade-up transition-all duration-700">
                             <a href="/products">Products</a>
                         </li>
+                        <li className="dropdown nav-link nav-link-fade-up transition-all duration-700">
+                            <a href="/orders">My Orders</a>
+                        </li>
                         <p className='navLine absolute bg-red-600 w-1 font-extralight h-9 z-50'></p>
                         <a href="/cart" className="navIcon">
                             <i className="bi bi-cart"></i>

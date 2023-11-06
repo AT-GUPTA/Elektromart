@@ -44,7 +44,7 @@ const Form = ({authentication, setRoleId}) => {
                     if (message === 0) {
                         navigate("/home");
                     } else {
-                        localStorage.setItem("id", JSON.stringify(message));
+                        localStorage.setItem("id", message);
                         navigate("/home");
                     }
                 }
