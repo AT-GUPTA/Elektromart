@@ -13,7 +13,7 @@ public class Order {
     private Long userId;
     private String cartId;
     private Date createdDate;
-    private ShippingStatus shippingStatus;
+    private String shippingStatus;
     private String shippingAddress;
     private Long shippingId;
 

@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/order")
+@CrossOrigin(origins = "http://localhost:3000",  allowCredentials = "true")
+@RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
-    @GetMapping("/all-orders")
+    @GetMapping("/")
     public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
@@ -42,9 +42,7 @@ public class OrderController {
     }
    // to get all orders for the current user logged in
     @GetMapping("/order-history")
-    public ResponseEntity<List<Order>> getOrderHistoryForCurrentUser(HttpSession session) {
-        Long userId = (Long) session.getAttribute("id");
-
+    public ResponseEntity<List<Order>> getOrderHistoryForCurrentUser(@RequestHeader("X-Session-ID") String userId) {
         if (userId != null) {
             List<Order> orders = orderService.getOrdersByUserId(userId);
             return ResponseEntity.ok(orders);
@@ -56,7 +54,7 @@ public class OrderController {
 
     // to get all orders by a specific user maybe used to filter search in admin page
     @GetMapping("/get-orders-byId/{userId}")
-    public ResponseEntity<?> getOrdersByUserId(@PathVariable Long userId) {
+    public ResponseEntity<?> getOrdersByUserId(@PathVariable String userId) {
         List<Order> orders = orderService.getOrdersByUserId(userId);
 
         if (orders != null) {

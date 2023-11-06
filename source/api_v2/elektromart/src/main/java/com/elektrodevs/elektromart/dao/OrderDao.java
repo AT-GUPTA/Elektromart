@@ -17,7 +17,7 @@ public class OrderDao {
     private final JdbcTemplate jdbcTemplate;
 
     public List<Order> getAllOrders() {
-        String SQL = "SELECT * FROM Order";
+        String SQL = "SELECT * FROM Orders";
         try {
             return jdbcTemplate.query(SQL, (rs, rowNum) -> {
                 Order order = new Order();
@@ -25,7 +25,7 @@ public class OrderDao {
                 order.setUserId(rs.getLong("user_id"));
                 order.setCartId(rs.getString("cart_id"));
                 order.setCreatedDate(rs.getDate("createdDate"));
-                order.setShippingStatus(Order.ShippingStatus.valueOf(rs.getString("shippingStatus")));
+                order.setShippingStatus(rs.getString("shippingStatus"));
                 order.setShippingAddress(rs.getString("shippingAddress"));
                 order.setShippingId(rs.getLong("shipping_id"));
                 order.setPaymentMethod(rs.getString("paymentMethod"));
@@ -40,7 +40,7 @@ public class OrderDao {
         String SQL = "INSERT INTO Order(user_id, cart_id, createdDate, shippingStatus, shippingAddress, shipping_id, paymentMethod) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
-            jdbcTemplate.update(SQL, order.getUserId(), order.getCartId(), new Date(), order.getShippingStatus().name(),
+            jdbcTemplate.update(SQL, order.getUserId(), order.getCartId(), new Date(), order.getShippingStatus(),
                     order.getShippingAddress(), order.getShippingId(), order.getPaymentMethod());
             return true;
         } catch (DataAccessException e) {
@@ -49,8 +49,8 @@ public class OrderDao {
         }
     }
 
-    public List<Order> getOrdersByUserId(Long userId) {
-        String SQL = "SELECT * FROM Order WHERE user_id = ?";
+    public List<Order> getOrdersByUserId(String userId) {
+        String SQL = "SELECT * FROM Orders WHERE user_id = ?";
         try {
             return jdbcTemplate.query(SQL, new Object[]{userId}, (rs, rowNum) -> {
                 Order order = new Order();
@@ -58,7 +58,7 @@ public class OrderDao {
                 order.setUserId(rs.getLong("user_id"));
                 order.setCartId(rs.getString("cart_id"));
                 order.setCreatedDate(rs.getDate("createdDate"));
-                order.setShippingStatus(Order.ShippingStatus.valueOf(rs.getString("shippingStatus")));
+                order.setShippingStatus(rs.getString("shippingStatus"));
                 order.setShippingAddress(rs.getString("shippingAddress"));
                 order.setShippingId(rs.getLong("shipping_id"));
                 order.setPaymentMethod(rs.getString("paymentMethod"));

@@ -37,7 +37,7 @@ public class OrderService {
         }
     }
 
-    public List<Order> getOrdersByUserId(Long userId) {
+    public List<Order> getOrdersByUserId(String userId) {
         return orderDao.getOrdersByUserId(userId);
     }
 
