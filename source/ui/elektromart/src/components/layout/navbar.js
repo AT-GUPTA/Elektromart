@@ -6,6 +6,24 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Swal from "sweetalert2";
 
 function Navigation({isAuth, roleId, logout}) {
+
+    const handleMyOrdersClick = (e) => {
+        if (!isAuth) {
+            e.preventDefault(); // Prevents the default anchor action
+            Swal.fire({
+                title: "Unauthorized",
+                text: "Please log in to access your orders",
+                icon: "warning",
+                confirmButtonText: "Login"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/login';
+                }
+            });
+        }
+        // If isAuth is true, nothing happens and the default action proceeds
+    };
+
     return (
         <div>
             <header className="banner" role="banner">
@@ -21,7 +39,7 @@ function Navigation({isAuth, roleId, logout}) {
                             <a href="/products">Products</a>
                         </li>
                         <li className="dropdown nav-link nav-link-fade-up transition-all duration-700">
-                            <a href="/orders">My Orders</a>
+                            <a href="/orders" onClick={handleMyOrdersClick}>My Orders</a>
                         </li>
                         <p className='navLine absolute bg-red-600 w-1 font-extralight h-9 z-50'></p>
                         <a href="/cart" className="navIcon">

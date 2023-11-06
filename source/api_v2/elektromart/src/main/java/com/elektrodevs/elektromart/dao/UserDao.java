@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -32,8 +34,13 @@ public class UserDao {
             return user;
         }
     };
+    public Optional<User> findByUsername(String username){
+        User user = getUser(username);
+        return Optional.ofNullable(user);
+    }
 
-    public User findByUsername(String username) {
+
+    public User getUser(String username) {
         String query = "SELECT * FROM Users WHERE username = ?";
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{username}, userRowMapper);
@@ -44,19 +51,20 @@ public class UserDao {
     }
 
     public User createUser(User newUser) {
-        String cartId = UUID.randomUUID().toString();
+        String cartId = (newUser.getCartId()==null||newUser.getCartId().equalsIgnoreCase("undefined")||Objects.equals(newUser.getCartId(), "0"))?UUID.randomUUID().toString():newUser.getCartId();
 
-        String cartQuery = "INSERT INTO Cart (id) VALUES (?)";
-        jdbcTemplate.update(cartQuery, cartId);
+        if(newUser.getCartId()==null||newUser.getCartId().equalsIgnoreCase("undefined")||Objects.equals(newUser.getCartId(), "0")) {
+            String cartQuery = "INSERT INTO Cart (id) VALUES (?)";
+            jdbcTemplate.update(cartQuery, cartId);
+        }
 
         String userQuery = "INSERT INTO Users (username, email, password, role_id, status, cart_id) VALUES (?, ?, ?, ?, ?, ?)";
-        String hashedPassword = BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt());
 
         try {
             jdbcTemplate.update(userQuery,
                     newUser.getUsername(),
                     newUser.getEmail(),
-                    hashedPassword,
+                    newUser.getPassword(),
                     newUser.getRoleId(),
                     newUser.getStatus(),
                     cartId);
@@ -68,5 +76,10 @@ public class UserDao {
             // Handle the case where the username or email already exists
             throw new IllegalArgumentException("Username or Email already exists.");
         }
+    }
+
+    public Integer getTotalUsers() {
+        String userCount = "SELECT COUNT(*) FROM Users";
+        return jdbcTemplate.queryForObject(userCount, Integer.class);
     }
 }

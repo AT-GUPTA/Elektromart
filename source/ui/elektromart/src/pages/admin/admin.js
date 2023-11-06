@@ -41,8 +41,13 @@ const Admin = () => {
     }, [errorMessage]);
 
     useEffect(() => {
+        const token = localStorage.getItem("secret");
         fetch('http://localhost:8080/api/orders/', {
             method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         })
         .then((response) => response.json())
         .then((data) => {
@@ -58,7 +63,14 @@ const Admin = () => {
 
     useEffect(() => {
         // Fetch products from the API endpoint
-        fetch("http://localhost:8080/api/products/")
+        const token = localStorage.getItem("secret");
+        fetch("http://localhost:8080/api/products/",{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
             .then((response) => response.json())
             .then((data) => {
                 setProducts(data);
@@ -96,7 +108,14 @@ const Admin = () => {
 
     const handleDownloadClick = async (e) => {
 
-            const response = await fetch('http://localhost:8080/api/products/download');
+            const token = localStorage.getItem("secret");
+            const response = await fetch('http://localhost:8080/api/products/download',{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
             console.log(response.ok ? 'Download successful' : 'Download failed');
             if (!response.ok) {
@@ -185,11 +204,12 @@ const Admin = () => {
 
     const handleAddProductSubmit = (e) => {
         e.preventDefault();
-
+        const token = localStorage.getItem("secret");
         fetch("http://localhost:8080/api/products/", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(productData),
         })
@@ -231,12 +251,14 @@ const Admin = () => {
         }
 
         try {
+            const token = localStorage.getItem("secret");
             const response = await fetch(
                 `http://localhost:8080/api/products/${selectedProduct.id}`,
                 {
                     method: "PUT", // Assuming you use PUT for editing
                     headers: {
                         "Content-Type": "application/json",
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify(productData),
                 }

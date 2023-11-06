@@ -52,12 +52,14 @@ function SingleProduct() {
         let cartId = localStorage.getItem("cart_id");
 
         if (!cartId) {
-            fetch(`http://localhost:8080/api/cart/create-cart`, {method: 'POST'})
-                .then(response => response.json())
+            fetch(`http://localhost:8080/api/cart/create-cart`, { method: 'POST' })
+                .then(response => response.json()) 
                 .then(data => {
-                    if (data.status === "SUCCESS") {
+                    if (data.cartId) {
                         localStorage.setItem("cart_id", data.cartId);
                         addProductToCart(data.cartId, 1);
+                    } else {
+                        setFeedbackMessage("Error adding to cart. Please try again.");
                     }
                 })
                 .catch(error => {
@@ -67,6 +69,7 @@ function SingleProduct() {
         } else {
             addProductToCart(cartId, quantity + 1);
         }
+        
     };
 
     const addProductToCart = (cartId, newQuantity) => {
@@ -84,13 +87,19 @@ function SingleProduct() {
         })
             .then(response => response.json())
             .then(data => {
-                if (data.status === "SUCCESS") {
+                if (data.message) {
                     setQuantity(newQuantity);
                     Swal.fire({
                         icon: "success",
                         title: "Success!",
-                        text: `Added ${newQuantity} ${product.name}(s) to the cart.`,
-                        timer: 1000,
+                        text: data.message,
+                        timer: 500,
+                    });
+                } else if (data.error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: data.error,
                     });
                 }
             })
@@ -118,52 +127,28 @@ function SingleProduct() {
         }
     };
 
-    const updateProductInCart = (newQuantity) => {
+    const updateProductInCart = (quantity) => {
         const cartId = localStorage.getItem("cart_id");
         fetch(`http://localhost:8080/api/cart/change-quantity`, {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `cartId=${cartId}&productSlug=${product.urlSlug}&quantity=${quantity}`
-        }).then(response => {
-            Swal.fire({
-                icon: "success",
-                title: "Success!",
-                text: "Cart updated successfully.",
-                timer: 1000,
-            });
-             return response.json()
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error!",
-                    text: "Error updating cart. Please try again.",
-                });
-            });
-    };
-
-    const deleteProduct = () => {
-        const cartId = localStorage.getItem("cart_id");
-        fetch(`http://localhost:8080/api/cart/delete-cart-product`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: `cartId=${cartId}&productSlug=${product.productSlug}`
-        }) .then(response => response.json())
+        }).then(response => response.json())
         .then(data => {
-            if (data.status !== 'SUCCESS') {
+            if (data.message) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Success!",
+                    text: data.message, // Display the message from the response
+                    timer: 500,
+                });
+            } else if (data.error) {
                 Swal.fire({
                     icon: "error",
                     title: "Error!",
-                    text: "Error updating cart. Please try again.",
+                    text: data.error, // Display the error from the response
                 });
             }
-
-            Swal.fire({
-                icon: "success",
-                title: "success!",
-                text: "Cart updated successfully.",
-                timer: 1000,
-            });
         })
         .catch(error => {
             Swal.fire({
@@ -173,6 +158,44 @@ function SingleProduct() {
             });
         });
     };
+
+    const deleteProduct = () => {
+        const cartId = localStorage.getItem("cart_id");
+        const params = new URLSearchParams({
+            cartId: cartId,
+            productSlug: product.urlSlug
+        });
+    
+        fetch(`http://localhost:8080/api/cart/delete-cart-product?${params}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Success!",
+                    text: data.message, 
+                    timer: 500,
+                });
+            } else if (data.error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: data.error,
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: "error",
+                title: "Error!",
+                text: "Error updating cart. Please try again.",
+            });
+        });
+    };
+    
 
     const navigateToCart = () => {
         navigate("/cart");

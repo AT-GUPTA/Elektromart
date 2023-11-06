@@ -26,8 +26,7 @@ const Form = ({role}) => {
     const passwordsMatch = () => password === confirmPassword;
 
     const addUser = async (user) => {
-        console.log(JSON.stringify(user));
-        const res = await fetch(`http://localhost:8080/api/user/signup`, {
+        const res = await fetch(`http://localhost:8080/api/auth/signup`, {
             method: "POST",
             headers: {"Content-type": "application/json"},
             body: JSON.stringify(user),
@@ -37,7 +36,6 @@ const Form = ({role}) => {
         const status = jsonResponse["status"];
         const message = jsonResponse["message"];
         const isAccountCreated = status === "SUCCESS";
-        localStorage.setItem("cart_id", jsonResponse["cartId"]);
 
         if (isAccountCreated) {
             Swal.fire({
@@ -62,6 +60,7 @@ const Form = ({role}) => {
 
     const signupHandler = (e) => {
         e.preventDefault();
+        
         if (!passwordsMatch()) {
             Swal.fire({
                 title: "Failure",
@@ -71,8 +70,24 @@ const Form = ({role}) => {
             });
             return;
         }
-        addUser({username, email, password, role});
+        
+        const cart_id = localStorage.getItem("cart_id");
+        const userData = {
+            username,
+            email,
+            password,
+            role,
+        };
+        
+        if (cart_id !== null) {
+            userData.cartId = cart_id;
+        } else {
+            userData.cartId = "0";
+        }
+        console.log(userData);
+        addUser(userData);
     };
+    
 
     return (
         <div className="mx-4 my-2">
@@ -150,7 +165,17 @@ const Form = ({role}) => {
                     <Link to="/login" className="link">
                         Login here
                     </Link>
+                    {
+                        localStorage.getItem("cart_id") && (
+                            <>
+                                <br />
+                                <span>Don't worry, your cart will be saved!</span>
+                            </>
+                        )
+                    }
                 </div>
+
+                
                 <div className="my-4 text-center">
                     <input
                         type="submit"
