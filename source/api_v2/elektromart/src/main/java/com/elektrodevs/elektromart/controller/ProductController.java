@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -48,6 +49,7 @@ public class ProductController {
     }
 
     @PostMapping("/")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> createProduct(@RequestBody Product newProduct) {
         Product product = productService.createProduct(newProduct);
         return (product != null)
@@ -57,6 +59,7 @@ public class ProductController {
 
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestBody Product updatedProduct) {
         updatedProduct.setId(id);
         Product product = productService.editProduct(updatedProduct);

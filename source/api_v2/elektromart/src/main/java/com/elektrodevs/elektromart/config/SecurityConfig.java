@@ -63,7 +63,17 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorize -> authorize
+                        // Allow unauthenticated requests to signup and login
                         .requestMatchers(HttpMethod.POST, "/api/auth/signup", "/api/auth/login").permitAll()
+                        .requestMatchers("/cart/**", "/products/**").permitAll()
+                        // Allow unauthenticated requests to /cart/
+                        .requestMatchers("/cart/**").permitAll()
+                        // Allow unauthenticated GET requests to /products/
+                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                        // Require authentication for POST and PUT requests to /products/
+                        .requestMatchers(HttpMethod.POST, "/products/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/products/**").authenticated()
+                        // All other requests should be authenticated
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

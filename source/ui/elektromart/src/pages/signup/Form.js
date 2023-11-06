@@ -26,8 +26,7 @@ const Form = ({role}) => {
     const passwordsMatch = () => password === confirmPassword;
 
     const addUser = async (user) => {
-        console.log(JSON.stringify(user));
-        const res = await fetch(`http://localhost:8080/api/user/signup`, {
+        const res = await fetch(`http://localhost:8080/api/auth/signup`, {
             method: "POST",
             headers: {"Content-type": "application/json"},
             body: JSON.stringify(user),

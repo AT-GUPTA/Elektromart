@@ -16,7 +16,7 @@ const Form = ({authentication, setRoleId}) => {
     const passwordFieldType = showPassword ? "text" : "password";
 
     const loginVerification = async (user) => {
-        const res = await fetch(`http://localhost:8080/api/user/login`, {
+        const res = await fetch(`http://localhost:8080/api/auth/login`, {
             method: "POST",
             mode: "cors",
             headers: {"Content-type": "application/json"},
@@ -30,6 +30,7 @@ const Form = ({authentication, setRoleId}) => {
         const roleId = jsonResponse["roleId"];
 
         localStorage.setItem("cart_id", jsonResponse["cartId"]);
+        localStorage.setItem("secret", jsonResponse["token"]);
 
         if (isLoggedIn) {
             authentication(true, roleId);
