@@ -3,6 +3,7 @@ package com.elektrodevs.elektromart.dao;
 import com.elektrodevs.elektromart.domain.Cart;
 import com.elektrodevs.elektromart.domain.Product;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
+@Slf4j
 public class CartDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -19,9 +21,10 @@ public class CartDao {
         String SQL = "INSERT INTO CartProduct(cart_id, product_slug, quantity) VALUES(?, ?, ?)";
         try {
             jdbcTemplate.update(SQL, cartId, productSlug, quantity);
+            log.debug("Product {} added to cart {} with quantity {}.", productSlug, cartId, quantity);
             return true;
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            log.error("Failed to add product {} to cart {}.", productSlug, cartId);
             return false;
         }
     }
@@ -37,7 +40,7 @@ public class CartDao {
                 return cart;
             });
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            log.error("Failed to get cart by ID: {}", cartId);
             return null;
         }
     }
@@ -58,7 +61,7 @@ public class CartDao {
                 return product;
             });
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            log.error("Failed to get products for cart with ID: {}", cartId);
             return null;
         }
     }
@@ -68,7 +71,7 @@ public class CartDao {
         try {
             return jdbcTemplate.queryForObject(SQL, new Object[]{cartId, productSlug}, Integer.class);
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            log.error("Failed to get quantity for product {} in cart with ID: {}", productSlug, cartId);
             return 0;
         }
     }
@@ -77,9 +80,10 @@ public class CartDao {
         String SQL = "UPDATE CartProduct SET quantity = ? WHERE cart_id = ? AND product_slug = ?";
         try {
             jdbcTemplate.update(SQL, quantity, cartId, productSlug);
+            log.debug("Changed quantity for product {} in cart {} to {}", productSlug, cartId, quantity);
             return true;
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            log.error("Failed to change quantity for product {} in cart {} to {}", productSlug, cartId, quantity);
             return false;
         }
     }
@@ -88,9 +92,10 @@ public class CartDao {
         String SQL = "DELETE FROM CartProduct WHERE cart_id = ? AND product_slug = ?";
         try {
             jdbcTemplate.update(SQL, cartId, productSlug);
+            log.debug("Deleted product {} from cart {}", productSlug, cartId);
             return true;
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            log.error("Failed to delete product {} from cart {}", productSlug, cartId);
             return false;
         }
     }
@@ -99,9 +104,10 @@ public class CartDao {
         try {
             String SQL = "INSERT INTO Cart(id) VALUES (?)";
             jdbcTemplate.update(SQL, cartId);
+            log.debug("Created new cart with ID: {}", cartId);
             return true;
         }catch (DataAccessException e){
-            e.printStackTrace();
+            log.error("Failed to create a new cart with ID: {}", cartId);
             return false;
         }
     }
