@@ -131,4 +131,8 @@ public class ProductDao {
     private int getLastInsertId() {
         return jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
     }
+
+    public Product getProductBySlug(String urlSlug) {
+        return jdbcTemplate.queryForObject("SELECT * FROM Product WHERE url_slug = ?", new Object[]{urlSlug}, productRowMapper);
+    }
 }
