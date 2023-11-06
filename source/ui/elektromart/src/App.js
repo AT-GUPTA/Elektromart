@@ -40,6 +40,9 @@ function App() {
         localStorage.removeItem("roleId"); // Clear roleId
         localStorage.removeItem("cart_id");
         localStorage.removeItem("id");
+        localStorage.removeItem("secret");
+        localStorage.clear();
+        sessionStorage.clear();
         setIsAuth(false);
         setRoleId(null); // Reset roleId state as well
     };
@@ -55,6 +58,22 @@ function App() {
         return <Admin/>;
     }
 
+    function OrderRoute({isAuth}) {
+        if (!isAuth) {
+            swal.fire({
+                title: "Unauthorized",
+                text: "Please log in to access your orders",
+                icon: "warning",
+                confirmButtonText: "Login"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/login';
+                }
+            });
+        }
+        return <Orders/>
+    }
+
     return (
         <>
             <Layout isAuth={isAuth} roleId={roleId} logout={logout}>
@@ -68,8 +87,8 @@ function App() {
                         <Route path="/product/:urlSlug" element={<SingleProduct/>}/>
                         <Route path="/products" element={<Products/>} exact/>
                         <Route path="/products/:id" element={<ProductDetail/>}/>
-                        <Route path="/cart" element={<Cart/>} exact/>
-                        <Route path="/orders" element={<Orders/>} exact/>
+                        <Route path="/cart" element={<Cart isAuth={isAuth}/>} exact/>
+                        <Route path="/orders" element={<OrderRoute isAuth={isAuth}/>}/>
                         <Route path="/orders/:id" element={<OrderDetail/>} exact/>
                     </Routes>
                 </Router>

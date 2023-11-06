@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import './cart.css';
 import Swal from "sweetalert2";
 
-const Cart = () => {
+const Cart = ({isAuth}) => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true); // Added loading state
 
@@ -136,6 +136,34 @@ const Cart = () => {
     // Calculate total
     const total = subtotal + taxAmount;
 
+    const handleButtonClick = () => {
+        if (!isAuth) {
+            Swal.fire({
+                title: "Unauthorized",
+                text: "Please log in to access your orders",
+                icon: "warning",
+                confirmButtonText: "Login"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/login';
+                }
+            });
+        } else if(cartItems.length<=0){
+            Swal.fire({
+                title: "Empty Cart",
+                text: "Please add items to your cart",
+                icon: "warning",
+                confirmButtonText: "Take me to Products"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/products';
+                }
+            });
+        } else{
+            window.location.href = '/checkout';
+        }
+    };
+
     return (
         <div className="card">
             <div className="card-header">
@@ -233,9 +261,9 @@ const Cart = () => {
                     <div className="col"></div>
                     <div className="col"></div>
                     <div className="col">
-                        <Link to="/checkout" className="btn btn-primary">
+                        <button onClick={handleButtonClick} className="btn btn-primary">
                             Continue to Checkout
-                        </Link>
+                        </button>
                     </div>
                 </div>
                 <div className="back-to-shop">
