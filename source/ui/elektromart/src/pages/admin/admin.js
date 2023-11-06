@@ -10,7 +10,10 @@ const Admin = () => {
     const [showEditProductForm, setShowEditProductForm] = useState(false);
     const [showAddAdminForm, setShowAddAdminForm] = useState(false);
     const [showAllProducts, setShowAllProducts] = useState(false);
+    const [showAllOrders, setShowAllOrders] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [userIds, setUserIds] = useState([]);
+    const [selectedUserId, setSelectedUserId] = useState('');
 
     const [productData, setProductData] = useState({
         name: "",
@@ -25,6 +28,7 @@ const Admin = () => {
     });
 
     const [products, setProducts] = useState([]);
+    const [orders, setOrders] = useState([]);
 
     useEffect(() => {
         if (errorMessage) {
@@ -35,6 +39,22 @@ const Admin = () => {
             });
         }
     }, [errorMessage]);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/api/orders/', {
+            method: 'GET',
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            const ids = data.map(order => order.userId);
+            setUserIds([...new Set(ids)]);
+            setOrders(data);
+        })
+        .catch((error) => {
+            setErrorMessage("Could not fetch orders");
+        });
+    }, []);
+
 
     useEffect(() => {
         // Fetch products from the API endpoint
@@ -103,6 +123,7 @@ const Admin = () => {
         setShowEditProductForm(false);
         setShowAddAdminForm(false);
         setShowAllProducts(false);
+        setShowAllOrders(false);
     };
 
     const handleEditProductClick = () => {
@@ -110,6 +131,7 @@ const Admin = () => {
         setShowEditProductForm(true);
         setShowAddAdminForm(false);
         setShowAllProducts(false);
+        setShowAllOrders(false);
     };
 
     const handleViewAllProductClick = () => {
@@ -117,6 +139,7 @@ const Admin = () => {
         setShowEditProductForm(false);
         setShowAddAdminForm(false);
         setShowAllProducts(true);
+        setShowAllOrders(false);
     };
 
     const handleAddAdminClick = () => {
@@ -124,6 +147,15 @@ const Admin = () => {
         setShowEditProductForm(false);
         setShowAddAdminForm(true);
         setShowAllProducts(false);
+        setShowAllOrders(false);
+    };
+
+    const handleShowAllOrders = () => {
+        setShowAddProductForm(false);
+        setShowEditProductForm(false);
+        setShowAddAdminForm(false);
+        setShowAllProducts(false);
+        setShowAllOrders(true);
     };
 
     const handleFormChange = (e) => {
@@ -268,9 +300,61 @@ const Admin = () => {
             <button className="adminButton" onClick={handleViewAllProductClick}>
                 View all Products
             </button>
+            <button className="adminButton" onClick={handleShowAllOrders}>
+                View all Orders
+            </button>
             <button className="adminButton" onClick={handleAddAdminClick}>
                 Add a New Admin
             </button>
+
+            {showAllOrders && ( 
+                <div className="container mt-5">
+                <h2 className="mb-4">Your Orders</h2>
+
+                <div className="mb-4">
+                    <label htmlFor="userIdSelect" className="form-label">Select User ID</label>
+                    <select 
+                        id="userIdSelect" 
+                        className="form-select"
+                        value={selectedUserId}
+                        onChange={(e) => setSelectedUserId(e.target.value)}
+                    >
+                        <option value="">Select a User ID...</option>
+                        {userIds.map(id => (
+                            <option key={id} value={id}>{id}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="card">
+                    <div className="card-body">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Order ID</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Payment method</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orders.filter(e =>!selectedUserId || e.userId === Number(selectedUserId)).map(order => (
+                                    <tr key={order.orderId} className={order.shippingStatus === 'delivered' ? 'table-success' : ''}>
+                                        <td>{order.orderId}</td>
+                                        <td>{order.createdDate}</td>
+                                        <td>{order.paymentMethod}</td>
+                                        <td>{order.shippingStatus}</td>
+                                        <td>
+                                            <a href={`/orders/${order.orderId}`} className="btn btn-primary btn-sm">View</a>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+            )}
 
             {showAddProductForm && (
                 <form className="product-form" onSubmit={handleAddProductSubmit}>
