@@ -29,4 +29,8 @@ public class ProductService {
     public Product editProduct(Product updatedProduct) {
         return productDao.editProduct(updatedProduct);
     }
+
+    public Product getProductBySlug(String urlSlug) {
+        return productDao.getProductBySlug(urlSlug);
+    }
 }
