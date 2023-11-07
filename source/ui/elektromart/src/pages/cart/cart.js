@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import './cart.css';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from "sweetalert2";
 
 const Cart = ({isAuth}) => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true); // Added loading state
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const cartId = localStorage.getItem("cart_id");
@@ -148,7 +151,7 @@ const Cart = ({isAuth}) => {
                     window.location.href = '/login';
                 }
             });
-        } else if(cartItems.length<=0){
+        } else if(cartItems.length <= 0) {
             Swal.fire({
                 title: "Empty Cart",
                 text: "Please add items to your cart",
@@ -160,7 +163,9 @@ const Cart = ({isAuth}) => {
                 }
             });
         } else{
-            window.location.href = '/checkout';
+           
+            const cartId = localStorage.getItem("cart_id");
+            navigate("/checkout", { state: { cartItems, cartId} } );
         }
     };
 
@@ -262,7 +267,7 @@ const Cart = ({isAuth}) => {
                     <div className="col"></div>
                     <div className="col">
                         <button onClick={handleButtonClick} className="btn btn-primary">
-                            Continue to Checkout
+                           Checkout
                         </button>
                     </div>
                 </div>

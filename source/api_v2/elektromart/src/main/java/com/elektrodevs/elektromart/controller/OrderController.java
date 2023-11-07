@@ -29,7 +29,7 @@ public class OrderController {
      * @return A list of all orders.
      */
     @GetMapping("/")
-    @PreAuthorize("hasAnyRole('STAFF', 'CUSTOMER')")
+    @PreAuthorize("hasAnyRole('ROLE_STAFF')")
     public ResponseEntity<List<Order>> getAllOrders() {
         log.debug("Request to get all orders");
         List<Order> orders = orderService.getAllOrders();
@@ -39,18 +39,15 @@ public class OrderController {
     /**
      * Creates a new order.
      *
-     * @param order   The order to be created.
-     * @param session The HTTP session for the current user.
      * @return A response entity with success or error message.
      */
     @PostMapping("/create-order")
-    @PreAuthorize("hasAnyRole('STAFF', 'CUSTOMER')")
-    public ResponseEntity<?> createOrder(@RequestBody Order order, HttpSession session) {
-        Long userId = (Long) session.getAttribute("id");
+    @PreAuthorize("hasAnyRole('ROLE_STAFF', 'ROLE_CUSTOMER')")
+    public ResponseEntity<?> createOrder(@RequestParam("cartId") String cartId, @RequestParam("deliveryAddress") String deliveryAddress, @RequestHeader("X-Session-ID") String userId) {
         log.debug("Request to create order for user id: {}", userId);
 
         if (userId != null) {
-            boolean orderCreated = orderService.createOrder(order, userId);
+            boolean orderCreated = orderService.createOrder(cartId, deliveryAddress, userId);
 
             if (orderCreated) {
                 log.debug("Order created successfully for user id: {}", userId);
@@ -72,7 +69,7 @@ public class OrderController {
      * @return A list of orders for the user.
      */
     @GetMapping("/order-history")
-    @PreAuthorize("hasAnyRole('STAFF', 'CUSTOMER')")
+    @PreAuthorize("hasAnyRole('ROLE_STAFF', 'ROLE_CUSTOMER')")
     public ResponseEntity<List<Order>> getOrderHistoryForCurrentUser(@RequestHeader("X-Session-ID") String userId) {
         log.debug("Request to get order history for user id: {}", userId);
         if (userId != null) {
@@ -91,7 +88,7 @@ public class OrderController {
      * @return A list of orders for the specified user.
      */
     @GetMapping("/get-orders-byId/{userId}")
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasRole('ROLE_STAFF')")
     public ResponseEntity<?> getOrdersByUserId(@PathVariable String userId) {
         log.debug("Request to get orders for user id: {}", userId);
         List<Order> orders = orderService.getOrdersByUserId(userId);

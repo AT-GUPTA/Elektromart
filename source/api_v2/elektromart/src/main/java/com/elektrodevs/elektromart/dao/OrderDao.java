@@ -77,7 +77,7 @@ public class OrderDao {
         }
     }
 
-    public boolean updateCartIdForUser(Long userId, String newCartId) {
+    public boolean updateCartIdForUser(String userId, String newCartId) {
         String SQL = "UPDATE Users SET cart_id = ? WHERE user_id = ?";
         try {
             jdbcTemplate.update(SQL, newCartId, userId);

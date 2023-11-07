@@ -13,6 +13,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import swal from 'sweetalert2';
 import Orders from './pages/order/orders';
 import OrderDetail from './pages/order/orderDetail';
+import OrderPlaced from './pages/order/orderPlaced';
+import Checkout from './pages/order/checkout';
 
 function App() {
 
@@ -90,6 +92,8 @@ function App() {
                         <Route path="/cart" element={<Cart isAuth={isAuth}/>} exact/>
                         <Route path="/orders" element={<OrderRoute isAuth={isAuth}/>}/>
                         <Route path="/orders/:id" element={<OrderDetail/>} exact/>
+                        <Route path="/checkout" element={<Checkout isAuth={isAuth}/>}/>
+                        <Route path="/order-placed" element={<OrderPlaced isAuth={isAuth}/>}/>
                     </Routes>
                 </Router>
             </Layout>

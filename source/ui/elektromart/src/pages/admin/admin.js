@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./admin.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
 import Form from "../signup/Form";
 
@@ -14,6 +15,9 @@ const Admin = () => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [userIds, setUserIds] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState('');
+
+    const navigate = useNavigate();
+
 
     const [productData, setProductData] = useState({
         name: "",
@@ -53,6 +57,7 @@ const Admin = () => {
         .then((data) => {
             const ids = data.map(order => order.userId);
             setUserIds([...new Set(ids)]);
+            console.log(data);
             setOrders(data);
         })
         .catch((error) => {
@@ -367,7 +372,9 @@ const Admin = () => {
                                         <td>{order.paymentMethod}</td>
                                         <td>{order.shippingStatus}</td>
                                         <td>
-                                            <a href={`/orders/${order.orderId}`} className="btn btn-primary btn-sm">View</a>
+                                            <button className="btn btn-primary btn-sm" onClick={() => navigate(`/orders/${order.orderId}`, { state: { order } })}>
+                                                View
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}

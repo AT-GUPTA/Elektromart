@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
+import Swal from "sweetalert2";
+
 
 function Orders({isAdmin}) {
     const [orders, setOrders] = useState([]);
     const [hasError, setHasError] = useState(false);
+
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const userId = localStorage.getItem("id");
@@ -22,7 +28,11 @@ function Orders({isAdmin}) {
             setOrders(data);
         })
         .catch((error) => {
-            setHasError(true);
+            Swal.fire({
+                icon: "error",
+                title: "error!",
+                text: "Could not fetch order history",
+            });
         });
     }, []);
 
@@ -49,8 +59,10 @@ function Orders({isAdmin}) {
                                     <td>{order.paymentMethod}</td>
                                     <td>{order.shippingStatus}</td>
                                     <td>
-                                        <a href={`/orders/${order.orderId}`} className="btn btn-primary btn-sm">View</a>
-                                    </td>
+                                    <button className="btn btn-primary btn-sm" onClick={() => navigate(`/orders/${order.orderId}`, { state: { order } })}>
+                                        View
+                                    </button>
+                                </td>
                                 </tr>
                             ))}
                         </tbody>

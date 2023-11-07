@@ -1,0 +1,13 @@
+.btn-smaller {
+    width: 50px !important;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .quantity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

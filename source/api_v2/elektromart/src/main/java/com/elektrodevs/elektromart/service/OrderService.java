@@ -20,7 +20,9 @@ public class OrderService {
         log.debug("getAllOrders: Retrieved {} orders.", orders.size());
         return orders;
     }
-    public Boolean createOrder(Order order, Long userId) {
+    public Boolean createOrder(String cartId, String deliveryAddress, String userId) {
+
+        Order order = new Order(cartId, deliveryAddress, userId);
         boolean orderCreated = orderDao.createOrder(order);
 
         if (orderCreated) {

@@ -26,4 +26,13 @@ public class Order {
         DELIVERED
     }
 
+    public Order(String cartId, String address, String userId) {
+        this.cartId = cartId;
+        this.shippingAddress = address;
+        this.createdDate = new Date();
+        this.shippingStatus = ShippingStatus.PENDING.name();
+        this.userId = Long.parseLong(userId);
+    }
+
+    public Order() {}
 }
