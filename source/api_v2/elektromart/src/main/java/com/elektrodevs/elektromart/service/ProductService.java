@@ -2,11 +2,18 @@ package com.elektrodevs.elektromart.service;
 
 import com.elektrodevs.elektromart.dao.ProductDao;
 import com.elektrodevs.elektromart.domain.Product;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -56,5 +63,12 @@ public class ProductService {
             log.error("getProductBySlug: Product with URL Slug '{}' not found.", urlSlug);
         }
         return product;
+    }
+
+    public String getDownloadString() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        List<Product> products = getProducts();
+        return objectMapper.writeValueAsString(products);
     }
 }

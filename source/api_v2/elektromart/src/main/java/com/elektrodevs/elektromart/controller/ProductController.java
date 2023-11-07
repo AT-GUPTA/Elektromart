@@ -3,7 +3,6 @@ package com.elektrodevs.elektromart.controller;
 import com.elektrodevs.elektromart.domain.Product;
 import com.elektrodevs.elektromart.service.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -84,14 +83,11 @@ public class ProductController {
      * @return A JSON file containing all products.
      * @throws JsonProcessingException If an error occurs during JSON processing.
      */
-    @PostMapping("/download")
+    @GetMapping("/download")
     @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> downloadAllProducts() throws JsonProcessingException {
         log.debug("Request to download all products");
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Product> products = productService.getProducts();
-        String json = objectMapper.writeValueAsString(products);
-
+        String json = productService.getDownloadString();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setContentDispositionFormData("attachment", "products.json");

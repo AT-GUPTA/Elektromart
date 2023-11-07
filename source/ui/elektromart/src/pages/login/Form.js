@@ -29,15 +29,15 @@ const Form = ({authentication, setRoleId}) => {
         const isLoggedIn = status === "SUCCESS";
         const roleId = jsonResponse["roleId"];
 
-        localStorage.setItem("cart_id", jsonResponse["cartId"]);
-        localStorage.setItem("secret", jsonResponse["token"]);
-
         if (isLoggedIn) {
+            localStorage.setItem("cart_id", jsonResponse["cartId"]);
+            localStorage.setItem("secret", jsonResponse["token"]);
+            localStorage.setItem("username",user.username)
             authentication(true, roleId);
             setRoleId(roleId);
             Swal.fire({
                 title: "Login Success!",
-                text: "Hello User",
+                text: "Hello " + user.username,
                 icon: "success",
                 confirmButtonText: "Continue Shopping!",
             }).then((result) => {
