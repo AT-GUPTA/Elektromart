@@ -29,7 +29,7 @@ public class OrderController {
      * @return A list of all orders.
      */
     @GetMapping("/")
-    @PreAuthorize("hasAnyRole('ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('STAFF')")
     public ResponseEntity<List<Order>> getAllOrders() {
         log.debug("Request to get all orders");
         List<Order> orders = orderService.getAllOrders();
@@ -42,7 +42,7 @@ public class OrderController {
      * @return A response entity with success or error message.
      */
     @PostMapping("/create-order")
-    @PreAuthorize("hasAnyRole('ROLE_STAFF', 'ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyRole('STAFF', 'CUSTOMER')")
     public ResponseEntity<?> createOrder(@RequestParam("cartId") String cartId, @RequestParam("deliveryAddress") String deliveryAddress, @RequestHeader("X-Session-ID") String userId) {
         log.debug("Request to create order for user id: {}", userId);
 
@@ -69,7 +69,7 @@ public class OrderController {
      * @return A list of orders for the user.
      */
     @GetMapping("/order-history")
-    @PreAuthorize("hasAnyRole('ROLE_STAFF', 'ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyRole('STAFF', 'CUSTOMER')")
     public ResponseEntity<List<Order>> getOrderHistoryForCurrentUser(@RequestHeader("X-Session-ID") String userId) {
         log.debug("Request to get order history for user id: {}", userId);
         if (userId != null) {
@@ -88,7 +88,7 @@ public class OrderController {
      * @return A list of orders for the specified user.
      */
     @GetMapping("/get-orders-byId/{userId}")
-    @PreAuthorize("hasRole('ROLE_STAFF')")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> getOrdersByUserId(@PathVariable String userId) {
         log.debug("Request to get orders for user id: {}", userId);
         List<Order> orders = orderService.getOrdersByUserId(userId);
