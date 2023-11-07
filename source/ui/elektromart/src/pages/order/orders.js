@@ -46,8 +46,8 @@ function Orders({isAdmin}) {
                                 <tr key={order.orderId} className={order.shippingStatus === 'delivered' ? 'table-success' : ''}>
                                     <td>{order.orderId}</td>
                                     <td>{order.createdDate}</td>
+                                    <td>{order.shippingStatus.charAt(0).toUpperCase() + order.shippingStatus.slice(1)}</td>
                                     <td>{order.paymentMethod}</td>
-                                    <td>{order.shippingStatus}</td>
                                     <td>
                                         <a href={`/orders/${order.orderId}`} className="btn btn-primary btn-sm">View</a>
                                     </td>

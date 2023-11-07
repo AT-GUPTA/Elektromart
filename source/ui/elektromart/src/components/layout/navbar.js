@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Swal from "sweetalert2";
 
-function Navigation({isAuth, roleId, logout}) {
+function Navigation({ isAuth, roleId, logout }) {
 
     const handleMyOrdersClick = (e) => {
         if (!isAuth) {
@@ -29,7 +29,7 @@ function Navigation({isAuth, roleId, logout}) {
             <header className="banner" role="banner">
                 <nav className="navbar" role="navigation" aria-label="menu">
                     <a href="/home" className="logo">
-                        <img src="/images/elektromart.png"/>
+                        <img src="/images/elektromart.png" />
                     </a>
                     <ul className="menuNav">
                         <li className="dropdown nav-link nav-link-fade-up">
@@ -45,7 +45,7 @@ function Navigation({isAuth, roleId, logout}) {
                         <a href="/cart" className="navIcon">
                             <i className="bi bi-cart"></i>
                         </a>
-                        <div className="navItem dropdown" style={{paddingTop: "15px"}}>
+                        <div className="navItem dropdown" style={{ paddingTop: "15px" }}>
                             <a
                                 href="#"
                                 className="navIcon dropdown-toggle"
@@ -58,6 +58,12 @@ function Navigation({isAuth, roleId, logout}) {
                                 <i className="bi bi-person-circle"></i>
                             </a>
                             <div className="dropdown-menu" aria-labelledby="accountDropdown">
+                                {localStorage.getItem("username") && (
+                                    <span className="dropdown-item font-weight-bold text-success bg-light rounded fst-italic">
+                                        Hi {localStorage.getItem("username")}
+                                    </span>
+                                )}
+                                {(roleId === "2" || roleId === 2) && <a className="dropdown-item" href="/admin">Admin</a>}
                                 {isAuth ? (
                                     <a className="dropdown-item" href="#" onClick={() => {
                                         logout();
@@ -71,7 +77,7 @@ function Navigation({isAuth, roleId, logout}) {
                                 ) : (
                                     <a className="dropdown-item" href="/login">Login</a>
                                 )}
-                                {roleId === "2" && <a className="dropdown-item" href="/admin">Admin</a>}
+
                             </div>
                         </div>
                     </ul>
