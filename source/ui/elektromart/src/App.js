@@ -76,6 +76,22 @@ function App() {
         return <Orders/>
     }
 
+    function CheckoutRoute({isAuth}) {
+        if (!isAuth) {
+            swal.fire({
+                title: "Unauthorized",
+                text: "Please log in to access your orders",
+                icon: "warning",
+                confirmButtonText: "Login"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/login';
+                }
+            });
+        }
+        return <Checkout/>
+    }
+
     return (
         <>
             <Layout isAuth={isAuth} roleId={roleId} logout={logout}>
@@ -91,8 +107,8 @@ function App() {
                         <Route path="/products/:id" element={<ProductDetail/>}/>
                         <Route path="/cart" element={<Cart isAuth={isAuth}/>} exact/>
                         <Route path="/orders" element={<OrderRoute isAuth={isAuth}/>}/>
-                        <Route path="/orders/:id" element={<OrderDetail/>} exact/>
-                        <Route path="/checkout" element={<Checkout isAuth={isAuth}/>}/>
+                        <Route path="/orders/:id" element={<OrderDetail/>} isAuth={isAuth} exact/>
+                        <Route path="/checkout" element={<CheckoutRoute isAuth={isAuth}/>}/>
                         <Route path="/order-placed" element={<OrderPlaced isAuth={isAuth}/>}/>
                     </Routes>
                 </Router>

@@ -2,6 +2,7 @@ package com.elektrodevs.elektromart.service;
 
 import com.elektrodevs.elektromart.dao.OrderDao;
 import com.elektrodevs.elektromart.domain.Order;
+import com.elektrodevs.elektromart.dto.OrderResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,8 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderDao orderDao;
-    public List<Order> getAllOrders() {
-        List<Order> orders = orderDao.getAllOrders();
+    public List<OrderResult> getAllOrders() {
+        List<OrderResult> orders = orderDao.getAllOrders();
         log.debug("getAllOrders: Retrieved {} orders.", orders.size());
         return orders;
     }

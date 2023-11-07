@@ -71,6 +71,7 @@ const Checkout = () => {
   };
 
   return (
+    cartItems && 
     <div className="container mt-5">
       <h2 className="mb-4">Review Your Cart</h2>
       <ul className="list-group mb-3">
@@ -121,7 +122,7 @@ const Checkout = () => {
         >
         Place Order
       </button>
-    </div>
+    </div> 
   );
 };
 

@@ -13,8 +13,8 @@ const Admin = () => {
     const [showAllProducts, setShowAllProducts] = useState(false);
     const [showAllOrders, setShowAllOrders] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
-    const [userIds, setUserIds] = useState([]);
-    const [selectedUserId, setSelectedUserId] = useState('');
+    const [usernames, setUsernames] = useState([]);
+    const [selectedUsername, setSelectedUsername] = useState('');
 
     const navigate = useNavigate();
 
@@ -55,9 +55,8 @@ const Admin = () => {
         })
         .then((response) => response.json())
         .then((data) => {
-            const ids = data.map(order => order.userId);
-            setUserIds([...new Set(ids)]);
-            console.log(data);
+            const usernames = data.map(order => order.username);
+            setUsernames([...new Set(usernames)]);
             setOrders(data);
         })
         .catch((error) => {
@@ -343,12 +342,14 @@ const Admin = () => {
                     <select 
                         id="userIdSelect" 
                         className="form-select"
-                        value={selectedUserId}
-                        onChange={(e) => setSelectedUserId(e.target.value)}
+                        value={selectedUsername}
+                        onChange={(e) => {
+                            setSelectedUsername(e.target.value)
+                        }}
                     >
-                        <option value="">Select a User ID...</option>
-                        {userIds.map(id => (
-                            <option key={id} value={id}>{id}</option>
+                        <option value="">Select a Username...</option>
+                        {usernames.map(u => (
+                            <option key={u} value={u}>{u}</option>
                         ))}
                     </select>
                 </div>
@@ -365,7 +366,7 @@ const Admin = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {orders.filter(e =>!selectedUserId || e.userId === Number(selectedUserId)).map(order => (
+                                {orders.filter(e => selectedUsername === "" || e.username === selectedUsername).map(order => (
                                     <tr key={order.orderId} className={order.shippingStatus === 'delivered' ? 'table-success' : ''}>
                                         <td>{order.orderId}</td>
                                         <td>{order.createdDate}</td>

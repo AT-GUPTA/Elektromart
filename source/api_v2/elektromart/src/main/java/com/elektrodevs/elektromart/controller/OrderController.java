@@ -1,6 +1,7 @@
 package com.elektrodevs.elektromart.controller;
 
 import com.elektrodevs.elektromart.domain.Order;
+import com.elektrodevs.elektromart.dto.OrderResult;
 import com.elektrodevs.elektromart.service.OrderService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +31,9 @@ public class OrderController {
      */
     @GetMapping("/")
     @PreAuthorize("hasAnyRole('STAFF')")
-    public ResponseEntity<List<Order>> getAllOrders() {
+    public ResponseEntity<List<OrderResult>> getAllOrders() {
         log.debug("Request to get all orders");
-        List<Order> orders = orderService.getAllOrders();
+        List<OrderResult> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 

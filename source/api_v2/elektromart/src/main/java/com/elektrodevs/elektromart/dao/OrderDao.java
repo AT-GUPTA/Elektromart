@@ -1,6 +1,7 @@
 package com.elektrodevs.elektromart.dao;
 
 import com.elektrodevs.elektromart.domain.Order;
+import com.elektrodevs.elektromart.dto.OrderResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -18,11 +19,12 @@ public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public List<Order> getAllOrders() {
-        String SQL = "SELECT * FROM Orders";
+    public List<OrderResult> getAllOrders() {
+        String SQL = "SELECT * FROM Orders INNER JOIN Users ON Users.user_id = Orders.user_id";
         try {
-            List<Order> orders = jdbcTemplate.query(SQL, (rs, rowNum) -> {
-                Order order = new Order();
+            List<OrderResult> orders = jdbcTemplate.query(SQL, (rs, rowNum) -> {
+                OrderResult order = new OrderResult();
+                order.setUsername(rs.getString("username"));
                 order.setOrderId(rs.getLong("order_id"));
                 order.setUserId(rs.getLong("user_id"));
                 order.setCartId(rs.getString("cart_id"));
