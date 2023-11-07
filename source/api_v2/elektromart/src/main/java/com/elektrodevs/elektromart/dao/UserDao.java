@@ -2,6 +2,7 @@ package com.elektrodevs.elektromart.dao;
 
 import com.elektrodevs.elektromart.domain.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class UserDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -36,6 +38,7 @@ public class UserDao {
     };
     public Optional<User> findByUsername(String username){
         User user = getUser(username);
+        log.debug("findByUsername: Username {} found in the database.", username);
         return Optional.ofNullable(user);
     }
 
@@ -43,9 +46,11 @@ public class UserDao {
     public User getUser(String username) {
         String query = "SELECT * FROM Users WHERE username = ?";
         try {
-            return jdbcTemplate.queryForObject(query, new Object[]{username}, userRowMapper);
+            User user = jdbcTemplate.queryForObject(query, new Object[]{username}, userRowMapper);
+            log.debug("getUser: User with username {} found in the database.", username);
+            return user;
         } catch (EmptyResultDataAccessException e) {
-            // User not found with the provided username
+            log.debug("getUser: User with username {} not found in the database.", username);
             return null;
         }
     }
@@ -70,16 +75,19 @@ public class UserDao {
                     cartId);
 
             newUser.setCartId(cartId);
+            log.debug("createUser: User {} created successfully.", newUser.getUsername());
             return newUser;
 
         } catch (DuplicateKeyException e) {
-            // Handle the case where the username or email already exists
+            log.error("createUser: Username or Email already exists for user {}.", newUser.getUsername());
             throw new IllegalArgumentException("Username or Email already exists.");
         }
     }
 
     public Integer getTotalUsers() {
         String userCount = "SELECT COUNT(*) FROM Users";
-        return jdbcTemplate.queryForObject(userCount, Integer.class);
+        Integer totalUsers = jdbcTemplate.queryForObject(userCount, Integer.class);
+        log.debug("getTotalUsers: Total users in the database: {}", totalUsers);
+        return totalUsers;
     }
 }

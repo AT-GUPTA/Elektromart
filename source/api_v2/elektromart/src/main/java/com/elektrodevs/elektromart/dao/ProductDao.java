@@ -2,6 +2,7 @@ package com.elektrodevs.elektromart.dao;
 
 import com.elektrodevs.elektromart.domain.Product;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +14,7 @@ import java.util.Random;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -34,9 +36,11 @@ public class ProductDao {
     public List<Product> getProducts() {
         String query = "SELECT * FROM Product";
         try {
-            return jdbcTemplate.query(query, productRowMapper);
+            List<Product> products = jdbcTemplate.query(query, productRowMapper);
+            log.debug("getProducts: Retrieved {} products from the database.", products.size());
+            return products;
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            log.error("getProducts: An error occurred while retrieving products from the database.", e);
             return null;
         }
     }
@@ -60,10 +64,10 @@ public class ProductDao {
 
             int lastInsertId = getLastInsertId();
             newProduct.setId(lastInsertId);
-
+            log.debug("createProduct: Product created successfully with ID {}.", lastInsertId);
             return newProduct;
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            log.error("createProduct: An error occurred while creating a product.", e);
             return null;
         }
     }
@@ -111,9 +115,10 @@ public class ProductDao {
                     updatedProduct.isFeatured(),
                     updatedProduct.isDelete(),
                     updatedProduct.getId());
+            log.debug("editProduct: Product with ID {} updated successfully.", updatedProduct.getId());
             return updatedProduct;
         } catch (DataAccessException e){
-            e.printStackTrace();
+            log.error("editProduct: An error occurred while updating a product with ID {}.", updatedProduct.getId(), e);
             return null;
         }
 
@@ -122,17 +127,27 @@ public class ProductDao {
     public Product getProductById(int productId) {
         String query = "SELECT * FROM Product WHERE id = ?";
         try {
-            return jdbcTemplate.queryForObject(query, new Object[]{productId}, productRowMapper);
+            Product product = jdbcTemplate.queryForObject(query, new Object[]{productId}, productRowMapper);
+            log.debug("getProductById: Retrieved product with ID {}.", productId);
+            return product;
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            log.error("getProductById: An error occurred while retrieving product with ID {}.", productId, e);
             return null;
-        }    }
+        }
+    }
 
     private int getLastInsertId() {
         return jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
     }
 
     public Product getProductBySlug(String urlSlug) {
-        return jdbcTemplate.queryForObject("SELECT * FROM Product WHERE url_slug = ?", new Object[]{urlSlug}, productRowMapper);
+        try {
+            Product product = jdbcTemplate.queryForObject("SELECT * FROM Product WHERE url_slug = ?", new Object[]{urlSlug}, productRowMapper);
+            log.debug("getProductBySlug: Retrieved product with URL Slug {}.", urlSlug);
+            return product;
+        } catch (DataAccessException e) {
+            log.error("getProductBySlug: An error occurred while retrieving product with URL Slug {}.", urlSlug, e);
+            return null;
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.elektrodevs.elektromart.domain.User;
 import com.elektrodevs.elektromart.dto.JwtAuthenticationResponse;
 import com.elektrodevs.elektromart.dto.SignInRequest;
 import com.elektrodevs.elektromart.dto.SignUpRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
 
     private final UserDao userDao;
@@ -33,8 +35,14 @@ public class AuthenticationService {
                 .build();
 
         user = userService.createUser(user);
-        var jwt = jwtService.generateToken(user);
-        return JwtAuthenticationResponse.builder().token(jwt).user(user).build();
+        if (user != null) {
+            log.debug("signup: User '{}' signed up successfully.", user.getUsername());
+            var jwt = jwtService.generateToken(user);
+            return JwtAuthenticationResponse.builder().token(jwt).user(user).build();
+        } else {
+            log.error("signup: Failed to sign up user '{}' due to an error.", request.getUsername());
+            return JwtAuthenticationResponse.builder().build();
+        }
     }
 
 
@@ -44,6 +52,7 @@ public class AuthenticationService {
         var user = userDao.findByUsername(request.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid username or password."));
         var jwt = jwtService.generateToken(user);
+        log.debug("login: User '{}' logged in successfully.", request.getUsername());
         return JwtAuthenticationResponse.builder().token(jwt).user(user).build();
     }
 
