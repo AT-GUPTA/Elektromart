@@ -40,6 +40,24 @@ public class OrderController {
     }
 
     /**
+     * Retrieves a specific order by its ID.
+     * @param orderId The ID of the order to retrieve.
+     * @return A response entity with the order.
+     */
+    @GetMapping("/{orderId}")
+    @PreAuthorize("hasAnyRole('STAFF')")
+    public ResponseEntity<?> getOrderByOrderId(@PathVariable Long orderId){
+        log.debug("Request to get order {}", orderId);
+        Order order = orderService.getOrderByOrderId(orderId);
+        if (order != null) {
+            return ResponseEntity.ok(order);
+        } else {
+            log.error("No order found with id: {}", orderId);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
      * Creates a new order.
      *
      * @return A response entity with success or error message.
