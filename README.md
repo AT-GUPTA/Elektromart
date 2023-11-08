@@ -1,77 +1,73 @@
-# Elektromart
+# Elektromart Online Storefront
 
-Online store for electronics
+Welcome to the Elektromart Online Storefront - an eCommerce platform that allows customers to view and purchase products and enables the merchant’s staff to manage the products and orders.
 
----
+## Getting Started
 
-# Instructions to Run Elektromart Web Application
+These instructions will guide you through setting up the project on your local machine for development and testing purposes.
 
-## Command Line Instructions
+### Prerequisites
 
-### 1. **Clone the Repository**
+What things you need to install the software and how to install them:
 
-```bash
-git clone https://github.com/AT-GUPTA/Elektromart.git
-```
+- Java JDK 11 or later
+- Maven (for building the backend)
+- Node.js and npm (for running the front-end)
+- SQL client (for database management)
+- AWS CLI (optional, for interacting with AWS services)
 
-### 2. **UI Module**
+### Installing
 
-- **Install npm** (Ensure you have Node.js installed; npm comes bundled with it)
-  ```bash
-  https://nodejs.org/
-  ```
+A step by step series of examples that tell you how to get a development environment running.
 
-- **Navigate to UI Directory and Install Dependencies**
-  ```bash
-  cd Elektromart\source\ui
-  npm install
-  ```
+#### Frontend Setup
 
-- **Start the UI**
-  ```bash
-  npm start
-  ```
+1. Clone the repository to your local machine:
+    ```bash
+    git clone https://github.com/AT-GUPTA/Elektromart.git
+    cd Elektromart
+    ```
 
-Note: UI will be accessible at `localhost:3000`
+2. Navigate to the front-end module directory and install dependencies:
+    ```bash
+    cd source/ui/elektromart
+    npm install
+    ```
 
-### 3. **Setup DB**
+3. Start the front-end application:
+    ```bash
+    npm start
+    ```
+   The application will be available at `http://localhost:3000`.
 
-- **Edit application.properties**
-  ```bash
-  cd ..\api\Elektromart\src\main\resources\
-  notepad application.properties
-  ```
+#### Backend Setup
 
-Replace `elektromart.dp.path` with the absolute path of `source\db\elektromart\elektromart` (without .mv.db extension).
+1. Navigate to the backend module directory:
+    ```bash
+    cd source/api_v2/elektromart
+    ```
 
-### 4. **API Module**
+2. Build the project using Maven:
+    ```bash
+    mvn clean install
+    ```
 
-- **Install Tomcat9 version 9.0.82** (Download from the Apache Tomcat official website and extract to a suitable
-  location)
+3. Run the compiled `.war` file:
+    - On Unix/Linux:
+        ```bash
+        java -jar target/elektromart.war
+        ```
+    - On Windows:
+        ```bash
+        java -jar target\elektromart.war
+        ```
+   The API will be accessible on `http://localhost:8080`.
 
-- **Compile the project to get the WAR file**
-  ```bash
-  cd ..\..\..\..
-  mvn clean package
-  ```
+### Database Configuration
 
-- **Deploy to Tomcat**
-  ```bash
-  copy target\Elektromart_war.war \path\to\tomcat9\webapps\
-  ```
+Configure your Spring Boot application properties to connect to the AWS RDS MySQL database with the following details:
 
-Restart Tomcat after copying.
-
-Note: API endpoints will be accessible at `localhost:8080/Elektromart_war/api-endpoints`
-
-## IntelliJ IDEA Instructions
-
-1. **Open IntelliJ IDEA** and choose *Open*.
-2. Navigate to the cloned directory `Elektromart` and open it.
-3. **For UI**: Right-click on `package.json` in the UI module and select *Show npm Scripts*. Run the `install`
-   and `start` scripts.
-4. **For DB**: Edit the `application.properties` file as mentioned in the command line instructions.
-5. **For API**: Use the Maven tool window to run `clean` and then `package`. Deploy the resulting WAR file to the
-   configured Tomcat server in IntelliJ.
-
----
+```properties
+spring.datasource.url=jdbc:mysql://elektromart-db.commiawyevbm.us-east-2.rds.amazonaws.com:3306/elektromart.db
+spring.datasource.username=admin
+spring.datasource.password=elektrodevs
