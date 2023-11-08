@@ -107,7 +107,7 @@ function App() {
                         <Route path="/products/:id" element={<ProductDetail/>}/>
                         <Route path="/cart" element={<Cart isAuth={isAuth}/>} exact/>
                         <Route path="/orders" element={<OrderRoute isAuth={isAuth}/>}/>
-                        <Route path="/orders/:id" element={<OrderDetail/>} isAuth={isAuth} exact/>
+                        <Route path="/orders/:id" element={<OrderDetail roleId={roleId}/>} isAuth={isAuth} exact/>
                         <Route path="/checkout" element={<CheckoutRoute isAuth={isAuth}/>}/>
                         <Route path="/order-placed" element={<OrderPlaced isAuth={isAuth}/>}/>
                     </Routes>

@@ -5,6 +5,7 @@ import com.elektrodevs.elektromart.dto.OrderResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -121,6 +122,29 @@ public class OrderDao {
             }
         }
         return false;
+    }
+
+    public Order getOrderByOrderId(Long orderId) {
+        String SQL = "SELECT * FROM Orders WHERE order_id = ?";
+        try {
+            Order result = jdbcTemplate.queryForObject(SQL, new Object[]{orderId}, (rs, rowNum) -> {
+                Order order = new Order();
+                order.setOrderId(rs.getLong("order_id"));
+                order.setUserId(rs.getLong("user_id"));
+                order.setCartId(rs.getString("cart_id"));
+                order.setCreatedDate(rs.getDate("createdDate"));
+                order.setShippingStatus(rs.getString("shippingStatus"));
+                order.setShippingAddress(rs.getString("shippingAddress"));
+                order.setShippingId(rs.getLong("shipping_id"));
+                order.setPaymentMethod(rs.getString("paymentMethod"));
+                return order;
+            });
+            log.debug("getOrderByOrderId: Retrieved order with ID {}.", orderId);
+            return result;
+        } catch (DataAccessException e) {
+            log.error("getOrderByOrderId: An error occurred while retrieving order with ID {}.", orderId, e);
+            return null;
+        }
     }
 
 }

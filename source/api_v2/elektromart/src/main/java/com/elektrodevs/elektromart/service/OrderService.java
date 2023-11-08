@@ -77,4 +77,8 @@ public class OrderService {
     private boolean isValidShippingStatus(String status) {
         return status != null && ("PENDING".equals(status) || "SHIPPED".equals(status) || "DELIVERED".equals(status));
     }
+
+    public Order getOrderByOrderId(Long orderId) {
+        return orderDao.getOrderByOrderId(orderId);
+    }
 }

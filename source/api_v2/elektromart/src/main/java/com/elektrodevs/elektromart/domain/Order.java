@@ -2,6 +2,7 @@ package com.elektrodevs.elektromart.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Order {
     private Long orderId;
     private Long userId;
@@ -35,11 +37,9 @@ public class Order {
         this.cartId = cartId;
         this.shippingAddress = address;
         this.createdDate = new Date();
-        this.shippingStatus = ShippingStatus.PENDING.name();
+        this.shippingStatus = ShippingStatus.PENDING.name().toUpperCase();
         this.userId = Long.parseLong(userId);
         this.paymentMethod = "Cash on delivery";
         this.shippingId = (long)randomNumber;
     }
-
-    public Order() {}
 }
