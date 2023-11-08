@@ -5,6 +5,7 @@ import com.elektrodevs.elektromart.dto.OrderResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -88,6 +89,61 @@ public class OrderDao {
         } catch (DataAccessException e) {
             log.error("updateCartIdForUser: An error occurred while updating cart_id for user with ID {}.", userId, e);
             return false;
+        }
+    }
+
+    public boolean updateShippingStatus(Long orderId, String newShippingStatus) {
+        // Validate that the provided newShippingStatus corresponds to a valid ShippingStatus enum
+        if (isValidShippingStatus(newShippingStatus)) {
+            String SQL = "UPDATE Orders SET shippingStatus = ? WHERE order_id = ?";
+            try {
+                int rowsAffected = jdbcTemplate.update(SQL, newShippingStatus, orderId);
+                if (rowsAffected > 0) {
+                    log.debug("updateShippingStatus: Updated shipping status for order with ID {} to {}.", orderId, newShippingStatus);
+                    return true;
+                } else {
+                    log.debug("updateShippingStatus: No order found with ID {}.", orderId);
+                    return false;
+                }
+            } catch (DataAccessException e) {
+                log.error("updateShippingStatus: An error occurred while updating shipping status for order with ID {}.", orderId, e);
+                return false;
+            }
+        } else {
+            log.error("updateShippingStatus: Invalid shipping status value received from the UI: {}", newShippingStatus);
+            return false;
+        }
+    }
+
+    private boolean isValidShippingStatus(String status) {
+        for (Order.ShippingStatus shippingStatus : Order.ShippingStatus.values()) {
+            if (shippingStatus.name().equals(status)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Order getOrderByOrderId(Long orderId) {
+        String SQL = "SELECT * FROM Orders WHERE order_id = ?";
+        try {
+            Order result = jdbcTemplate.queryForObject(SQL, new Object[]{orderId}, (rs, rowNum) -> {
+                Order order = new Order();
+                order.setOrderId(rs.getLong("order_id"));
+                order.setUserId(rs.getLong("user_id"));
+                order.setCartId(rs.getString("cart_id"));
+                order.setCreatedDate(rs.getDate("createdDate"));
+                order.setShippingStatus(rs.getString("shippingStatus"));
+                order.setShippingAddress(rs.getString("shippingAddress"));
+                order.setShippingId(rs.getLong("shipping_id"));
+                order.setPaymentMethod(rs.getString("paymentMethod"));
+                return order;
+            });
+            log.debug("getOrderByOrderId: Retrieved order with ID {}.", orderId);
+            return result;
+        } catch (DataAccessException e) {
+            log.error("getOrderByOrderId: An error occurred while retrieving order with ID {}.", orderId, e);
+            return null;
         }
     }
 

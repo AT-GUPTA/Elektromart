@@ -1,0 +1,70 @@
+.card-header {
+    background-color: #495057;
+    color: white;
+    padding: 1rem 1.25rem;
+    font-size: 1.25rem;
+    border-bottom: none;
+}
+
+.card {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.badge {
+    padding: 0.25em 0.6em;
+    border-radius: 1rem;
+    font-size: 0.9em;
+    font-weight: 500;
+    color: white;
+}
+
+.list-group-item {
+    border-bottom: 1px solid #f8f9fa;
+    padding: 1.25rem 1rem;
+}
+
+.price-badge {
+    background-color: #6c757d;
+    color: white;
+    padding: 0.25em 0.6em;
+    border-radius: 1rem;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.mark-button {
+    width: auto;
+    padding: 0.75rem 1.5rem;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+    transition: background-color 0.3s, transform 0.2s;
+    display: block;
+    margin: 1rem auto;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.mark-button:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* Additional styles for status colors */
+.badge-pending {
+    background-color: #ffc107;
+}
+
+.badge-shipped {
+    background-color: #17a2b8;
+}
+
+.badge-delivered {
+    background-color: #28a745;
+}

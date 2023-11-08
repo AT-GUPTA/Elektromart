@@ -52,5 +52,33 @@ public class OrderService {
         log.debug("getOrdersByUserId: Retrieved {} orders for user with ID '{}'.", orders.size(), userId);
         return orders;
     }
+    public boolean updateShippingStatus(Long orderId, String newStatus) {
+        try {
+            // Check if the newStatus is a valid value, e.g., 'PENDING', 'SHIPPED', 'DELIVERED'
+            if (isValidShippingStatus(newStatus)) {
+                boolean updated = orderDao.updateShippingStatus(orderId, newStatus);
+                if (updated) {
+                    log.debug("updateShippingStatus: Updated shipping status for order ID '{}'.", orderId);
+                    return true;
+                } else {
+                    log.error("updateShippingStatus: Failed to update shipping status for order ID '{}'.", orderId);
+                    return false;
+                }
+            } else {
+                log.error("updateShippingStatus: Invalid shipping status value: '{}'.", newStatus);
+                return false;
+            }
+        } catch (Exception e) {
+            log.error("updateShippingStatus: An error occurred while updating shipping status for order ID '{}'.", orderId, e);
+            return false;
+        }
+    }
 
+    private boolean isValidShippingStatus(String status) {
+        return status != null && ("PENDING".equals(status) || "SHIPPED".equals(status) || "DELIVERED".equals(status));
+    }
+
+    public Order getOrderByOrderId(Long orderId) {
+        return orderDao.getOrderByOrderId(orderId);
+    }
 }

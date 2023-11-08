@@ -10,7 +10,7 @@ const Admin = () => {
     const [showAddProductForm, setShowAddProductForm] = useState(false);
     const [showEditProductForm, setShowEditProductForm] = useState(false);
     const [showAddAdminForm, setShowAddAdminForm] = useState(false);
-    const [showAllProducts, setShowAllProducts] = useState(false);
+    const [showAllProducts, setShowAllProducts] = useState(true);
     const [showAllOrders, setShowAllOrders] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
     const [usernames, setUsernames] = useState([]);

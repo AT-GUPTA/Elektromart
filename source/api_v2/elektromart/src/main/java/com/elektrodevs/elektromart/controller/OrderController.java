@@ -40,6 +40,24 @@ public class OrderController {
     }
 
     /**
+     * Retrieves a specific order by its ID.
+     * @param orderId The ID of the order to retrieve.
+     * @return A response entity with the order.
+     */
+    @GetMapping("/{orderId}")
+    @PreAuthorize("hasAnyRole('STAFF')")
+    public ResponseEntity<?> getOrderByOrderId(@PathVariable Long orderId){
+        log.debug("Request to get order {}", orderId);
+        Order order = orderService.getOrderByOrderId(orderId);
+        if (order != null) {
+            return ResponseEntity.ok(order);
+        } else {
+            log.error("No order found with id: {}", orderId);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
      * Creates a new order.
      *
      * @return A response entity with success or error message.
@@ -108,6 +126,33 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+    /**
+     * Updates the shipping status of an order.
+     *
+     * @param orderId   The ID of the order to update.
+     * @param newStatus The new shipping status.
+     * @return A response entity with success or error message.
+     */
+    @PostMapping("/update-shipping-status")
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<?> updateShippingStatus(@RequestParam("orderId") Long orderId, @RequestParam("newStatus") String newStatus) {
+        log.debug("Request to update shipping status for order with ID: {}", orderId);
+
+        if (orderId != null && newStatus != null) {
+            boolean statusUpdated = orderService.updateShippingStatus(orderId, newStatus);
+            if (statusUpdated) {
+                log.debug("Shipping status updated successfully for order with ID: {}", orderId);
+                return ResponseEntity.ok("Shipping status updated successfully.");
+            } else {
+                log.error("Failed to update shipping status for order with ID: {}", orderId);
+                return ResponseEntity.badRequest().body("Failed to update shipping status.");
+            }
+        } else {
+            log.error("Invalid input for updating shipping status.");
+            return ResponseEntity.badRequest().body("Invalid input for updating shipping status.");
+        }
+    }
+
 }
 
 /**

@@ -64,4 +64,13 @@ public class CartService {
         log.debug("createCart: Created a new cart with ID '{}'.", cartId);
         return cartId;
     }
+    public Boolean clearCart(String cartId) {
+        Boolean result = cartDao.clearCart(cartId);
+        if (result) {
+            log.debug("clearCart: Cart with ID '{}' has been cleared.", cartId);
+        } else {
+            log.error("clearCart: Failed to clear cart with ID '{}'.", cartId);
+        }
+        return result;
+    }
 }
