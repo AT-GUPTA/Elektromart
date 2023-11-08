@@ -202,7 +202,7 @@ const Cart = ({isAuth}) => {
     };
 
     return (
-        <div className="card">
+        <div className="card cart-container">
             <div>
                 <div className="row">
                     <div className="col">
@@ -251,7 +251,7 @@ const Cart = ({isAuth}) => {
                                     <button className="btn btn-sm" type="button"
                                             onClick={() => handleDecreaseQty(item)}>-
                                     </button>
-                                    <input type="text" className="form-control form-control-sm text-center"
+                                    <input type="text" className="form-control form-control-sm text-center quantity-input"
                                            value={item.quantity} readOnly/>
                                     <button className="btn btn-sm" type="button"
                                             onClick={() => handleIncreaseQty(item)}>+
@@ -261,7 +261,7 @@ const Cart = ({isAuth}) => {
                         </div>
                         <div className="col text-center">$ {(item.price * item.quantity).toFixed(2)}
                         </div>
-                        <div className="col remove"> {/* text-right class for aligning icon to the right */}
+                        <div className="col remove">
                             <i className="bi bi-trash" onClick={() => handleRemoveItem(item)}></i>
                         </div>
                     </div>
