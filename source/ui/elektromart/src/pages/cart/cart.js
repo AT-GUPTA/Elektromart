@@ -163,6 +163,39 @@ const Cart = ({isAuth}) => {
             window.location.href = '/checkout';
         }
     };
+    const handleClearCart = () => {
+        const cartId = localStorage.getItem("cart_id");
+        fetch(`http://localhost:8080/api/cart/clear-cart?cartId=${cartId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: "Cart cleared successfully.",
+                    });
+                    // Clear the cart items in the frontend
+                    setCartItems([]);
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: "Failed to clear the cart. Please try again.",
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: "Failed to clear the cart. Please try again.",
+                });
+            });
+    };
 
     return (
         <div className="card">
@@ -256,10 +289,15 @@ const Cart = ({isAuth}) => {
                     </div>
                     <div className="col text-center bb">${total.toFixed(2)}</div>
                 </div>
+
                 <div className="row mb-3">
                     <div className="col"></div>
                     <div className="col"></div>
-                    <div className="col"></div>
+                    <div className="col">
+                        <button onClick={handleClearCart} className="btn btn-danger">
+                            Clear Cart
+                        </button>
+                    </div>
                     <div className="col">
                         <button onClick={handleButtonClick} className="btn btn-primary">
                             Continue to Checkout

@@ -111,4 +111,15 @@ public class CartDao {
             return false;
         }
     }
+    public boolean clearCart(String cartId) {
+        String SQL = "DELETE FROM CartProduct WHERE cart_id = ?";
+        try {
+            jdbcTemplate.update(SQL, cartId);
+            log.debug("Cleared cart with ID: {}", cartId);
+            return true;
+        } catch (DataAccessException e) {
+            log.error("Failed to clear cart with ID: {}", cartId);
+            return false;
+        }
+    }
 }
