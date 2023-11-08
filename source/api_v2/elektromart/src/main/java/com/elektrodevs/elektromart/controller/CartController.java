@@ -124,4 +124,20 @@ public class CartController {
         response.put("message", "Product removed from cart successfully.");
         return ResponseEntity.ok(response);
     }
+    /**
+     * Clears the cart for a given user. If no cart exists, do nothing.
+     *
+     * @param cartId The identifier of the cart to clear.
+     * @return A response entity with a success or error message.
+     */
+    @DeleteMapping("/clear-cart")
+    public ResponseEntity<?> clearCart(@RequestParam("cartId") String cartId) {
+        log.debug("Clearing cart with id: {}", cartId);
+        boolean result = cartService.clearCart(cartId);
+        if (result) {
+            return ResponseEntity.ok("Cart cleared successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to clear the cart.");
+        }
+    }
 }
