@@ -54,7 +54,6 @@ function OrderDetail() {
     };
 
     const badgeStyle = (status) => ({
-        backgroundColor: status === 'pending' ? '#17a2b8' : '#28a745',
         padding: '5px 10px',
         borderRadius: '10px'
     });

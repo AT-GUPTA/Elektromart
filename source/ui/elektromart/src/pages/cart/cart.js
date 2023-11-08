@@ -170,7 +170,7 @@ const Cart = ({isAuth}) => {
 
     return (
         <div className="card">
-            <div className="card-header">
+            <div>
                 <div className="row">
                     <div className="col">
                         <h4>

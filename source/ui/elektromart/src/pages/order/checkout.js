@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import '../../styles/checkout.css'
 
 const Checkout = () => {
   const [address, setAddress] = useState('');
@@ -12,6 +13,11 @@ const Checkout = () => {
   const navigate = useNavigate();
   const cartItems = location.state?.cartItems;
   const cartId = location.state?.cartId;
+
+  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const taxRate = 0.10;
+  const taxAmount = subtotal * taxRate;
+  const total = subtotal + taxAmount;
 
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
@@ -73,6 +79,18 @@ const Checkout = () => {
             <span className="text-muted">${item.price.toFixed(2)}</span>
           </li>
         ))}
+        <li className="list-group-item d-flex justify-content-between">
+          <span>Subtotal</span>
+          <strong>${subtotal.toFixed(2)}</strong>
+        </li>
+        <li className="list-group-item d-flex justify-content-between">
+          <span>Tax (10%)</span>
+          <strong>${taxAmount.toFixed(2)}</strong>
+        </li>
+        <li className="list-group-item d-flex justify-content-between bg-light">
+          <span className="text-success">Total (incl. tax)</span>
+          <strong className="text-success">${total.toFixed(2)}</strong>
+        </li>
       </ul>
       <div className="mb-4">
         <h4>Delivery Address</h4>
@@ -86,10 +104,8 @@ const Checkout = () => {
           disabled={validatingAddress}
         />
          {validatingAddress && (
-          <div className="d-flex align-items-center">
-             
-            <div className="spinner-border spinner-border-sm mr-2" role="status">
-            </div>
+          <div className="validating-address">
+            <div className="spinner-border spinner-border-sm" role="status"></div>
             &nbsp; Validating address...
           </div>
         )}
@@ -98,7 +114,7 @@ const Checkout = () => {
         <div className="card border-success mb-3">
           <div className="card-header bg-success text-white">Estimated Delivery and Shipping</div>
           <div className="card-body text-success">
-            <h5 className="card-title">Shipping: ${shippingCost.toFixed(2)}</h5>
+            <h5 className="card-title">Standard Shipping: ${shippingCost.toFixed(2)}</h5>
             <p className="card-text">Estimated Delivery Date: <b>{deliveryDate}</b></p>
           </div>
         </div>

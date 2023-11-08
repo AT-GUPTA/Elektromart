@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
+import '../../styles/orders.css'
 
 
 function Orders({isAdmin}) {
@@ -52,19 +53,23 @@ function Orders({isAdmin}) {
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map(order => (
-                                <tr key={order.orderId} className={order.shippingStatus === 'delivered' ? 'table-success' : ''}>
-                                    <td>{order.orderId}</td>
-                                    <td>{order.createdDate}</td>
-                                    <td>{order.shippingStatus.charAt(0).toUpperCase() + order.shippingStatus.slice(1)}</td>
-                                    <td>{order.paymentMethod}</td>
-                                    <td>
-                                    <button className="btn btn-primary btn-sm" onClick={() => navigate(`/orders/${order.orderId}`, { state: { order } })}>
-                                        View
-                                    </button>
-                                </td>
-                                </tr>
-                            ))}
+                        {orders.map(order => (
+                            <tr key={order.orderId}>
+                            <td>{order.orderId}</td>
+                            <td>{order.createdDate}</td>
+                            <td>
+                                <span className={`status-label ${order.shippingStatus.toLowerCase() === 'delivered' ? 'status-delivered' : 'status-other'}`}>
+                                {order.shippingStatus.charAt(0).toUpperCase() + order.shippingStatus.slice(1)}
+                                </span>
+                            </td>
+                            <td>{order.paymentMethod}</td>
+                            <td>
+                                <button className="btn btn-primary btn-sm" onClick={() => navigate(`/orders/${order.orderId}`, { state: { order } })}>
+                                View
+                                </button>
+                            </td>
+                            </tr>
+                        ))}
                         </tbody>
                     </table>
                 </div>
