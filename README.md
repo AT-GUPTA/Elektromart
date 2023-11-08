@@ -10,7 +10,7 @@ These instructions will guide you through setting up the project on your local m
 
 What things you need to install the software and how to install them:
 
-- Java JDK 11 or later
+- Java JDK 21
 - Maven (for building the backend)
 - Node.js and npm (for running the front-end)
 - SQL client (for database management)
