@@ -45,7 +45,7 @@ public class OrderController {
      * @return A response entity with success or error message.
      */
     @PostMapping("/create-order")
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('STAFF', 'CUSTOMER')")
     public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
         Long userId = orderRequest.getUserId();
         String cartId = orderRequest.getCartId();
