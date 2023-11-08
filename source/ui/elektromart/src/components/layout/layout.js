@@ -2,7 +2,6 @@ import React from 'react';
 import Navigation from './navbar';
 
 function Layout({children, isAuth, roleId, logout}) {
-    console.log('roleId', roleId);
     return (
         <>
             <Navigation isAuth={isAuth} roleId={roleId} logout={logout}/>

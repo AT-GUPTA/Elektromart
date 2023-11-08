@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./admin.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
 import Form from "../signup/Form";
 
@@ -12,8 +13,11 @@ const Admin = () => {
     const [showAllProducts, setShowAllProducts] = useState(false);
     const [showAllOrders, setShowAllOrders] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
-    const [userIds, setUserIds] = useState([]);
-    const [selectedUserId, setSelectedUserId] = useState('');
+    const [usernames, setUsernames] = useState([]);
+    const [selectedUsername, setSelectedUsername] = useState('');
+
+    const navigate = useNavigate();
+
 
     const [productData, setProductData] = useState({
         name: "",
@@ -51,8 +55,8 @@ const Admin = () => {
         })
         .then((response) => response.json())
         .then((data) => {
-            const ids = data.map(order => order.userId);
-            setUserIds([...new Set(ids)]);
+            const usernames = data.map(order => order.username);
+            setUsernames([...new Set(usernames)]);
             setOrders(data);
         })
         .catch((error) => {
@@ -117,7 +121,6 @@ const Admin = () => {
                 }
             });
 
-            console.log(response.ok ? 'Download successful' : 'Download failed');
             if (!response.ok) {
                setErrorMessage('Download failed');
             } else {
@@ -304,7 +307,6 @@ const Admin = () => {
 
     const handleAddAdminSubmit = (e) => {
         e.preventDefault();
-        console.log("New admin data submitted:", adminData);
         setAdminData({
             adminEmail: "",
             adminName: "",
@@ -336,16 +338,18 @@ const Admin = () => {
                 <h2 className="mb-4">Your Orders</h2>
 
                 <div className="mb-4">
-                    <label htmlFor="userIdSelect" className="form-label">Select User ID</label>
+                    <label htmlFor="userIdSelect" className="form-label">Select a Username</label>
                     <select 
                         id="userIdSelect" 
                         className="form-select"
-                        value={selectedUserId}
-                        onChange={(e) => setSelectedUserId(e.target.value)}
+                        value={selectedUsername}
+                        onChange={(e) => {
+                            setSelectedUsername(e.target.value)
+                        }}
                     >
-                        <option value="">Select a User ID...</option>
-                        {userIds.map(id => (
-                            <option key={id} value={id}>{id}</option>
+                        <option value="">Select a Username...</option>
+                        {usernames.map(u => (
+                            <option key={u} value={u}>{u}</option>
                         ))}
                     </select>
                 </div>
@@ -362,14 +366,16 @@ const Admin = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {orders.filter(e =>!selectedUserId || e.userId === Number(selectedUserId)).map(order => (
+                                {orders.filter(e => selectedUsername === "" || e.username === selectedUsername).map(order => (
                                     <tr key={order.orderId} className={order.shippingStatus === 'delivered' ? 'table-success' : ''}>
                                         <td>{order.orderId}</td>
                                         <td>{order.createdDate}</td>
                                         <td>{order.shippingStatus.charAt(0).toUpperCase() + order.shippingStatus.slice(1)}</td>
                                         <td>{order.paymentMethod}</td>
                                         <td>
-                                            <a href={`/orders/${order.orderId}`} className="btn btn-primary btn-sm">View</a>
+                                            <button className="btn btn-primary btn-sm" onClick={() => navigate(`/orders/${order.orderId}`, { state: { order } })}>
+                                                View
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}

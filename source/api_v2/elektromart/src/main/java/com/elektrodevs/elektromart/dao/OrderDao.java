@@ -1,6 +1,7 @@
 package com.elektrodevs.elektromart.dao;
 
 import com.elektrodevs.elektromart.domain.Order;
+import com.elektrodevs.elektromart.dto.OrderResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -18,11 +19,12 @@ public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public List<Order> getAllOrders() {
-        String SQL = "SELECT * FROM Orders";
+    public List<OrderResult> getAllOrders() {
+        String SQL = "SELECT * FROM Orders INNER JOIN Users ON Users.user_id = Orders.user_id";
         try {
-            List<Order> orders = jdbcTemplate.query(SQL, (rs, rowNum) -> {
-                Order order = new Order();
+            List<OrderResult> orders = jdbcTemplate.query(SQL, (rs, rowNum) -> {
+                OrderResult order = new OrderResult();
+                order.setUsername(rs.getString("username"));
                 order.setOrderId(rs.getLong("order_id"));
                 order.setUserId(rs.getLong("user_id"));
                 order.setCartId(rs.getString("cart_id"));
@@ -41,7 +43,7 @@ public class OrderDao {
         }
     }
     public boolean createOrder(Order order) {
-        String SQL = "INSERT INTO Order(user_id, cart_id, createdDate, shippingStatus, shippingAddress, shipping_id, paymentMethod) " +
+        String SQL = "INSERT INTO Orders (user_id, cart_id, createdDate, shippingStatus, shippingAddress, shipping_id, paymentMethod) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             jdbcTemplate.update(SQL, order.getUserId(), order.getCartId(), new Date(), order.getShippingStatus(),
@@ -77,7 +79,7 @@ public class OrderDao {
         }
     }
 
-    public boolean updateCartIdForUser(Long userId, String newCartId) {
+    public boolean updateCartIdForUser(String userId, String newCartId) {
         String SQL = "UPDATE Users SET cart_id = ? WHERE user_id = ?";
         try {
             jdbcTemplate.update(SQL, newCartId, userId);

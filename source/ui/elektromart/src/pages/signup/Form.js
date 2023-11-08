@@ -84,7 +84,6 @@ const Form = ({role}) => {
         } else {
             userData.cartId = "0";
         }
-        console.log(userData);
         addUser(userData);
     };
     

@@ -4,6 +4,7 @@ import "./singleProduct.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
 import {Button, Card} from "react-bootstrap";
+import '../../styles/singleProduct.css'
 
 function SingleProduct() {
     const {urlSlug} = useParams();
@@ -267,9 +268,9 @@ function SingleProduct() {
                                     <Button variant="primary" onClick={addToCart}>Add to Cart</Button>
                                 ) : (
                                     <>
-                                        <Button onClick={decreaseQuantity}>-</Button>
+                                        <Button onClick={decreaseQuantity} className="btn-smaller">-</Button>
                                         <span>{quantity}</span>
-                                        <Button onClick={increaseQuantity}>+</Button>
+                                        <Button onClick={increaseQuantity} className="btn-smaller">+</Button>
                                     </>
                                 )}
                             </div>

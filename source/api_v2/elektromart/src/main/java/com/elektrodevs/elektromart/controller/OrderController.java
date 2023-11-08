@@ -1,7 +1,10 @@
 package com.elektrodevs.elektromart.controller;
 
 import com.elektrodevs.elektromart.domain.Order;
+import com.elektrodevs.elektromart.dto.OrderResult;
+import com.elektrodevs.elektromart.service.CartService;
 import com.elektrodevs.elektromart.service.OrderService;
+import com.elektrodevs.elektromart.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +18,9 @@ import java.util.List;
  * Controller for order-related operations.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/orders")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
 public class OrderController {
 
@@ -29,32 +32,34 @@ public class OrderController {
      * @return A list of all orders.
      */
     @GetMapping("/")
-    @PreAuthorize("hasAnyRole('STAFF', 'CUSTOMER')")
-    public ResponseEntity<List<Order>> getAllOrders() {
+    @PreAuthorize("hasAnyRole('STAFF')")
+    public ResponseEntity<List<OrderResult>> getAllOrders() {
         log.debug("Request to get all orders");
-        List<Order> orders = orderService.getAllOrders();
+        List<OrderResult> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 
     /**
      * Creates a new order.
      *
-     * @param order   The order to be created.
-     * @param session The HTTP session for the current user.
      * @return A response entity with success or error message.
      */
     @PostMapping("/create-order")
-    @PreAuthorize("hasAnyRole('STAFF', 'CUSTOMER')")
-    public ResponseEntity<?> createOrder(@RequestBody Order order, HttpSession session) {
-        Long userId = (Long) session.getAttribute("id");
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
+        Long userId = orderRequest.getUserId();
+        String cartId = orderRequest.getCartId();
+        String deliveryAddress = orderRequest.getDeliveryAddress();
+
         log.debug("Request to create order for user id: {}", userId);
 
-        if (userId != null) {
-            boolean orderCreated = orderService.createOrder(order, userId);
 
-            if (orderCreated) {
+        if (userId != null) {
+            String newCardId = orderService.createOrder(cartId, deliveryAddress, userId.toString());
+
+            if (!newCardId.isEmpty()) {
                 log.debug("Order created successfully for user id: {}", userId);
-                return ResponseEntity.ok("Order created successfully.");
+                return ResponseEntity.ok("{\"newCardId\":\"" + newCardId + "\"}");
             } else {
                 log.error("Failed to create order for user id: {}", userId);
                 return ResponseEntity.badRequest().body("Failed to create the order.");
@@ -103,4 +108,39 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+}
+
+/**
+ * The DTO class for order request.
+ */
+class OrderRequest {
+    private Long userId;
+    private String cartId;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(String cartId) {
+        this.cartId = cartId;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    private String deliveryAddress;
+
 }
