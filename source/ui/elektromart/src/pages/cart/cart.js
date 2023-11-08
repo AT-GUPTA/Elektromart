@@ -33,7 +33,6 @@ const Cart = ({isAuth}) => {
     }
 
     const updateQuantityAPI = (cartId, productSlug, quantity) => {
-        console.log("quantity",quantity);
         fetch(`http://localhost:8080/api/cart/change-quantity`, {
             method: 'POST',
             headers: {

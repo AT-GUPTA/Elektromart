@@ -43,7 +43,7 @@ public class OrderDao {
         }
     }
     public boolean createOrder(Order order) {
-        String SQL = "INSERT INTO Order(user_id, cart_id, createdDate, shippingStatus, shippingAddress, shipping_id, paymentMethod) " +
+        String SQL = "INSERT INTO Orders (user_id, cart_id, createdDate, shippingStatus, shippingAddress, shipping_id, paymentMethod) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             jdbcTemplate.update(SQL, order.getUserId(), order.getCartId(), new Date(), order.getShippingStatus(),

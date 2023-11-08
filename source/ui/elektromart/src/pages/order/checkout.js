@@ -20,20 +20,14 @@ const Checkout = () => {
 
   const validateAddress = async (address) => {
     setValidatingAddress(true);
-    // Simulate address validation delay
     setTimeout(() => {
-      // Here you would typically make an API call to Google's API for address validation
-      // For this mockup, we'll assume the address is always valid and calculate shipping
       setValidatingAddress(false);
-      // Simulate shipping cost calculation based on address
       setShippingCost(calculateShipping(address));
       setDeliveryDate(calculateDeliveryDate());
     }, 1500);
   };
 
   const calculateShipping = (address) => {
-    // Implement actual shipping cost calculation logic here
-    // For this mockup, we'll return a fixed cost
     return 5.99;
   };
 
@@ -47,27 +41,22 @@ const Checkout = () => {
     const userId = localStorage.getItem("id");
     const token = localStorage.getItem("secret");
 
-    const orderInfo = {
-        deliveryDate,
-    }
     fetch('http://localhost:8080/api/orders/create-order', {
-        method: 'POST',
+        method: "POST",
         headers: {
-            'X-Session-ID': userId,
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         },
-        body: `cartId=${cartId}&deliveryAddress=${address}`,
-        credentials: 'include',
+        body: JSON.stringify({cartId, deliveryAddress: address, userId}),
     })
     .then((response) => response.json())
     .then((data) => {
-        navigate("/order-placed", { state:  { isSuccess: true, deliveryDate } } ) } )
+       const newCartId = data.newCardId;
+       localStorage.setItem("cart_id", newCartId);
+       navigate("/order-placed", { state:  { isSuccess: true, deliveryDate } } ) } )
     .catch((error) => {
+      console.log(error);
         navigate("/order-placed", { state:  { isSuccess: false, deliveryDate } } ) } )
-    // Implement order placement logic here
-    console.log('Order placed:', { cartItems, address, shippingCost, deliveryDate });
-    // Redirect to success page, show confirmation, etc.
   };
 
   return (

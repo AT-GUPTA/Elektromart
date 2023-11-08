@@ -1,5 +1,6 @@
 package com.elektrodevs.elektromart.service;
 
+import com.elektrodevs.elektromart.dao.CartDao;
 import com.elektrodevs.elektromart.dao.OrderDao;
 import com.elektrodevs.elektromart.domain.Order;
 import com.elektrodevs.elektromart.dto.OrderResult;
@@ -16,12 +17,13 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderDao orderDao;
+    private final CartDao cartDao;
     public List<OrderResult> getAllOrders() {
         List<OrderResult> orders = orderDao.getAllOrders();
         log.debug("getAllOrders: Retrieved {} orders.", orders.size());
         return orders;
     }
-    public Boolean createOrder(String cartId, String deliveryAddress, String userId) {
+    public String createOrder(String cartId, String deliveryAddress, String userId) {
 
         Order order = new Order(cartId, deliveryAddress, userId);
         boolean orderCreated = orderDao.createOrder(order);
@@ -29,18 +31,19 @@ public class OrderService {
         if (orderCreated) {
             // Update the user's cart_id with a new UUID
             String newCartId = UUID.randomUUID().toString();
+            boolean cartCreated = cartDao.createCart(newCartId);
             boolean cartIdUpdated = orderDao.updateCartIdForUser(userId, newCartId);
 
             if (cartIdUpdated) {
                 log.debug("createOrder: Order created and user's cart_id updated successfully.");
-                return true;
+                return newCartId;
             } else {
                 log.error("createOrder: Error updating the user's cart_id.");
-                return false;
+                return "";
             }
         } else {
             log.error("createOrder: Error creating the order.");
-            return false;
+            return "";
         }
     }
 

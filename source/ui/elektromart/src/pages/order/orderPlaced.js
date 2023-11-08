@@ -23,7 +23,7 @@ const OrderPlaced = () => {
           <p className="mt-4">Thank you for your purchase. Here are the details of your order:</p>
           <div className="border p-4 mt-3">
             <p><strong>Created Date:</strong> {formattedDate}</p>
-            <p><strong>Payment Method:</strong>Cash on delivery</p>
+            <p><strong>Payment Method:</strong>&nbsp;Cash on delivery</p>
             <p><strong>Estimated Delivery Date:</strong> {deliveryDate}</p>
           </div>
         </div>

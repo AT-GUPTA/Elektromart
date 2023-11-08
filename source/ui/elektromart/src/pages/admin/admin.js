@@ -121,7 +121,6 @@ const Admin = () => {
                 }
             });
 
-            console.log(response.ok ? 'Download successful' : 'Download failed');
             if (!response.ok) {
                setErrorMessage('Download failed');
             } else {
@@ -308,7 +307,6 @@ const Admin = () => {
 
     const handleAddAdminSubmit = (e) => {
         e.preventDefault();
-        console.log("New admin data submitted:", adminData);
         setAdminData({
             adminEmail: "",
             adminName: "",
@@ -340,7 +338,7 @@ const Admin = () => {
                 <h2 className="mb-4">Your Orders</h2>
 
                 <div className="mb-4">
-                    <label htmlFor="userIdSelect" className="form-label">Select User ID</label>
+                    <label htmlFor="userIdSelect" className="form-label">Select a Username</label>
                     <select 
                         id="userIdSelect" 
                         className="form-select"

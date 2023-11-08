@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Random;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -27,11 +29,16 @@ public class Order {
     }
 
     public Order(String cartId, String address, String userId) {
+        Random random = new Random();
+        int randomNumber = random.nextInt(2_000_000_000 - 1) + 1;
+
         this.cartId = cartId;
         this.shippingAddress = address;
         this.createdDate = new Date();
         this.shippingStatus = ShippingStatus.PENDING.name();
         this.userId = Long.parseLong(userId);
+        this.paymentMethod = "Cash on delivery";
+        this.shippingId = (long)randomNumber;
     }
 
     public Order() {}
