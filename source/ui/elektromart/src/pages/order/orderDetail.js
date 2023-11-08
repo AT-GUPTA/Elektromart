@@ -55,7 +55,7 @@ function OrderDetail({ roleId }) {
     };
 
     const badgeStyle = (status) => ({
-        backgroundColor: status === 'pending' ? '#17a2b8' : '#28a745',
+        backgroundColor: status === 'PENDING' ? '#ffc107' : (status === 'SHIPPED' ? '#17a2b8' :'#28a745'),
         padding: '2px 6px',
         borderRadius: '10px'
     });
@@ -108,7 +108,7 @@ function OrderDetail({ roleId }) {
                     title: "Updated!",
                     text: "Shipping status updated successfully",
                 });
-                
+
                 setOrder(prevOrder => ({
                     ...prevOrder,
                     shippingStatus: newStatus
