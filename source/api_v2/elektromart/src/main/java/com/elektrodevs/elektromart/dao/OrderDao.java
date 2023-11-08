@@ -91,4 +91,36 @@ public class OrderDao {
         }
     }
 
+    public boolean updateShippingStatus(Long orderId, String newShippingStatus) {
+        // Validate that the provided newShippingStatus corresponds to a valid ShippingStatus enum
+        if (isValidShippingStatus(newShippingStatus)) {
+            String SQL = "UPDATE Orders SET shippingStatus = ? WHERE order_id = ?";
+            try {
+                int rowsAffected = jdbcTemplate.update(SQL, newShippingStatus, orderId);
+                if (rowsAffected > 0) {
+                    log.debug("updateShippingStatus: Updated shipping status for order with ID {} to {}.", orderId, newShippingStatus);
+                    return true;
+                } else {
+                    log.debug("updateShippingStatus: No order found with ID {}.", orderId);
+                    return false;
+                }
+            } catch (DataAccessException e) {
+                log.error("updateShippingStatus: An error occurred while updating shipping status for order with ID {}.", orderId, e);
+                return false;
+            }
+        } else {
+            log.error("updateShippingStatus: Invalid shipping status value received from the UI: {}", newShippingStatus);
+            return false;
+        }
+    }
+
+    private boolean isValidShippingStatus(String status) {
+        for (Order.ShippingStatus shippingStatus : Order.ShippingStatus.values()) {
+            if (shippingStatus.name().equals(status)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
