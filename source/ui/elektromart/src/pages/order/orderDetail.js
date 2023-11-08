@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Swal from "sweetalert2";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../styles/orderDetail.css'
 
 function OrderDetail({ roleId }) {
     const [cart, setCart] = useState({});
@@ -9,12 +10,14 @@ function OrderDetail({ roleId }) {
 
     const [order, setOrder] = useState(location.state?.order || null);
 
-    const totalPrice = () => {
-        if (!cart.cartContent) {
-            return 0;
-        }
-        return cart.cartContent?.reduce((a, i) => a + i.price * i.quantity, 0);
+    const getTotalPrice = () => {
+    return (cart.cartContent || []).reduce((total, item) => total + item.price * item.quantity, 0);
     }
+    
+    const getTotalItems = () => {
+    return (cart.cartContent || []).reduce((total, item) => total + item.quantity, 0);
+    }
+      
 
     useEffect(() => {
         if (order) {
@@ -55,7 +58,7 @@ function OrderDetail({ roleId }) {
     };
 
     const badgeStyle = (status) => ({
-        backgroundColor: status === 'PENDING' ? '#ffc107' : (status === 'SHIPPED' ? '#17a2b8' :'#28a745'),
+        backgroundColor: "#79d1d9",
         padding: '2px 6px',
         borderRadius: '10px'
     });
@@ -131,9 +134,9 @@ function OrderDetail({ roleId }) {
                 <div className="card-body text-primary">
                     <h5 className="card-title">Order ID: {order.orderId}</h5>
                     <p className="card-text">Date: {order.createdDate}</p>
-                    <p className="card-text">Total Items: {cart.cartContent?.length || 0}</p>
-                    <p className="card-text">Total Price: ${totalPrice().toFixed(2)}</p>
-                    <p className="card-text">Status: <span style={badgeStyle(order.shippingStatus)}>{order.shippingStatus}</span></p>
+                    <p className="card-text">Total Items: {getTotalItems()}</p>
+                    <p className="card-text">Total Price: ${getTotalPrice().toFixed(2)}</p>
+                    <p className="card-text">Status: <span style={badgeStyle(order.shippingStatus)}><b>{order.shippingStatus}</b></span></p>
                     
                     {
                         roleId == 2 && order.shippingStatus === "PENDING" && (
@@ -155,15 +158,15 @@ function OrderDetail({ roleId }) {
             <div className="card" style={cardStyle}>
                 <div className="card-header" style={cardHeaderStyle}>Shipping Information</div>
                 <ul className="list-group list-group-flush">
-                    <li className="list-group-item" style={listItemStyle}>Tracking number: {order.shippingId}</li>
-                    <li className="list-group-item" style={listItemStyle}>Delivery Address: {order.shippingAddress}</li>
+                    <li className="list-group-item" style={listItemStyle}><b>Tracking number: </b>{order.shippingId}</li>
+                    <li className="list-group-item" style={listItemStyle}><b>Delivery Address:</b> {order.shippingAddress}</li>
                 </ul>
             </div>
 
             <div className="card" style={cardStyle}>
                 <div className="card-header" style={cardHeaderStyle}>Payment Option</div>
                 <div className="card-body">
-                    <p className="card-text">Method: {order.paymentMethod}</p>
+                    <p className="card-text"><b>Method:</b> {order.paymentMethod}</p>
                 </div>
             </div>
 

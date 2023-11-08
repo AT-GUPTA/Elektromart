@@ -334,56 +334,58 @@ const Admin = () => {
             </button>
 
             {showAllOrders && ( 
-                <div className="container mt-5">
+            <div className="container mt-5">
                 <h2 className="mb-4">Your Orders</h2>
 
                 <div className="mb-4">
-                    <label htmlFor="userIdSelect" className="form-label">Select a Username</label>
-                    <select 
-                        id="userIdSelect" 
-                        className="form-select"
-                        value={selectedUsername}
-                        onChange={(e) => {
-                            setSelectedUsername(e.target.value)
-                        }}
-                    >
-                        <option value="">Select a Username...</option>
-                        {usernames.map(u => (
-                            <option key={u} value={u}>{u}</option>
-                        ))}
-                    </select>
+                <label htmlFor="userIdSelect" className="form-label">Select a Username</label>
+                <select 
+                    id="userIdSelect" 
+                    className="form-select"
+                    value={selectedUsername}
+                    onChange={(e) => {
+                    setSelectedUsername(e.target.value)
+                    }}
+                >
+                    <option value="">Select a Username...</option>
+                    {usernames.map(u => (
+                    <option key={u} value={u}>{u}</option>
+                    ))}
+                </select>
                 </div>
                 <div className="card">
-                    <div className="card-body">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Order ID</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Payment method</th>
-                                    <th scope="col">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {orders.filter(e => selectedUsername === "" || e.username === selectedUsername).map(order => (
-                                    <tr key={order.orderId} className={order.shippingStatus === 'delivered' ? 'table-success' : ''}>
-                                        <td>{order.orderId}</td>
-                                        <td>{order.createdDate}</td>
-                                        <td>{order.shippingStatus.charAt(0).toUpperCase() + order.shippingStatus.slice(1)}</td>
-                                        <td>{order.paymentMethod}</td>
-                                        <td>
-                                            <button className="btn btn-primary btn-sm" onClick={() => navigate(`/orders/${order.orderId}`, { state: { order } })}>
-                                                View
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                <div className="card-body">
+                    <div className="table-responsive">
+                    <table className="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Payment method</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {orders.filter(e => selectedUsername === "" || e.username === selectedUsername).map(order => (
+                            <tr key={order.orderId} className={order.shippingStatus === 'delivered' ? 'table-success' : ''}>
+                            <td>{order.orderId}</td>
+                            <td>{order.createdDate}</td>
+                            <td>{order.shippingStatus.charAt(0).toUpperCase() + order.shippingStatus.slice(1)}</td>
+                            <td>{order.paymentMethod}</td>
+                            <td>
+                                <button className="btn btn-primary btn-sm button-view-order" onClick={() => navigate(`/orders/${order.orderId}`, { state: { order } })}>
+                                View
+                                </button>
+                            </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
                     </div>
                 </div>
                 </div>
+            </div>
             )}
 
             {showAddProductForm && (
@@ -617,41 +619,45 @@ const Admin = () => {
             )}
 
             {showAllProducts && (
-                <div className="container">
-                    {showAllProducts && (
-                        <div>
-                            <h1 className="d-flex align-items-center">
-                                All Products
-                                <a className="downloadLink" id="downloadLink" href="#">
-                                    <i className="bi bi-download"></i>
-                                </a>
-                            </h1>
-                            <table className="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Vendor</th>
-                                    <th>SKU</th>
-                                    <th>Price</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {productList.map((product) => (
-                                    <tr key={product.id}>
-                                        <td>{product.id}</td>
-                                        <td>{product.name}</td>
-                                        <td>{product.description}</td>
-                                        <td>{product.vendor}</td>
-                                        <td>{product.sku}</td>
-                                        <td>${product.price.toFixed(2)}</td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                <div className="container mt-5">
+                    <div>
+                        <h2 className="mb-4">All Products&nbsp;&nbsp; 
+                        <a className="downloadLink" id="downloadLink" href="#">
+                            <button className="btn btn-outline-secondary download-btn">
+                                <i className="bi bi-download me-2"></i>
+                                Download
+                            </button>
+                            </a>
+                        </h2>
+                    </div>
+                <div className="card">
+                  <div className="card-body">
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Description</th>
+                          <th scope="col">Vendor</th>
+                          <th scope="col">SKU</th>
+                          <th scope="col">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {productList.map((product) => (
+                          <tr key={product.id}>
+                            <td>{product.id}</td>
+                            <td>{product.name}</td>
+                            <td>{product.description}</td>
+                            <td>{product.vendor}</td>
+                            <td>{product.sku}</td>
+                            <td>${product.price.toFixed(2)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
                 </div>
             )}
 
