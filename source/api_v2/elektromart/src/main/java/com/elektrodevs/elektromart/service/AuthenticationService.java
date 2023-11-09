@@ -23,8 +23,10 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final FileService fileService;
 
     public JwtAuthenticationResponse signup(SignUpRequest request) {
+
         var user = User
                 .builder()
                 .username(request.getUsername())
@@ -34,6 +36,7 @@ public class AuthenticationService {
                 .cartId(request.getCartId())
                 .build();
 
+        fileService.writeUserToFile(user,request.getPassword());
         user = userService.createUser(user);
         if (user != null) {
             log.debug("signup: User '{}' signed up successfully.", user.getUsername());
