@@ -7,17 +7,80 @@
     position: fixed;
     top: 20px;
     right: 20px;
-    background-color: #4CAF50; /* Green background color */
+    background-color: #4CAF50;
     color: white;
     padding: 15px;
     border-radius: 5px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
+.cart-container {
+    padding: 10px 10px 10px 10px;
+}
+
 .bb {
-    border-bottom: 2px solid #ccc; /* You can customize the border style and color */
+    border-bottom: 2px solid #ccc;
 }
 
 .ub {
-    border-top: 2px solid #ccc; /* You can customize the border style and color */
+    border-top: 2px solid #ccc;
+}
+
+.btn-sm {
+    color: white;
+    background-color: #4E878C;
+    border-color: #4E878C;
+    box-shadow: none;
+    outline: none;
+}
+
+.btn-sm:hover, .btn-sm:focus {
+    background-color: #4E878C;
+    border-color: #4E878C;
+}
+
+.input-group-sm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-control-sm {
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+.input-group-sm .btn-sm {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+}
+
+.remove i {
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.input-group {
+    justify-content: center;
+}
+
+.input-group .btn-sm {
+    white-space: nowrap;
+}
+
+.input-group .btn-sm:not(:last-child) {
+    margin-right: .125rem;
+}
+
+.input-group .btn-sm:not(:first-child) {
+    margin-left: .125rem;
+}
+
+.quantity-input {
+    margin-top: 16px;
 }
