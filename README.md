@@ -46,13 +46,18 @@ A step by step series of examples that tell you how to get a development environ
     ```bash
     cd source/api_v2/elektromart
     ```
+2. Set the desired path for user.json file that saves user credentials:
+     ```bash
+    cd source/api_v2/elektromart/src/main/resources/application.properties
+    ```
+     Complete the todo item for file.userdata.path key
 
-2. Build the project using Maven:
+3. Build the project using Maven:
     ```bash
     mvn clean install
     ```
 
-3. Run the compiled `.war` file:
+4. Run the compiled `.war` file:
     - On Unix/Linux:
         ```bash
         java -jar target/elektromart.war
