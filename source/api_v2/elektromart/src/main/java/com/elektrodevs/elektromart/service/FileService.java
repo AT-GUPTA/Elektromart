@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Service;
 
 import java.nio.file.*;
 import java.io.IOException;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Service
 public class FileService {
 
     private final ResourceLoader resourceLoader;
@@ -66,7 +64,7 @@ public class FileService {
             Files.writeString(externalFilePath, mapper.writeValueAsString(users), StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 
         } catch (IOException e) {
-            log.error("writeUserToFile: Failed to append user details to JSON file.", e);
+            log.error("writeUserToFile: Failed to append user details to JSON file -- {}",e.getMessage(), e);
         }
     }
 }
