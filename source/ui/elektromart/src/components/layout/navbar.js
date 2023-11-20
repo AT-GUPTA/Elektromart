@@ -38,6 +38,12 @@ function Navigation({ isAuth, roleId, logout }) {
                         <li className="dropdown nav-link nav-link-fade-up transition-all duration-700">
                             <a href="/products">Products</a>
                         </li>
+                        {isAuth && ( // Assuming Claim Order should be visible only to logged-in users
+                            <li className="dropdown nav-link nav-link-fade-up transition-all duration-700">
+                                {/* Replace with <Link> if using react-router-dom */}
+                                <a href="/claim-order">Claim Order</a>
+                            </li>
+                        )}
                         {(roleId === "2" || roleId === 2) && 
                         <li className="dropdown nav-link nav-link-fade-up transition-all duration-700">
                             <a href="/admin">Admin</a>

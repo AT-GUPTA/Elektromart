@@ -15,6 +15,7 @@ import Orders from './pages/order/orders';
 import OrderDetail from './pages/order/orderDetail';
 import OrderPlaced from './pages/order/orderPlaced';
 import Checkout from './pages/order/checkout';
+import ClaimOrder from "./pages/order/claimOrder";
 
 function App() {
 
@@ -110,6 +111,7 @@ function App() {
                         <Route path="/orders/:id" element={<OrderDetail roleId={roleId}/>} isAuth={isAuth} exact/>
                         <Route path="/checkout" element={<CheckoutRoute isAuth={isAuth}/>}/>
                         <Route path="/order-placed" element={<OrderPlaced isAuth={isAuth}/>}/>
+                        <Route path="/claim-order" element={<ClaimOrder />} />
                     </Routes>
                 </Router>
             </Layout>

@@ -147,4 +147,21 @@ public class OrderDao {
         }
     }
 
+    public boolean updateUserForOrderIfAbsent(Long orderId, Long userId) {
+        String SQL = "UPDATE Orders SET user_id = ? WHERE order_id = ? AND user_id IS NULL";
+        try {
+            int rowsAffected = jdbcTemplate.update(SQL, userId, orderId);
+            if (rowsAffected > 0) {
+                log.debug("updateUserForOrderIfAbsent: Updated user for order with ID {}.", orderId);
+                return true;
+            } else {
+                log.debug("updateUserForOrderIfAbsent: No update performed, either order not found or user already present.");
+                return false;
+            }
+        } catch (DataAccessException e) {
+            log.error("updateUserForOrderIfAbsent: An error occurred while updating user for order with ID {}.", orderId, e);
+            return false;
+        }
+    }
+
 }

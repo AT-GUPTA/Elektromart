@@ -81,4 +81,10 @@ public class OrderService {
     public Order getOrderByOrderId(Long orderId) {
         return orderDao.getOrderByOrderId(orderId);
     }
+
+    public boolean updateUserForOrderIfAbsent(Long orderId, Long userId) {
+        log.debug("updateUserForOrderIfAbsent: Attempting to update user for order ID '{}'", orderId);
+        return orderDao.updateUserForOrderIfAbsent(orderId, userId);
+    }
+
 }
