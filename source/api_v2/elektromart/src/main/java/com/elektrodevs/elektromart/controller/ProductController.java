@@ -36,6 +36,19 @@ public class ProductController {
     }
 
     /**
+     * Retrieves all featured products.
+     *
+     * @return A list of featured products.
+     */
+    @GetMapping("/featured")
+    public ResponseEntity<List<Product>> getAllFeaturedProducts() {
+        log.debug("Request to get all featured products");
+        List<Product> products = productService.getFeaturedProducts();
+        return ResponseEntity.ok(products);
+    }
+
+
+    /**
      * Retrieves a product by its ID.
      *
      * @param id The ID of the product.

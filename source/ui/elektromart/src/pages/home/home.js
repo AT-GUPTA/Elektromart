@@ -1,18 +1,20 @@
 import React from 'react';
 import Featured from './featured';
-import '../../styles/home.css'
+import '../../styles/home.css';
 
 function Home() {
     return (
-        <>
-            <div className='d-flex justify-content-between welcome-container'>
-                    <h1>Welcome to Elektromart!</h1>
-                <div className='border p-3'>
-                    <h3>Get started by visiting our <a href="/products">product catalog</a></h3>
-                </div>
-            </div>
+        <div className='home-container'>
+            <header className='home-header'>
+                <h1>Welcome to Elektromart!</h1>
+                <p>Explore our wide range of electronic products.</p>
+            </header>
             <Featured />
-        </>
+            <div className='catalog-link'>
+                <h3>Discover More</h3>
+                <a className='btn btn-primary' href="/products">View Product Catalog</a>
+            </div>
+        </div>
     );
 }
 

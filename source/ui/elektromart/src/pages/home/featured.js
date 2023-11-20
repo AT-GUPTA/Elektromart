@@ -1,40 +1,86 @@
-import React from 'react';
-import '../../styles/featured.css'
+import React, { useState, useEffect, useRef } from 'react';
+import '../../styles/featured.css';
 
 function Featured() {
+    const [featuredProducts, setFeaturedProducts] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const autoPlayRef = useRef();
+    const intervalRef = useRef();
+
+    const images = ['galaxy.jpg', 'Iphone.jpg', 'nokia.jpg', 'pixel.jpg', 'xiaomi.jpg'];
+
+    useEffect(() => {
+        fetch('http://localhost:8080/api/products/featured')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                setFeaturedProducts(data);
+            })
+            .catch(error => console.error('Error fetching featured products:', error));
+    }, []);
+
+    useEffect(() => {
+        autoPlayRef.current = goToNext;
+    });
+
+    useEffect(() => {
+        startAutoPlay();
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, []);
+
+    const startAutoPlay = () => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+        }
+        intervalRef.current = setInterval(() => autoPlayRef.current(), 5000);
+    };
+
+    const resetAutoPlay = () => {
+        startAutoPlay();
+    };
+
+    const goToPrevious = () => {
+        const isFirstItem = currentIndex === 0;
+        const newIndex = isFirstItem ? featuredProducts.length - 1 : currentIndex - 1;
+        setCurrentIndex(newIndex);
+        resetAutoPlay();
+    };
+
+    const goToNext = () => {
+        const isLastItem = currentIndex === featuredProducts.length - 1;
+        const newIndex = isLastItem ? 0 : currentIndex + 1;
+        setCurrentIndex(newIndex);
+        resetAutoPlay();
+    };
+
     return (
-        <div className='mt-5 featured-container'>
-            <div className='d-flex justify-content-center'>
-            <h2><u>Featured Products</u></h2>
-            </div>
-            <div class="d-flex justify-content-between gap-3">
-                <div className='d-flex justify-content-between align-items-center'>
-                    <div style={{marginRight: "30px"}}>
-                        <button className="left-arrow">&#9666;</button>
-                    </div>
-                    <div>
-                        <h3>Iphone 12</h3>
-                        <img src="/images/iphone.jpg" alt="iPhone 12" width="200px" height="150px" />
-                    </div>
+        <div className="featured-carousel-container">
+            {featuredProducts.length > 0 ? (
+                <div className="featured-carousel">
+                    {featuredProducts.map((product, index) => (
+                        <a href={`/product/${product.urlSlug}`} key={index} className={`carousel-slide ${index === currentIndex ? 'active' : ''}`} style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+                            <img
+                                className="carousel-image"
+                                src={`../../images/${images[index % images.length]}`}
+                                alt={product.name}
+                            />
+                            <div className="carousel-caption">
+                                <h3>{product.name}</h3>
+                                <p>{product.description}</p>
+                                <p>Price: ${product.price}</p>
+                            </div>
+                        </a>
+                    ))}
+                    <button className="carousel-control prev" onClick={goToPrevious}>&lt;</button>
+                    <button className="carousel-control next" onClick={goToNext}>&gt;</button>
                 </div>
-                <div>
-                    <h3>Pixel 7</h3>
-                    <img src="/images/pixel.jpg" alt="Pixel 7" className="featured-image" width="200px" height="150px" />
-                </div>
-                <div>
-                    <h3>Samsung Galaxy S21</h3>
-                    <img src="/images/galaxy.jpg" alt="Samsung Galaxy S21" className="featured-image" width="200px" height="150px" />
-                </div>
-                <div className='d-flex justify-content-between align-items-center'>
-                    <div>
-                        <h3>Nokia Solid state 2</h3>
-                        <img src="/images/nokia.jpg" alt="iPhone 12" width="200px" height="150px" />
-                    </div>
-                    <div className="">
-                        <button>&#9656;</button>
-                    </div>
-                </div>
-            </div>
+            ) : (
+                <p>Loading featured products...</p>
+            )}
         </div>
     );
 }

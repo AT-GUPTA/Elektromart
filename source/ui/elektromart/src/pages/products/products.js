@@ -37,8 +37,6 @@ function Products() {
                         <div className="card">
                             <img
                                 src={"../../images/iphone.jpg"}
-                                // src={product.image} // Add the product image URL here
-                                // alt={product.name}
                                 className="card-img-top"
                             />
                             <div className="card-body">
