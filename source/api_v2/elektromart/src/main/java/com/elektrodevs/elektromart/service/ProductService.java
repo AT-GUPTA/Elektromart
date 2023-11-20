@@ -28,6 +28,12 @@ public class ProductService {
         log.debug("getProducts: Retrieved {} products.", products.size());
         return products;
     }
+
+    public List<Product> getFeaturedProducts() {
+        List<Product> products = productDao.getFeaturedProducts();
+        log.debug("getProducts: Retrieved {} products.", products.size());
+        return products;
+    }
     public Product createProduct(Product newProduct) {
         Product createdProduct = productDao.createProduct(newProduct);
         if (createdProduct != null) {

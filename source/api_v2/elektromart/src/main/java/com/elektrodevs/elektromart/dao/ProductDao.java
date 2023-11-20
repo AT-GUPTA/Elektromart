@@ -44,6 +44,18 @@ public class ProductDao {
             return null;
         }
     }
+
+    public List<Product> getFeaturedProducts() {
+        String query = "SELECT * FROM Product WHERE is_featured = 1";
+        try {
+            List<Product> featuredProducts = jdbcTemplate.query(query, productRowMapper);
+            log.debug("getProducts: Retrieved {} featured products from the database.", featuredProducts.size());
+            return featuredProducts;
+        } catch (DataAccessException e) {
+            log.error("getProducts: An error occurred while retrieving featured products from the database.", e);
+            return null;
+        }
+    }
     public Product createProduct(Product newProduct) {
         newProduct.setSku(generateSKU()); // Generate SKU
         newProduct.setUrlSlug(generateUrlSlug(newProduct.getName())); // Generate URL Slug
