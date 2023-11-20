@@ -153,6 +153,33 @@ public class OrderController {
         }
     }
 
+    /**
+     * Updates the user of an order if the username is currently null.
+     *
+     * @param orderId The ID of the order to update.
+     * @param userId The ID of the user to attach to the order.
+     * @return A response entity with success or error message.
+     */
+    @PostMapping("/update-order-user-if-absent")
+    @PreAuthorize("hasAnyRole('STAFF', 'CUSTOMER')")
+    public ResponseEntity<?> updateOrderUserIfAbsent(@RequestParam("orderId") Long orderId, @RequestParam("userId") Long userId) {
+        log.debug("Request to update user for order with ID: {}", orderId);
+
+        if (orderId != null && userId != null) {
+            boolean isUpdated = orderService.updateUserForOrderIfAbsent(orderId, userId);
+            if (isUpdated) {
+                log.debug("User updated successfully for order with ID: {}", orderId);
+                return ResponseEntity.ok("User updated successfully for order.");
+            } else {
+                log.error("Failed to update user for order with ID: {}", orderId);
+                return ResponseEntity.badRequest().body("Failed to update user for the order or user already present.");
+            }
+        } else {
+            log.error("Invalid input for updating order user.");
+            return ResponseEntity.badRequest().body("Invalid input for updating order user.");
+        }
+    }
+
 }
 
 /**
