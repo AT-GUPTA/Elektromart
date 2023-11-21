@@ -1,0 +1,4 @@
+sqlite:
+  datasource:
+    url: jdbc:sqlite:C:\Users\atulg\soen387
+    driver-class-name: org.sqlite.JDBC
