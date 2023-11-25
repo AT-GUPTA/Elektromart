@@ -15,6 +15,8 @@ const Admin = () => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [usernames, setUsernames] = useState([]);
     const [selectedUsername, setSelectedUsername] = useState('');
+    const [showStaffMembers, setShowStaffMembers] = useState(false);
+
 
     const navigate = useNavigate();
 
@@ -33,6 +35,8 @@ const Admin = () => {
 
     const [products, setProducts] = useState([]);
     const [orders, setOrders] = useState([]);
+    const [staffMembers, setStaffMembers] = useState([]);
+    const [customerUsernames, setCustomerUsernames] = useState([]);
 
     useEffect(() => {
         if (errorMessage) {
@@ -109,6 +113,60 @@ const Admin = () => {
             }
         };
     }, [showAllProducts]);
+    useEffect(() => {
+        if (showStaffMembers) {
+            fetchStaffMembers();
+        }
+    }, [showStaffMembers]);
+
+    const fetchStaffMembers = async () => {
+        const token = localStorage.getItem("secret");
+        try {
+            const response = await fetch('http://localhost:8080/api/staff/list', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setStaffMembers(data);
+            } else {
+                setErrorMessage('Failed to fetch staff members');
+            }
+        } catch (error) {
+            console.error('Error fetching staff members:', error);
+            setErrorMessage('Error fetching staff members');
+        }
+    };
+
+    useEffect(() => {
+        fetchCustomers();
+    }, []);
+
+    const fetchCustomers = async () => {
+        const token = localStorage.getItem("secret");
+        try {
+            const response = await fetch('http://localhost:8080/api/staff/list-of-customers', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setCustomerUsernames(data.map(user => user.username));
+            } else {
+                setErrorMessage('Failed to fetch customers');
+            }
+        } catch (error) {
+            console.error('Error fetching customers:', error);
+            setErrorMessage('Error fetching customers');
+        }
+    };
+
 
     const handleDownloadClick = async (e) => {
 
@@ -146,6 +204,7 @@ const Admin = () => {
         setShowAddAdminForm(false);
         setShowAllProducts(false);
         setShowAllOrders(false);
+        setShowStaffMembers(false);
     };
 
     const handleEditProductClick = () => {
@@ -154,6 +213,7 @@ const Admin = () => {
         setShowAddAdminForm(false);
         setShowAllProducts(false);
         setShowAllOrders(false);
+        setShowStaffMembers(false);
     };
 
     const handleViewAllProductClick = () => {
@@ -162,6 +222,7 @@ const Admin = () => {
         setShowAddAdminForm(false);
         setShowAllProducts(true);
         setShowAllOrders(false);
+        setShowStaffMembers(false);
     };
 
     const handleAddAdminClick = () => {
@@ -170,6 +231,7 @@ const Admin = () => {
         setShowAddAdminForm(true);
         setShowAllProducts(false);
         setShowAllOrders(false);
+        setShowStaffMembers(false);
     };
 
     const handleShowAllOrders = () => {
@@ -178,6 +240,15 @@ const Admin = () => {
         setShowAddAdminForm(false);
         setShowAllProducts(false);
         setShowAllOrders(true);
+        setShowStaffMembers(false);
+    };
+    const handleManageStaffClick = () => {
+        setShowAddProductForm(false);
+        setShowEditProductForm(false);
+        setShowAddAdminForm(false);
+        setShowAllProducts(false);
+        setShowAllOrders(false);
+        setShowStaffMembers(true);
     };
 
     const handleFormChange = (e) => {
@@ -313,25 +384,102 @@ const Admin = () => {
             adminToken: "",
         });
     };
+    const handleRevokePrivileges = async (username) => {
+        const isConfirmed = await Swal.fire({
+            title: 'Are you sure?',
+            text: `Do you want to revoke privileges for ${username}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Yes, revoke it!'
+        });
+
+        if (isConfirmed.value) {
+            const token = localStorage.getItem("secret");
+            try {
+                const response = await fetch(`http://localhost:8080/api/staff/revoke?username=${username}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    Swal.fire(
+                        'Revoked!',
+                        'Privileges have been revoked.',
+                        'success'
+                    );
+                    fetchStaffMembers(); // Refetch the staff list to update the UI
+                } else {
+                    setErrorMessage('Failed to revoke privileges');
+                }
+            } catch (error) {
+                console.error('Error revoking privileges:', error);
+                setErrorMessage('Error revoking privileges');
+            }
+        }
+    };
+    const handleGrantPrivilegesClick = () => {
+        Swal.fire({
+            title: 'Grant Staff Privileges',
+            input: 'select',
+            inputOptions: customerUsernames.reduce((options, username) => {
+                options[username] = username;
+                return options;
+            }, {}),
+            inputPlaceholder: 'Select a customer',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                return new Promise((resolve) => {
+                    if (value !== '') {
+                        resolve();
+                    } else {
+                        resolve('You need to select a customer');
+                    }
+                });
+            }
+        }).then((result) => {
+            if (result.value) {
+                grantPrivileges(result.value);
+            }
+        });
+    };
+    const grantPrivileges = async (username) => {
+        const token = localStorage.getItem("secret");
+        try {
+            const response = await fetch(`http://localhost:8080/api/staff/grant?username=${username}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                Swal.fire('Granted!', `Staff privileges granted to ${username}`, 'success');
+                fetchStaffMembers(); // Update staff list
+            } else {
+                Swal.fire('Error!', 'Failed to grant privileges', 'error');
+            }
+        } catch (error) {
+            console.error('Error granting privileges:', error);
+            Swal.fire('Error!', 'Failed to grant privileges', 'error');
+        }
+    };
+
 
     return (
         <div className="admin-container">
             <h2>Admin Panel</h2>
-            <button className="adminButton" onClick={handleAddProductClick}>
-                Add New Product
-            </button>
-            <button className="adminButton" onClick={handleEditProductClick}>
-                Edit a Product
-            </button>
-            <button className="adminButton" onClick={handleViewAllProductClick}>
-                View all Products
-            </button>
-            <button className="adminButton" onClick={handleShowAllOrders}>
-                View all Orders
-            </button>
-            <button className="adminButton" onClick={handleAddAdminClick}>
-                Add a New Admin
-            </button>
+            <div className="buttons-container">
+                <button className="adminButton" onClick={handleAddProductClick}>Add New Product</button>
+                <button className="adminButton" onClick={handleEditProductClick}>Edit a Product</button>
+                <button className="adminButton" onClick={handleViewAllProductClick}>View all Products</button>
+                <button className="adminButton" onClick={handleShowAllOrders}>View all Orders</button>
+                <button className="adminButton" onClick={handleAddAdminClick}>Add a New Admin</button>
+                <button className="adminButton" onClick={handleManageStaffClick}>Manage Staff</button>
+            </div>
 
             {showAllOrders && ( 
             <div className="container mt-5">
@@ -386,6 +534,48 @@ const Admin = () => {
                 </div>
                 </div>
             </div>
+            )}
+
+            {showStaffMembers && (
+                <div className="container mt-5">
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Current Staff Members</h2>
+                        <button className="btn btn-primary" onClick={handleGrantPrivilegesClick}>
+                            Grant Staff Privileges
+                        </button>
+                    </div>
+                    <div className="card">
+                        <div className="card-body">
+                            <div className="table-responsive">
+                                <table className="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">User ID</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {staffMembers.map(member => (
+                                        <tr key={member.id}>
+                                            <td>{member.userId}</td>
+                                            <td>{member.username}</td>
+                                            <td>
+                                                <button
+                                                    className="btn btn-sm"
+                                                    style={{width: '25%', backgroundColor: '#d33', color: 'white' }}
+                                                    onClick={() => handleRevokePrivileges(member.username)}>
+                                                    Revoke
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
 
             {showAddProductForm && (

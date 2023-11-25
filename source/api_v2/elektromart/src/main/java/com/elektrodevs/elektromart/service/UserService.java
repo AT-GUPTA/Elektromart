@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -40,4 +42,36 @@ public class UserService {
             log.error("createUser: Failed to create a new user.");
         }
         return createdUser;
-    }}
+    }
+    public void grantStaffPrivileges(String username) {
+        userDao.updateUserRole(username, User.ROLE_STAFF);
+        log.info("Granted staff privileges to user {}", username);
+    }
+
+    public void revokeStaffPrivileges(String username) {
+        userDao.updateUserRole(username, User.ROLE_CUSTOMER);
+        log.info("Revoked staff privileges from user {}", username);
+    }
+    public List<User> getAllStaffMembers() {
+        log.info("Fetching all staff members");
+        try {
+            List<User> staffMembers = userDao.getAllStaffMembers();
+            log.info("Successfully fetched {} staff members", staffMembers.size());
+            return staffMembers;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching staff members: {}", e.getMessage());
+            throw e;
+        }
+    }
+    public List<User> getAllCustomers() {
+        log.info("Fetching all customers");
+        try {
+            List<User> customers = userDao.getAllCustomers();
+            log.info("Successfully fetched {} customers", customers.size());
+            return customers;
+        } catch (Exception e) {
+            log.error("Error occurred while fetching customers: {}", e.getMessage());
+            throw e;
+        }
+    }
+}

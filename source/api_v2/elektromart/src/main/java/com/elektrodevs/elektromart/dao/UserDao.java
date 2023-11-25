@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -90,4 +91,39 @@ public class UserDao {
         log.debug("getTotalUsers: Total users in the database: {}", totalUsers);
         return totalUsers;
     }
+
+    public void updateUserRole(String username, Long newRoleId) {
+        String query = "UPDATE Users SET role_id = ? WHERE username = ?";
+        int updatedRows = jdbcTemplate.update(query, newRoleId, username);
+
+        if (updatedRows > 0) {
+            log.info("UserRole updated for user {}. New RoleId: {}", username, newRoleId);
+        } else {
+            log.warn("No rows updated for user {}. RoleId not changed.", username);
+        }
+    }
+    public List<User> getAllStaffMembers() {
+        String query = "SELECT * FROM Users WHERE role_id = ?";
+        try {
+            List<User> staffMembers = jdbcTemplate.query(query, new Object[]{User.ROLE_STAFF}, userRowMapper);
+            log.info("Retrieved {} staff members from the database", staffMembers.size());
+            return staffMembers;
+        } catch (Exception e) {
+            log.error("Error retrieving staff members: {}", e.getMessage());
+            throw e;
+        }
+    }
+    public List<User> getAllCustomers() {
+        String query = "SELECT * FROM Users WHERE role_id = ?";
+        try {
+            List<User> customers = jdbcTemplate.query(query, new Object[]{User.ROLE_CUSTOMER}, userRowMapper);
+            log.info("Retrieved {} customers from the database", customers.size());
+            return customers;
+        } catch (Exception e) {
+            log.error("Error retrieving customer: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+
 }
