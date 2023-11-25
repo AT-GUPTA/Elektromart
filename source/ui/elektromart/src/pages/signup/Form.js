@@ -6,25 +6,8 @@ import Swal from "sweetalert2";
 const Form = ({role}) => {
     const [username, setUserName] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const navigate = useNavigate();
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-
-    const togglePasswordVisibility = () => {
-        setShowPassword(prevShowPassword => !prevShowPassword);
-    };
-    const toggleConfirmPasswordVisibility = () => {
-        setShowConfirmPassword(prevShowPassword => !prevShowPassword);
-    };
-
-    const passwordFieldType = showPassword ? "text" : "password";
-    const confirmPasswordFieldType = showConfirmPassword ? "text" : "password";
-
-    const passwordsMatch = () => password === confirmPassword;
-
+     const navigate = useNavigate();
+    
     const addUser = async (user) => {
         const res = await fetch(`http://localhost:8080/api/auth/signup`, {
             method: "POST",
@@ -61,21 +44,10 @@ const Form = ({role}) => {
     const signupHandler = (e) => {
         e.preventDefault();
         
-        if (!passwordsMatch()) {
-            Swal.fire({
-                title: "Failure",
-                text: "Passwords do not match",
-                icon: "warning",
-                confirmButtonText: "Try Again",
-            });
-            return;
-        }
-        
         const cart_id = localStorage.getItem("cart_id");
         const userData = {
             username,
             email,
-            password,
             role,
         };
         
@@ -100,7 +72,7 @@ const Form = ({role}) => {
                         type="text"
                         className="form-control input-box"
                         maxLength="30"
-                        placeholder="Username"
+                        placeholder="Passcode"
                         autoComplete="off"
                         onChange={(e) => setUserName(e.target.value)}
                         required
@@ -120,44 +92,6 @@ const Form = ({role}) => {
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
-                </div>
-                <div className="input-group col-lg mt-3 my-md-none">
-                    <label htmlFor="userpass" className="input-group-text">
-                        <i className="bi bi-key"></i>
-                    </label>
-                    <input
-                        id="userpass"
-                        type={passwordFieldType}
-                        className="form-control input-box"
-                        maxLength="16"
-                        minLength="8"
-                        placeholder="Password"
-                        autoComplete="off"
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                    <button type="button" onClick={togglePasswordVisibility} className="btn">
-                        {showPassword ? <i className="bi bi-eye"></i> : <i className="bi bi-eye-slash"></i>}
-                    </button>
-                </div>
-                <div className="input-group col-lg mt-3 my-md-none">
-                    <label htmlFor="confirmPass" className="input-group-text">
-                        <i className="bi bi-key"></i>
-                    </label>
-                    <input
-                        id="confirmPass"
-                        type={confirmPasswordFieldType}
-                        className="form-control input-box"
-                        maxLength="16"
-                        minLength="8"
-                        placeholder="Confirm Password"
-                        autoComplete="off"
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                    />
-                    <button type="button" onClick={toggleConfirmPasswordVisibility} className="btn">
-                        {showConfirmPassword ? <i className="bi bi-eye"></i> : <i className="bi bi-eye-slash"></i>}
-                    </button>
                 </div>
                 <div className="fw-light mt-3">
                     Already have an account?&nbsp;

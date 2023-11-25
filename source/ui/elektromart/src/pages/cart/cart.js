@@ -139,18 +139,19 @@ const Cart = ({isAuth}) => {
     const total = subtotal + taxAmount;
 
     const handleButtonClick = () => {
-        if (!isAuth) {
-            Swal.fire({
-                title: "Unauthorized",
-                text: "Please log in to access your orders",
-                icon: "warning",
-                confirmButtonText: "Login"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '/login';
-                }
-            });
-        } else if(cartItems.length <= 0) {
+        // if (!isAuth) {
+        //     Swal.fire({
+        //         title: "Unauthorized",
+        //         text: "Please log in to access your orders",
+        //         icon: "warning",
+        //         confirmButtonText: "Login"
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             window.location.href = '/login';
+        //         }
+        //     });
+        // } else 
+        if(cartItems.length <= 0) {
             Swal.fire({
                 title: "Empty Cart",
                 text: "Please add items to your cart",

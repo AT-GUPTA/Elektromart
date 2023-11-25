@@ -5,13 +5,13 @@ import com.elektrodevs.elektromart.dto.OrderResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Repository
@@ -46,8 +46,12 @@ public class OrderDao {
     public boolean createOrder(Order order) {
         String SQL = "INSERT INTO Orders (user_id, cart_id, createdDate, shippingStatus, shippingAddress, shipping_id, paymentMethod) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String timestamp = dateFormat.format(new Date());
+
         try {
-            jdbcTemplate.update(SQL, order.getUserId(), order.getCartId(), new Date(), order.getShippingStatus(),
+            jdbcTemplate.update(SQL, order.getUserId(), order.getCartId(), timestamp, order.getShippingStatus(),
                     order.getShippingAddress(), order.getShippingId(), order.getPaymentMethod());
             log.debug("createOrder: Order created successfully for user with ID {}.", order.getUserId());
             return true;

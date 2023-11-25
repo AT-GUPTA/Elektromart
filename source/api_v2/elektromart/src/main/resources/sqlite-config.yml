@@ -1,4 +1,4 @@
 sqlite:
   datasource:
-    url: jdbc:sqlite:C:\Users\atulg\soen387
+    url: jdbc:sqlite:C:/Users/atulg/soen387/elektromart.db
     driver-class-name: org.sqlite.JDBC

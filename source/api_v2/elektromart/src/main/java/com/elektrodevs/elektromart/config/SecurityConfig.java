@@ -73,6 +73,8 @@ public class SecurityConfig {
                         // Require authentication for POST and PUT requests to /products/
                         .requestMatchers(HttpMethod.POST, "/products/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/products/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/orders/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/orders/**").permitAll()
                         // All other requests should be authenticated
                         .anyRequest().authenticated()
                 )

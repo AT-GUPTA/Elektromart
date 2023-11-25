@@ -25,13 +25,15 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final FileService fileService;
 
+    private static final String SECRET="elektro@123";
+
     public JwtAuthenticationResponse signup(SignUpRequest request) {
 
         var user = User
                 .builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .password(passwordEncoder.encode(SECRET))
                 .roleId(request.getRole())
                 .cartId(request.getCartId())
                 .build();
@@ -50,10 +52,10 @@ public class AuthenticationService {
 
 
     public JwtAuthenticationResponse login(SignInRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), SECRET));
 
         var user = userDao.findByUsername(request.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid username or password."));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid passcode"));
         var jwt = jwtService.generateToken(user);
         log.debug("login: User '{}' logged in successfully.", request.getUsername());
         return JwtAuthenticationResponse.builder().token(jwt).user(user).build();

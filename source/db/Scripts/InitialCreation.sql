@@ -1,52 +1,71 @@
-DROP TABLE IF EXISTS Product;
-CREATE TABLE Product (
-                         id INT AUTO_INCREMENT PRIMARY KEY,
-                         name VARCHAR(255) NOT NULL,
-                         description TEXT,
-                         vendor VARCHAR(255),
-                         url_slug VARCHAR(100) UNIQUE NOT NULL,
-                         sku VARCHAR(255) UNIQUE NOT NULL,
-                         price DECIMAL(10, 2) NOT NULL,
-                         discount_percent INT DEFAULT 0,
-                         is_featured BOOLEAN DEFAULT FALSE,
-                         is_delete BOOLEAN DEFAULT FALSE
-);
-
-DROP TABLE IF EXISTS Cart;
+-- Cart table
 CREATE TABLE Cart (
-                      id VARCHAR(255) NOT NULL PRIMARY KEY,
-                      user_id BIGINT DEFAULT NULL,
-                      temp_id VARCHAR(255) DEFAULT NULL
+  id TEXT NOT NULL,
+  temp_id TEXT DEFAULT NULL,
+  PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS CartProduct;
+-- CartProduct table
 CREATE TABLE CartProduct (
-                             cart_id VARCHAR(255) NOT NULL,
-                             product_slug VARCHAR(100) UNIQUE NOT NULL,
-                             quantity INT NOT NULL default 1,
-                             PRIMARY KEY (cart_id, product_slug),
-                             FOREIGN KEY (cart_id) REFERENCES Cart(id),
-                             FOREIGN KEY (product_slug) REFERENCES Product(url_slug)
+  cart_id TEXT NOT NULL,
+  product_slug TEXT NOT NULL,
+  quantity INTEGER NOT NULL DEFAULT 1,
+  PRIMARY KEY (cart_id, product_slug),
+  FOREIGN KEY (cart_id) REFERENCES Cart(id),
+  FOREIGN KEY (product_slug) REFERENCES Product(url_slug)
 );
 
-DROP TABLE IF EXISTS Role;
+-- Orders table
+CREATE TABLE Orders (
+  order_id INTEGER NOT NULL,
+  user_id INTEGER,
+  cart_id TEXT NOT NULL,
+  createdDate TEXT NOT NULL,
+  shippingStatus TEXT NOT NULL CHECK(shippingStatus IN ('PENDING', 'SHIPPED', 'DELIVERED')),
+  shippingAddress TEXT,
+  shipping_id INTEGER DEFAULT NULL,
+  paymentMethod TEXT NOT NULL DEFAULT 'COD',
+  PRIMARY KEY (order_id AUTOINCREMENT),
+  FOREIGN KEY (user_id) REFERENCES Users(user_id),
+  FOREIGN KEY (cart_id) REFERENCES Cart(id)
+);
+
+-- Product table
+CREATE TABLE Product (
+  id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT,
+  vendor TEXT DEFAULT NULL,
+  url_slug TEXT NOT NULL,
+  sku TEXT NOT NULL,
+  price REAL NOT NULL,
+  discount_percent INTEGER DEFAULT 0,
+  is_featured INTEGER DEFAULT 0,
+  is_delete INTEGER DEFAULT 0,
+  PRIMARY KEY (id AUTOINCREMENT),
+  UNIQUE (url_slug),
+  UNIQUE (sku)
+);
+
+-- Role table
 CREATE TABLE Role (
-                      role_id int AUTO_INCREMENT PRIMARY KEY,
-                      role_name VARCHAR(255) UNIQUE NOT NULL
+  role_id INTEGER NOT NULL,
+  role_name TEXT NOT NULL,
+  PRIMARY KEY (role_id AUTOINCREMENT),
+  UNIQUE (role_name)
 );
 
-INSERT INTO Role (role_name) VALUES ('customer'), ('staff');
-
-
-DROP TABLE IF EXISTS Users;
+-- Users table
 CREATE TABLE Users (
-                       user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                       username VARCHAR(255) UNIQUE NOT NULL,
-                       password VARCHAR(100) NOT NULL,
-                       email VARCHAR(255) UNIQUE NOT NULL,
-                       role_id int,
-                       status VARCHAR(255),
-                       cart_id VARCHAR(255),
-                       FOREIGN KEY (role_id) REFERENCES Role(role_id),
-                       FOREIGN KEY (cart_id) REFERENCES Cart(id)
+  user_id INTEGER NOT NULL,
+  username TEXT NOT NULL,
+  password TEXT NOT NULL,
+  email TEXT NOT NULL,
+  role_id INTEGER DEFAULT NULL,
+  status TEXT DEFAULT NULL,
+  cart_id TEXT DEFAULT NULL,
+  PRIMARY KEY (user_id AUTOINCREMENT),
+  UNIQUE (username),
+  UNIQUE (email),
+  FOREIGN KEY (role_id) REFERENCES Role(role_id)
 );
