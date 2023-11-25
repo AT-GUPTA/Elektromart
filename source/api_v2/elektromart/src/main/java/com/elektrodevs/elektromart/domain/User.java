@@ -25,6 +25,8 @@ public class User implements UserDetails {
     private String status;
     private String cartId;
 
+    public static final long ROLE_CUSTOMER = 1;
+    public static final long ROLE_STAFF = 2;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(roleId == 1 ? "ROLE_CUSTOMER" : "ROLE_STAFF"));
