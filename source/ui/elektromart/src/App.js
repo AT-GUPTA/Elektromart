@@ -62,34 +62,34 @@ function App() {
     }
 
     function OrderRoute({isAuth}) {
-        if (!isAuth) {
-            swal.fire({
-                title: "Unauthorized",
-                text: "Please log in to access your orders",
-                icon: "warning",
-                confirmButtonText: "Login"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '/login';
-                }
-            });
-        }
+        // if (!isAuth) {
+        //     swal.fire({
+        //         title: "Unauthorized",
+        //         text: "Please log in to access your orders",
+        //         icon: "warning",
+        //         confirmButtonText: "Login"
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             window.location.href = '/login';
+        //         }
+        //     });
+        // }
         return <Orders/>
     }
 
     function CheckoutRoute({isAuth}) {
-        if (!isAuth) {
-            swal.fire({
-                title: "Unauthorized",
-                text: "Please log in to access your orders",
-                icon: "warning",
-                confirmButtonText: "Login"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '/login';
-                }
-            });
-        }
+        // if (!isAuth) {
+        //     swal.fire({
+        //         title: "Unauthorized",
+        //         text: "Please log in to access your orders",
+        //         icon: "warning",
+        //         confirmButtonText: "Login"
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             window.location.href = '/login';
+        //         }
+        //     });
+        // }
         return <Checkout/>
     }
 

@@ -2,10 +2,7 @@ package com.elektrodevs.elektromart.controller;
 
 import com.elektrodevs.elektromart.domain.Order;
 import com.elektrodevs.elektromart.dto.OrderResult;
-import com.elektrodevs.elektromart.service.CartService;
 import com.elektrodevs.elektromart.service.OrderService;
-import com.elektrodevs.elektromart.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -41,12 +38,13 @@ public class OrderController {
 
     /**
      * Retrieves a specific order by its ID.
+     *
      * @param orderId The ID of the order to retrieve.
      * @return A response entity with the order.
      */
     @GetMapping("/{orderId}")
     @PreAuthorize("hasAnyRole('STAFF')")
-    public ResponseEntity<?> getOrderByOrderId(@PathVariable Long orderId){
+    public ResponseEntity<?> getOrderByOrderId(@PathVariable Long orderId) {
         log.debug("Request to get order {}", orderId);
         Order order = orderService.getOrderByOrderId(orderId);
         if (order != null) {
@@ -63,7 +61,6 @@ public class OrderController {
      * @return A response entity with success or error message.
      */
     @PostMapping("/create-order")
-    @PreAuthorize("hasAnyRole('STAFF', 'CUSTOMER')")
     public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
         Long userId = orderRequest.getUserId();
         String cartId = orderRequest.getCartId();
@@ -72,19 +69,14 @@ public class OrderController {
         log.debug("Request to create order for user id: {}", userId);
 
 
-        if (userId != null) {
-            String newCardId = orderService.createOrder(cartId, deliveryAddress, userId.toString());
+        String newCardId = orderService.createOrder(cartId, deliveryAddress, userId != null ? userId.toString() : null);
 
-            if (!newCardId.isEmpty()) {
-                log.debug("Order created successfully for user id: {}", userId);
-                return ResponseEntity.ok("{\"newCardId\":\"" + newCardId + "\"}");
-            } else {
-                log.error("Failed to create order for user id: {}", userId);
-                return ResponseEntity.badRequest().body("Failed to create the order.");
-            }
+        if (!newCardId.isEmpty()) {
+            log.debug("Order created successfully for user id: {}", userId);
+            return ResponseEntity.ok("{\"newCardId\":\"" + newCardId + "\"}");
         } else {
-            log.error("Attempt to create order without login");
-            return ResponseEntity.status(401).body("User is not logged in.");
+            log.error("Failed to create order for user id: {}", userId);
+            return ResponseEntity.badRequest().body("Failed to create the order.");
         }
     }
 
@@ -95,7 +87,6 @@ public class OrderController {
      * @return A list of orders for the user.
      */
     @GetMapping("/order-history")
-    @PreAuthorize("hasAnyRole('STAFF', 'CUSTOMER')")
     public ResponseEntity<List<Order>> getOrderHistoryForCurrentUser(@RequestHeader("X-Session-ID") String userId) {
         log.debug("Request to get order history for user id: {}", userId);
         if (userId != null) {
@@ -126,6 +117,7 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+
     /**
      * Updates the shipping status of an order.
      *
@@ -157,7 +149,7 @@ public class OrderController {
      * Updates the user of an order if the username is currently null.
      *
      * @param orderId The ID of the order to update.
-     * @param userId The ID of the user to attach to the order.
+     * @param userId  The ID of the user to attach to the order.
      * @return A response entity with success or error message.
      */
     @PostMapping("/update-order-user-if-absent")
@@ -188,6 +180,7 @@ public class OrderController {
 class OrderRequest {
     private Long userId;
     private String cartId;
+    private String deliveryAddress;
 
     public Long getUserId() {
         return userId;
@@ -212,7 +205,5 @@ class OrderRequest {
     public void setDeliveryAddress(String deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
     }
-
-    private String deliveryAddress;
 
 }

@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.Random;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -24,12 +23,6 @@ public class Order {
     @JsonProperty("paymentMethod")
     private String paymentMethod;
 
-    public enum ShippingStatus {
-        PENDING,
-        SHIPPED,
-        DELIVERED
-    }
-
     public Order(String cartId, String address, String userId) {
         Random random = new Random();
         int randomNumber = random.nextInt(2_000_000_000 - 1) + 1;
@@ -38,8 +31,14 @@ public class Order {
         this.shippingAddress = address;
         this.createdDate = new Date();
         this.shippingStatus = ShippingStatus.PENDING.name().toUpperCase();
-        this.userId = Long.parseLong(userId);
+        this.userId = userId != null ? Long.parseLong(userId) : null;
         this.paymentMethod = "Cash on delivery";
-        this.shippingId = (long)randomNumber;
+        this.shippingId = (long) randomNumber;
+    }
+
+    public enum ShippingStatus {
+        PENDING,
+        SHIPPED,
+        DELIVERED
     }
 }

@@ -5,15 +5,8 @@ import Swal from "sweetalert2";
 
 const Form = ({authentication, setRoleId}) => {
     const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const [showPassword, setShowPassword] = useState(false);
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(prevShowPassword => !prevShowPassword);
-    };
-
-    const passwordFieldType = showPassword ? "text" : "password";
 
     const loginVerification = async (user) => {
         const res = await fetch(`http://localhost:8080/api/auth/login`, {
@@ -53,7 +46,7 @@ const Form = ({authentication, setRoleId}) => {
         } else {
             await Swal.fire({
                 title: "Login Failure",
-                text: "Invalid username or password",
+                text: "Invalid passcode",
                 icon: "warning",
                 confirmButtonText: "Try Again",
             });
@@ -62,7 +55,7 @@ const Form = ({authentication, setRoleId}) => {
 
     const loginHandler = (e) => {
         e.preventDefault();
-        loginVerification({username, password});
+        loginVerification({username});
     };
 
     return (
@@ -77,30 +70,11 @@ const Form = ({authentication, setRoleId}) => {
                         type="text"
                         className="form-control input-box"
                         maxLength="40"
-                        placeholder="Username"
+                        placeholder="Passcode"
                         autoComplete="off"
                         onChange={(e) => setUsername(e.target.value)}
                         required
                     />
-                </div>
-                <div className="input-group col-lg mt-3 my-md-none">
-                    <label htmlFor="userpass" className="input-group-text">
-                        <i className="bi bi-key"></i>
-                    </label>
-                    <input
-                        id="userpass"
-                        type={passwordFieldType}
-                        className="form-control input-box"
-                        maxLength="16"
-                        minLength="8"
-                        placeholder="••••••••"
-                        autoComplete="off"
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                    <button type="button" onClick={togglePasswordVisibility} className="btn">
-                        {showPassword ? <i className="bi bi-eye"></i> : <i className="bi bi-eye-slash"></i>}
-                    </button>
                 </div>
                 <div className="fw-light mt-3">
                     Don't have an account?&nbsp;

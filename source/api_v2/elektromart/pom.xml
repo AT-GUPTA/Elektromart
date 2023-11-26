@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.elektrodevs</groupId>
 	<artifactId>elektromart</artifactId>
-	<version>2.0.0</version>
+	<version>3.0.0</version>
 	<packaging>war</packaging>
 	<name>elektromart</name>
 	<description>COMP 387 Project</description>
@@ -20,7 +20,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -40,11 +40,6 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -86,7 +81,11 @@
 			<artifactId>json</artifactId>
 			<version>20231013</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<version>3.44.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
