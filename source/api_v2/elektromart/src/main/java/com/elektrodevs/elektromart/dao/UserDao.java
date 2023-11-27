@@ -1,6 +1,8 @@
 package com.elektrodevs.elektromart.dao;
 
+import com.elektrodevs.elektromart.domain.Product;
 import com.elektrodevs.elektromart.domain.User;
+import com.elektrodevs.elektromart.dto.PasscodeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -28,8 +30,7 @@ public class UserDao {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             User user = new User();
             user.setUserId(rs.getLong("user_id"));
-            user.setUsername(rs.getString("username"));
-            user.setPassword(rs.getString("password"));
+            user.setPasscode(rs.getString("passcode"));
             user.setEmail(rs.getString("email"));
             user.setRoleId(rs.getLong("role_id"));
             user.setStatus(rs.getString("status"));
@@ -37,21 +38,32 @@ public class UserDao {
             return user;
         }
     };
-    public Optional<User> findByUsername(String username){
-        User user = getUser(username);
-        log.debug("findByUsername: Username {} found in the database.", username);
+    public Optional<User> findByPasscode(String passcode) {
+        User user = getUser(passcode);
+        log.debug("findByPasscode: Passcode {} found in the database.", PasscodeUtil.Encrypt(passcode));
         return Optional.ofNullable(user);
     }
 
-
-    public User getUser(String username) {
-        String query = "SELECT * FROM Users WHERE username = ?";
+    public User getUserByEmail(String email) {
+        String query = "SELECT * FROM Users WHERE passcode = ?";
         try {
-            User user = jdbcTemplate.queryForObject(query, new Object[]{username}, userRowMapper);
-            log.debug("getUser: User with username {} found in the database.", username);
+            User user = jdbcTemplate.queryForObject(query, new Object[]{email}, userRowMapper);
+            log.debug("getUser: User with email {} found in the database.",  email);
             return user;
         } catch (EmptyResultDataAccessException e) {
-            log.debug("getUser: User with username {} not found in the database.", username);
+            log.debug("getUser: User with email {} not found in the database.",  email);
+            return null;
+        }
+    }
+
+    public User getUser(String passcode) {
+        String query = "SELECT * FROM Users WHERE passcode = ?";
+        try {
+            User user = jdbcTemplate.queryForObject(query, new Object[]{passcode}, userRowMapper);
+            log.debug("getUser: User with passcode {} found in the database.",  PasscodeUtil.Encrypt(passcode));
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            log.debug("getUser: User with passcode {} not found in the database.",  PasscodeUtil.Encrypt(passcode));
             return null;
         }
     }
@@ -64,24 +76,23 @@ public class UserDao {
             jdbcTemplate.update(cartQuery, cartId);
         }
 
-        String userQuery = "INSERT INTO Users (username, email, password, role_id, status, cart_id) VALUES (?, ?, ?, ?, ?, ?)";
+        String userQuery = "INSERT INTO Users (email, passcode, role_id, status, cart_id) VALUES (?, ?, ?, ?, ?)";
 
         try {
             jdbcTemplate.update(userQuery,
-                    newUser.getUsername(),
                     newUser.getEmail(),
-                    newUser.getPassword(),
+                    newUser.getPasscode(),
                     newUser.getRoleId(),
                     newUser.getStatus(),
                     cartId);
 
             newUser.setCartId(cartId);
-            log.debug("createUser: User {} created successfully.", newUser.getUsername());
+            log.debug("createUser: User {} created successfully.", newUser.getPasscode());
             return newUser;
 
         } catch (DuplicateKeyException e) {
-            log.error("createUser: Username or Email already exists for user {}.", newUser.getUsername());
-            throw new IllegalArgumentException("Username or Email already exists.");
+            log.error("createUser: passcode or Email already exists for user {}.", newUser.getPasscode());
+            throw new IllegalArgumentException("passcode or Email already exists.");
         }
     }
 
@@ -92,14 +103,14 @@ public class UserDao {
         return totalUsers;
     }
 
-    public void updateUserRole(String username, Long newRoleId) {
-        String query = "UPDATE Users SET role_id = ? WHERE username = ?";
-        int updatedRows = jdbcTemplate.update(query, newRoleId, username);
+    public void updateUserRole(String passcode, Long newRoleId) {
+        String query = "UPDATE Users SET role_id = ? WHERE passcode = ?";
+        int updatedRows = jdbcTemplate.update(query, newRoleId, passcode);
 
         if (updatedRows > 0) {
-            log.info("UserRole updated for user {}. New RoleId: {}", username, newRoleId);
+            log.info("UserRole updated for user {}. New RoleId: {}", passcode, newRoleId);
         } else {
-            log.warn("No rows updated for user {}. RoleId not changed.", username);
+            log.warn("No rows updated for user {}. RoleId not changed.", passcode);
         }
     }
     public List<User> getAllStaffMembers() {
@@ -119,6 +130,18 @@ public class UserDao {
             List<User> customers = jdbcTemplate.query(query, new Object[]{User.ROLE_CUSTOMER}, userRowMapper);
             log.info("Retrieved {} customers from the database", customers.size());
             return customers;
+        } catch (Exception e) {
+            log.error("Error retrieving customer: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    public List<User> getAllUsers() {
+        String query = "SELECT * FROM Users";
+        try {
+            List<User> users = jdbcTemplate.query(query, userRowMapper);
+            log.info("Retrieved {} customers from the database", users.size());
+            return users;
         } catch (Exception e) {
             log.error("Error retrieving customer: {}", e.getMessage());
             throw e;

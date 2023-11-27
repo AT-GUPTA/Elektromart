@@ -26,9 +26,8 @@ public class SeedAdminUser implements CommandLineRunner {
 
             User admin = User
                     .builder()
-                    .username("admin")
                     .email("admin@test.com")
-                    .password(passwordEncoder.encode("elektrodevs@123"))
+                    .passcode(passwordEncoder.encode("admin"))
                     .roleId(2L)
                     .build();
 

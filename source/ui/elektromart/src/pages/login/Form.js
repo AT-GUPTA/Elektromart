@@ -4,16 +4,16 @@ import {Link, useNavigate} from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Form = ({authentication, setRoleId}) => {
-    const [username, setUsername] = useState("");
+    const [passcode, setPasscode] = useState("");
     const navigate = useNavigate();
 
 
-    const loginVerification = async (user) => {
+    const loginVerification = async (passcode) => {
         const res = await fetch(`http://localhost:8080/api/auth/login`, {
             method: "POST",
             mode: "cors",
             headers: {"Content-type": "application/json"},
-            body: JSON.stringify(user)
+            body: JSON.stringify(passcode)
         });
 
         const jsonResponse = await res.json();
@@ -21,16 +21,18 @@ const Form = ({authentication, setRoleId}) => {
         const message = jsonResponse["message"];
         const isLoggedIn = status === "SUCCESS";
         const roleId = jsonResponse["roleId"];
+        const user = JSON.parse(message);
+        console.log(jsonResponse);
 
         if (isLoggedIn) {
             localStorage.setItem("cart_id", jsonResponse["cartId"]);
             localStorage.setItem("secret", jsonResponse["token"]);
-            localStorage.setItem("username",user.username)
+            localStorage.setItem("email", user.email)
             authentication(true, roleId);
             setRoleId(roleId);
             Swal.fire({
                 title: "Login Success!",
-                text: "Hello " + user.username,
+                text: "Hello " + user.email,
                 icon: "success",
                 confirmButtonText: "Continue Shopping!",
             }).then((result) => {
@@ -55,7 +57,7 @@ const Form = ({authentication, setRoleId}) => {
 
     const loginHandler = (e) => {
         e.preventDefault();
-        loginVerification({username});
+        loginVerification({passcode});
     };
 
     return (
@@ -72,7 +74,7 @@ const Form = ({authentication, setRoleId}) => {
                         maxLength="40"
                         placeholder="Passcode"
                         autoComplete="off"
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setPasscode(e.target.value)}
                         required
                     />
                 </div>

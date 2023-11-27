@@ -1,9 +1,13 @@
 package com.elektrodevs.elektromart.controller;
 
+import com.elektrodevs.elektromart.domain.User;
 import com.elektrodevs.elektromart.dto.JwtAuthenticationResponse;
+import com.elektrodevs.elektromart.dto.PasscodeUtil;
 import com.elektrodevs.elektromart.dto.SignInRequest;
 import com.elektrodevs.elektromart.dto.SignUpRequest;
 import com.elektrodevs.elektromart.service.AuthenticationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,19 +36,32 @@ public class AuthenticationController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody SignInRequest request) {
-        log.debug("Attempting to login user: {}", request.getUsername());
+        String encryptedPasscode = PasscodeUtil.Encrypt(request.getPasscode());
+        log.debug("Attempting to login user: {}", encryptedPasscode);
         try {
             JwtAuthenticationResponse result = authenticationService.login(request);
-            if (result != null && result.getUser() != null){
-                log.debug("Login successful for user: {}", request.getUsername());
-                return ResponseEntity.ok(createJsonResponse("SUCCESS", result.getUser().getUserId().toString(),result));
+            if (result != null && result.getUser() != null) {
+                log.debug("Login successful for user: {}", encryptedPasscode);
+                // Serialize the entire user object to JSON and include it in the response
+                String userJson = convertUserToJson(result.getUser());
+                return ResponseEntity.ok(createJsonResponse("SUCCESS", userJson, result));
             } else {
-                log.error("Login failed for user: {}", request.getUsername());
+                log.error("Login failed for user: {}", encryptedPasscode);
                 return ResponseEntity.badRequest().body(createJsonResponse("FAILURE", "Invalid email or password.", new JwtAuthenticationResponse()));
             }
         } catch (Exception e) {
-            log.error("Login exception for user: {}: {}", request.getUsername(), e.getMessage());
+            log.error("Login exception for user: {}: {}", encryptedPasscode, e.getMessage());
             return ResponseEntity.badRequest().body(createJsonResponse("FAILURE", e.getMessage(), new JwtAuthenticationResponse()));
+        }
+    }
+
+    private String convertUserToJson(User user) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(user);
+        } catch (JsonProcessingException e) {
+            log.error("Error serializing user object to JSON", e);
+            return "{}";
         }
     }
 

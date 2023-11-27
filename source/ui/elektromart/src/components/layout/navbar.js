@@ -66,9 +66,9 @@ function Navigation({ isAuth, roleId, logout }) {
                                 <i className="bi bi-person-circle"></i>
                             </a>
                             <div className="dropdown-menu" aria-labelledby="accountDropdown">
-                                {localStorage.getItem("username") && (
+                                {localStorage.getItem("email") && (
                                     <span className="dropdown-item font-weight-bold text-success bg-light rounded fst-italic">
-                                        Hi {localStorage.getItem("username")}
+                                        Hi {localStorage.getItem("email")}
                                     </span>
                                 )}
                                 <a href="/orders" className="dropdown-item" onClick={handleMyOrdersClick}>My Orders</a>

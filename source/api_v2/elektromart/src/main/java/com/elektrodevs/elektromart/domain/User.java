@@ -18,8 +18,7 @@ import java.util.List;
 public class User implements UserDetails {
 
     private Long userId;
-    private String username;
-    private String password;
+    private String passcode; // New field for passcode
     private String email;
     private Long roleId;
     private String status;
@@ -27,14 +26,21 @@ public class User implements UserDetails {
 
     public static final long ROLE_CUSTOMER = 1;
     public static final long ROLE_STAFF = 2;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(roleId == 1 ? "ROLE_CUSTOMER" : "ROLE_STAFF"));
+        return List.of(new SimpleGrantedAuthority(roleId == ROLE_CUSTOMER ? "ROLE_CUSTOMER" : "ROLE_STAFF"));
     }
 
     @Override
     public String getUsername() {
-        return username;
+       return email;
+    }
+
+    @Override
+    public String getPassword() {
+        // Return the passcode
+        return passcode;
     }
 
     @Override

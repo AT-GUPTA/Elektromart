@@ -25,7 +25,7 @@ public class OrderDao {
         try {
             List<OrderResult> orders = jdbcTemplate.query(SQL, (rs, rowNum) -> {
                 OrderResult order = new OrderResult();
-                order.setUsername(rs.getString("username"));
+                order.setPasscode(rs.getString("passcode"));
                 order.setOrderId(rs.getLong("order_id"));
                 order.setUserId(rs.getLong("user_id"));
                 order.setCartId(rs.getString("cart_id"));
