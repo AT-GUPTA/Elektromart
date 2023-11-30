@@ -4,6 +4,7 @@ import com.elektrodevs.elektromart.dao.UserDao;
 import com.elektrodevs.elektromart.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,39 +20,38 @@ import java.util.List;
 public class UserService {
     private final UserDao userDao;
 
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsService() {
-            @Override
-            public UserDetails loadUserByUsername(String username) {
-                try {
-                    UserDetails user = userDao.findByUsername(username)
-                            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-                    log.debug("loadUserByUsername: Loaded user with username '{}'.", username);
-                    return user;
-                } catch (UsernameNotFoundException e) {
-                    log.error("loadUserByUsername: User with username '{}' not found.", username);
-                    throw e;
-                }
+    public User findUserByPasscode(String passcode) {
+        try {
+            Optional<User> user = userDao.findByPasscode(passcode);
+            if (user == null) {
+                log.error("findUserByPasscode: User with passcode '{}' not found.", passcode);
+                return null;
             }
-        };
+            log.debug("findUserByPasscode: Loaded user with passcode '{}'.", passcode);
+            return user.orElseThrow(() -> new BadCredentialsException("Invalid passcode"));
+        } catch (Exception e) {
+            log.error("findUserByPasscode: Error occurred while finding user with passcode '{}': {}", passcode, e.getMessage());
+            throw e;
+        }
     }
+
     public User createUser(User newUser) {
         User createdUser = userDao.createUser(newUser);
         if (createdUser != null) {
-            log.debug("createUser: Created a new user with username '{}'.", newUser.getUsername());
+            log.debug("createUser: Created a new user with encrypted passcode '{}'.", newUser.getPasscode());
         } else {
             log.error("createUser: Failed to create a new user.");
         }
         return createdUser;
     }
-    public void grantStaffPrivileges(String username) {
-        userDao.updateUserRole(username, User.ROLE_STAFF);
-        log.info("Granted staff privileges to user {}", username);
+    public void grantStaffPrivileges(String passcode) {
+        userDao.updateUserRole(passcode, User.ROLE_STAFF);
+        log.info("Granted staff privileges to user {}", passcode);
     }
 
-    public void revokeStaffPrivileges(String username) {
-        userDao.updateUserRole(username, User.ROLE_CUSTOMER);
-        log.info("Revoked staff privileges from user {}", username);
+    public void revokeStaffPrivileges(String passcode) {
+        userDao.updateUserRole(passcode, User.ROLE_CUSTOMER);
+        log.info("Revoked staff privileges from user {}", passcode);
     }
     public List<User> getAllStaffMembers() {
         log.info("Fetching all staff members");

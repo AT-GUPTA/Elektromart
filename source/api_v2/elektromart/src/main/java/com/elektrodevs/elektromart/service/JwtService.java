@@ -25,29 +25,29 @@ public class JwtService {
     @Value("${token.expirationms}")
     Long jwtExpirationMs;
 
-    public String extractUserName(String token) {
+    public String extractPasscode(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(String passcode) {
+        return generateToken(new HashMap<>(), passcode);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    public boolean isTokenValid(String token, String userId) {
+        final String extractedPasscode = extractPasscode(token);
+        return (extractedPasscode.equals(userId)) && !isTokenExpired(token);
     }
+
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
         final Claims claims = extractAllClaims(token);
         return claimsResolvers.apply(claims);
     }
 
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    private String generateToken(Map<String, Object> extraClaims, String passcode) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(passcode)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

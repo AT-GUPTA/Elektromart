@@ -69,12 +69,12 @@ public class OrderResult {
         this.shippingId = shippingId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getPasscode() {
+        return passcode;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPasscode(String passcode) {
+        this.passcode = passcode;
     }
 
     private Long userId;
@@ -83,7 +83,7 @@ public class OrderResult {
     private String shippingStatus;
     private String shippingAddress;
     private Long shippingId;
-    private String username;
+    private String passcode;
 
     public String getPaymentMethod() {
         return paymentMethod;

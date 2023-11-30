@@ -146,7 +146,7 @@ public class OrderController {
     }
 
     /**
-     * Updates the user of an order if the username is currently null.
+     * Updates the user of an order if the passcode is currently null.
      *
      * @param orderId The ID of the order to update.
      * @param userId  The ID of the user to attach to the order.
