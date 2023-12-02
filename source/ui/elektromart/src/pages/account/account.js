@@ -57,7 +57,7 @@ function Account() {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'An error occurred while updating the passcode',
+        text: 'The old passcode does not exists.',
       });
     }
   };
