@@ -57,7 +57,7 @@ function Account() {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: error.message || 'An error occurred',
+        text: 'An error occurred while updating the passcode',
       });
     }
   };
