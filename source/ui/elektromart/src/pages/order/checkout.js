@@ -58,7 +58,8 @@ const Checkout = () => {
     .then((data) => {
        const newCartId = data.newCardId;
        localStorage.setItem("cart_id", newCartId);
-       navigate("/order-placed", { state:  { isSuccess: true, deliveryDate } } ) } )
+      const orderId = data.orderId; // Assuming the response contains the order ID
+      navigate("/order-placed", { state:  { isSuccess: true, deliveryDate,orderId } } ) } )
     .catch((error) => {
       console.log(error);
         navigate("/order-placed", { state:  { isSuccess: false, deliveryDate } } ) } )
