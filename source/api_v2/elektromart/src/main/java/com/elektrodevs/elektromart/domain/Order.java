@@ -24,16 +24,13 @@ public class Order {
     private String paymentMethod;
 
     public Order(String cartId, String address, String userId) {
-        Random random = new Random();
-        int randomNumber = random.nextInt(2_000_000_000 - 1) + 1;
-
         this.cartId = cartId;
         this.shippingAddress = address;
         this.createdDate = new Date();
         this.shippingStatus = ShippingStatus.PENDING.name().toUpperCase();
         this.userId = userId != null ? Long.parseLong(userId) : null;
         this.paymentMethod = "Cash on delivery";
-        this.shippingId = (long) randomNumber;
+        this.shippingId = null;
     }
 
     public enum ShippingStatus {

@@ -119,6 +119,23 @@ public class OrderDao {
         }
     }
 
+    public boolean updateTrackingNumber(Long orderId, long trackingNumber) {
+        String SQL = "UPDATE Orders SET shipping_id = ? WHERE order_id = ?";
+        try {
+            int rowsAffected = jdbcTemplate.update(SQL, trackingNumber, orderId);
+            if (rowsAffected > 0) {
+                log.debug("updateTrackingNumber: Updated tracking number for order with ID {} to {}.", orderId, trackingNumber);
+                return true;
+            } else {
+                log.debug("updateTrackingNumber: No order found with ID {}.", orderId);
+                return false;
+            }
+        } catch (DataAccessException e) {
+            log.error("updateTrackingNumber: An error occurred while tracking number id for order with ID {}.", orderId, e);
+            return false;
+        }
+    }
+
     private boolean isValidShippingStatus(String status) {
         for (Order.ShippingStatus shippingStatus : Order.ShippingStatus.values()) {
             if (shippingStatus.name().equals(status)) {

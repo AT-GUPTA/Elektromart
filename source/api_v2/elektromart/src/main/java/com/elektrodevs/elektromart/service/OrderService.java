@@ -74,6 +74,22 @@ public class OrderService {
         }
     }
 
+    public boolean updateTrackingNumber(Long orderId, long trackingNumber) {
+        try {
+            boolean updated = orderDao.updateTrackingNumber(orderId, trackingNumber);
+            if (updated) {
+                log.debug("updateShippingStatus: Updated tracking number for order ID '{}'.", orderId);
+                return true;
+            } else {
+                log.error("updateShippingStatus: Failed to update tracking number for order ID '{}'.", orderId);
+                return false;
+            }
+        } catch (Exception e) {
+            log.error("updateShippingStatus: An error occurred while updating tracking number for order ID '{}'.", orderId, e);
+            return false;
+        }
+    }
+
     private boolean isValidShippingStatus(String status) {
         return status != null && ("PENDING".equals(status) || "SHIPPED".equals(status) || "DELIVERED".equals(status));
     }

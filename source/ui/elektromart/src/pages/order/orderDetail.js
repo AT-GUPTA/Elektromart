@@ -8,7 +8,47 @@ function OrderDetail({ roleId }) {
     const [cart, setCart] = useState({});
     const location = useLocation();
 
-    const [order, setOrder] = useState(location.state?.order || null);
+    const [order, setOrder] = useState({});
+    const [trackingNumber, setTrackingNumber] = useState("");
+    const [statusMessage, setStatusMessage] = useState(null);
+
+    const handleTrackingNumberChange = (event) => {
+        const inputText = event.target.value;
+        if (/^\d*$/.test(inputText)) {
+            setTrackingNumber(inputText);
+        }
+    };
+
+    const checkmarkStyle = {
+        color: 'green',
+        animation: 'rotate 1s ease-in-out infinite',
+    };
+
+    const handleTrackingNumberBlur = () => {
+        const token = localStorage.getItem("secret");
+
+        fetch(`http://localhost:8080/api/orders/update-tracking-number?orderId=${order.orderId}&trackingNumber=${trackingNumber}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            credentials: 'include',
+        })
+        .then(data => {
+            setStatusMessage({
+                success: true,
+                message: 'Tracking number updated successfully'
+            });
+        })
+        .catch(error => {
+            console.log(error);
+            setStatusMessage({
+                success: false,
+                message: 'Error updating tracking number'
+            });
+        });
+    };
 
     const getTotalPrice = () => {
     return (cart.cartContent || []).reduce((total, item) => total + item.price * item.quantity, 0);
@@ -45,7 +85,34 @@ function OrderDetail({ roleId }) {
 
     }, [order?.cartId]);
 
-    // Styles
+    useEffect(() => {
+        if (location.state?.order) {
+            const token = localStorage.getItem("secret");
+            fetch(`http://localhost:8080/api/orders/${location.state?.order.orderId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                credentials: 'include',
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    setOrder(data);
+                    setTrackingNumber(data.shippingId);
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: "Could not fetch order details",
+                    });
+                });
+        }
+
+    }, [order?.cartId]);
+
     const cardHeaderStyle = {
         backgroundColor: '#2f4550',
         color: 'white',
@@ -139,14 +206,14 @@ function OrderDetail({ roleId }) {
                     <p className="card-text">Status: <span style={badgeStyle(order.shippingStatus)}><b>{order.shippingStatus}</b></span></p>
                     
                     {
-                        roleId == 2 && order.shippingStatus === "PENDING" && (
+                        roleId === 2 && order.shippingStatus === "PENDING" && (
                             <button style={markButtonStyle} onClick={() => updateShippingStatus("SHIPPED")}>
                                 Mark as Shipped
                             </button>
                         )
                     }
                     {
-                        roleId == 2 && order.shippingStatus === "SHIPPED" && (
+                        roleId === 2 && order.shippingStatus === "SHIPPED" && (
                             <button style={markButtonStyle} onClick={() => updateShippingStatus("DELIVERED")}>
                                 Mark as Delivered
                             </button>
@@ -158,7 +225,25 @@ function OrderDetail({ roleId }) {
             <div className="card" style={cardStyle}>
                 <div className="card-header" style={cardHeaderStyle}>Shipping Information</div>
                 <ul className="list-group list-group-flush">
-                    <li className="list-group-item" style={listItemStyle}><b>Tracking number: </b>{order.shippingId}</li>
+                    <li className="list-group-item" style={listItemStyle}>
+                        <b>Tracking number: </b>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={trackingNumber}
+                            onChange={handleTrackingNumberChange}
+                            onBlur={handleTrackingNumberBlur}
+                        />
+                    {statusMessage && (
+                            <span style={{ marginLeft: '10px', color: statusMessage.success ? 'green' : 'red' }}>
+                                {statusMessage.success ? (
+                                    <span style={checkmarkStyle}>✔ Tracking number updated successfully</span>
+                                ) :  (
+                                    <span>✘ {statusMessage.message}</span>
+                                )}
+                            </span>
+                        )}                      
+                    </li>
                     <li className="list-group-item" style={listItemStyle}><b>Delivery Address:</b> {order.shippingAddress}</li>
                 </ul>
             </div>

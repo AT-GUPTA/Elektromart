@@ -24,7 +24,7 @@ function Account() {
       }
 
       const token = localStorage.getItem("secret");
-      const response = await fetch('http://localhost:3000/api/account/passcode', {
+      const response = await fetch('http://localhost:3000/api/auth/passcode', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
