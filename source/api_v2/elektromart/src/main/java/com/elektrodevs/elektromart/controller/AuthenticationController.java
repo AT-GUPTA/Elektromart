@@ -4,6 +4,8 @@ import com.elektrodevs.elektromart.dto.JwtAuthenticationResponse;
 import com.elektrodevs.elektromart.dto.SignInRequest;
 import com.elektrodevs.elektromart.dto.SignUpRequest;
 import com.elektrodevs.elektromart.service.AuthenticationService;
+import com.elektrodevs.elektromart.service.UserService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import java.util.Map;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final UserService userService;
 
     /**
      * Endpoint for user login.
@@ -68,6 +71,25 @@ public class AuthenticationController {
     }
 
     /**
+     * Updates a user's passcode
+     * @param request
+     * @return
+     */
+    @PostMapping("/passcode")
+    public ResponseEntity<?> ChangePasscode(@RequestBody AuthenticationController.PasscodeChangeRequest request) {
+        log.info("Received request to change passcodeprivileges to {}", request.getOldPasscode());
+
+        if (!request.getNewPasscode().equals(request.getNewPasscodeConfirmation())) {
+            log.error("New passcode and new passcode confirmation do not match.");
+            return ResponseEntity.unprocessableEntity().build();
+        }
+
+        userService.updateUserPasscode(request.getOldPasscode(), request.getNewPasscode());
+        log.info("Update user passcode from {} to {}", request.getOldPasscode(), request.getNewPasscode());
+        return ResponseEntity.ok().build();
+    }
+
+    /**
      * Helper method to create a JSON response map.
      *
      * @param status  The status of the response, typically "SUCCESS" or "FAILURE".
@@ -90,5 +112,13 @@ public class AuthenticationController {
         }
 
         return response;
+    }
+
+    @Data
+    static
+    private class PasscodeChangeRequest {
+        private String oldPasscode;
+        private String newPasscode;
+        private String newPasscodeConfirmation;
     }
 }
