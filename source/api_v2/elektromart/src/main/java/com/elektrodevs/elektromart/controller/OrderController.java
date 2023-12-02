@@ -144,6 +144,32 @@ public class OrderController {
             return ResponseEntity.badRequest().body("Invalid input for updating shipping status.");
         }
     }
+    /**
+     * Updates the tracking number of an order.
+     *
+     * @param orderId   The ID of the order to update.
+     * @param trackingNumber The new tracking number.
+     * @return A response entity with success or error message.
+     */
+    @PostMapping("/update-tracking-number")
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<?> updateTrackingNumber(@RequestParam("orderId") Long orderId, @RequestParam("trackingNumber") Long trackingNumber) {
+        log.debug("Request to update tracking number for order with ID: {}", orderId);
+
+        if (orderId != null) {
+            boolean statusUpdated = orderService.updateTrackingNumber(orderId, trackingNumber);
+            if (statusUpdated) {
+                log.debug("tracking number updated successfully for order with ID: {}", orderId);
+                return ResponseEntity.ok("Shipping status updated successfully.");
+            } else {
+                log.error("Failed to update tracking number for order with ID: {}", orderId);
+                return ResponseEntity.badRequest().body("Failed to update tracking number.");
+            }
+        } else {
+            log.error("Invalid input for updating tracking number.");
+            return ResponseEntity.badRequest().body("Invalid input for updating tracking number.");
+        }
+    }
 
     /**
      * Updates the user of an order if the username is currently null.

@@ -86,7 +86,7 @@ function Navigation({ isAuth, roleId, logout }) {
                                 ) : (
                                     <a className="dropdown-item" href="/login">Login</a>
                                 )}
-                                {isAuth && <a href="/account" className="dropdown-item" onClick={handleMyOrdersClick}>Account</a>}
+                                {isAuth && <a href="/account" className="dropdown-item" onClick={handleMyOrdersClick}>Change Passcode</a>}
                             </div>
                         </div>
                     </ul>
