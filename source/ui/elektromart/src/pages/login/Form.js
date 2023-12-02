@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import "./Form.css";
 import {Link, useNavigate} from "react-router-dom";
 import Swal from "sweetalert2";
+import "./Login.css";
 
 const Form = ({authentication, setRoleId}) => {
     const [username, setUsername] = useState("");
@@ -62,7 +63,7 @@ const Form = ({authentication, setRoleId}) => {
         <div className="mx-4 my-2">
             <form method="post" onSubmit={loginHandler}>
                 <div className="input-group col-lg mt-3 my-md-none">
-                    <label htmlFor="username" className="input-group-text">
+                    <label htmlFor="username" className="input-group-text login-input">
                         <i className="bi bi-envelope"></i>
                     </label>
                     <input

@@ -74,4 +74,9 @@ public class UserService {
             throw e;
         }
     }
+
+    public boolean updateUserPasscode(String oldPasscode, String newPasscode) {
+        log.info("Updating user passcode");
+        return userDao.updateUserPasscode(oldPasscode, newPasscode);
+    }
 }

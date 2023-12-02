@@ -82,10 +82,11 @@ function Navigation({ isAuth, roleId, logout }) {
                                             confirmButtonText: "Login Again"
                                         })
                                     }}>Logout</a>
+                                    
                                 ) : (
                                     <a className="dropdown-item" href="/login">Login</a>
                                 )}
-
+                                {isAuth && <a href="/account" className="dropdown-item" onClick={handleMyOrdersClick}>Account</a>}
                             </div>
                         </div>
                     </ul>

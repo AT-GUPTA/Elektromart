@@ -1,13 +1,12 @@
 .navbar {
-    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    background: rgba(244, 243, 240, 0.8);
-    display: flex;
-    align-items: center;
-    height: 8rem;
-    justify-content: flex-start;
-    gap: 2rem;
-  }
-
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  background: rgba(244, 243, 240, 0.8);
+  display: flex;
+  align-items: center;
+  height: 8rem;
+  justify-content: center;
+  gap: 2rem;
+}
   .navbar a {
     text-decoration: none;
     color: inherit;
@@ -97,4 +96,4 @@
     width: 1.5px !important;
     top: 2.8rem !important;
     background-color: #031D44;
-  }/*# sourceMappingURL=Navbar.css.map */
+  }

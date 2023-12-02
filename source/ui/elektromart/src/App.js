@@ -16,6 +16,7 @@ import OrderDetail from './pages/order/orderDetail';
 import OrderPlaced from './pages/order/orderPlaced';
 import Checkout from './pages/order/checkout';
 import ClaimOrder from "./pages/order/claimOrder";
+import Account from './pages/account/account';
 
 function App() {
 
@@ -112,6 +113,7 @@ function App() {
                         <Route path="/checkout" element={<CheckoutRoute isAuth={isAuth}/>}/>
                         <Route path="/order-placed" element={<OrderPlaced isAuth={isAuth}/>}/>
                         <Route path="/claim-order" element={<ClaimOrder />} />
+                        <Route path="/account" element={<Account />} />
                     </Routes>
                 </Router>
             </Layout>

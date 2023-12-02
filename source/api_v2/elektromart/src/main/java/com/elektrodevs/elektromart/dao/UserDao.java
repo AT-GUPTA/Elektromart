@@ -102,6 +102,20 @@ public class UserDao {
             log.warn("No rows updated for user {}. RoleId not changed.", username);
         }
     }
+
+    public boolean updateUserPasscode(String oldPasscode, String newPasscode) {
+        String query = "UPDATE Users SET username = ? WHERE username = ?";
+        int updatedRows = jdbcTemplate.update(query, oldPasscode, newPasscode);
+
+        if (updatedRows > 0) {
+            log.info("User passcode updated for user {}. New Pascode: {}", oldPasscode, newPasscode);
+            return true;
+        } else {
+            log.warn("No rows updated for user {}. Passcode not changed.", oldPasscode);
+            return false;
+        }
+    }
+
     public List<User> getAllStaffMembers() {
         String query = "SELECT * FROM Users WHERE role_id = ?";
         try {
