@@ -84,3 +84,9 @@
 .quantity-input {
     margin-top: 16px;
 }
+
+.swal2-login-btn {
+    background-color: #007bff;
+    color: white;
+}
+

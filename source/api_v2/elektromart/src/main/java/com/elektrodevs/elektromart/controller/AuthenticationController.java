@@ -35,18 +35,18 @@ public class AuthenticationController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody SignInRequest request) {
-        log.debug("Attempting to login user: {}", request.getUsername());
+        log.debug("Attempting to login user: {}", request.getPasscode());
         try {
             JwtAuthenticationResponse result = authenticationService.login(request);
-            if (result != null && result.getUser() != null){
-                log.debug("Login successful for user: {}", request.getUsername());
-                return ResponseEntity.ok(createJsonResponse("SUCCESS", result.getUser().getUserId().toString(),result));
+            if (result != null && result.getUser() != null) {
+                log.debug("Login successful for user: {}", request.getPasscode());
+                return ResponseEntity.ok(createJsonResponse("SUCCESS", result.getUser().getUserId().toString(), result));
             } else {
-                log.error("Login failed for user: {}", request.getUsername());
+                log.error("Login failed for user: {}", request.getPasscode());
                 return ResponseEntity.badRequest().body(createJsonResponse("FAILURE", "Invalid email or password.", new JwtAuthenticationResponse()));
             }
         } catch (Exception e) {
-            log.error("Login exception for user: {}: {}", request.getUsername(), e.getMessage());
+            log.error("Login exception for user: {}: {}", request.getPasscode(), e.getMessage());
             return ResponseEntity.badRequest().body(createJsonResponse("FAILURE", e.getMessage(), new JwtAuthenticationResponse()));
         }
     }
@@ -63,7 +63,7 @@ public class AuthenticationController {
         try {
             JwtAuthenticationResponse result = authenticationService.signup(request);
             log.debug("Signup successful for user: {}", request.getEmail());
-            return ResponseEntity.ok(createJsonResponse("SUCCESS", "Account created!",result));
+            return ResponseEntity.ok(createJsonResponse("SUCCESS", "Account created!", result));
         } catch (Exception e) {
             log.error("Signup exception for user: {}: {}", request.getEmail(), e.getMessage());
             return ResponseEntity.badRequest().body(createJsonResponse("FAILURE", e.getMessage(), new JwtAuthenticationResponse()));
@@ -72,6 +72,7 @@ public class AuthenticationController {
 
     /**
      * Updates a user's passcode
+     *
      * @param request
      * @return
      */
@@ -102,12 +103,12 @@ public class AuthenticationController {
         Map<String, Object> response = new HashMap<>();
         response.put("status", status);
         response.put("message", message);
-        response.put("token",resp.getToken()!=null?resp.getToken():"");
+        response.put("token", resp.getToken() != null ? resp.getToken() : "");
 
-        if (resp.getUser()!=null&&resp.getUser().getCartId() != null) {
+        if (resp.getUser() != null && resp.getUser().getCartId() != null) {
             response.put("cartId", resp.getUser().getCartId());
         }
-        if (resp.getUser()!=null&&resp.getUser().getRoleId() != null) {
+        if (resp.getUser() != null && resp.getUser().getRoleId() != null) {
             response.put("roleId", resp.getUser().getRoleId());
         }
 

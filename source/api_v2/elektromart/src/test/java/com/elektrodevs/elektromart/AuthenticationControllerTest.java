@@ -12,7 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 /**
@@ -36,7 +37,7 @@ public class AuthenticationControllerTest {
         // Arrange
         SignUpRequest signUpRequest = new SignUpRequest();
         signUpRequest.setEmail("test@example.com");
-        signUpRequest.setUsername("testUser");
+        signUpRequest.setPasscode("testUser");
 
         JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
         jwtResponse.setToken("testToken");
@@ -58,7 +59,7 @@ public class AuthenticationControllerTest {
     public void testLogin() {
         // Arrange
         SignInRequest signInRequest = new SignInRequest();
-        signInRequest.setUsername("testUser");
+        signInRequest.setPasscode("testUser");
         // No password is set here
 
         JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();

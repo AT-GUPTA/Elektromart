@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 
-import java.nio.file.*;
 import java.io.IOException;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +47,8 @@ public class FileService {
             // Reading the current array of users from the file
             List<Map<String, String>> users;
             if (Files.exists(externalFilePath)) {
-                users = mapper.readValue(Files.readString(externalFilePath), new TypeReference<>() {});
+                users = mapper.readValue(Files.readString(externalFilePath), new TypeReference<>() {
+                });
             } else {
                 users = new ArrayList<>();
             }
@@ -64,7 +65,7 @@ public class FileService {
             Files.writeString(externalFilePath, mapper.writeValueAsString(users), StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 
         } catch (IOException e) {
-            log.error("writeUserToFile: Failed to append user details to JSON file -- {}",e.getMessage(), e);
+            log.error("writeUserToFile: Failed to append user details to JSON file -- {}", e.getMessage(), e);
         }
     }
 }
