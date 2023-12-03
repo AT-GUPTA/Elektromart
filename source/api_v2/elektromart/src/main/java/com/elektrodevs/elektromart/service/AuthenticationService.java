@@ -23,7 +23,6 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final FileService fileService;
 
     public JwtAuthenticationResponse signup(SignUpRequest request) {
 
