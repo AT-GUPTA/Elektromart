@@ -55,7 +55,7 @@ h2 {
 .buttons-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: start;
+  justify-content: space-between;
   gap: 1rem;
   margin-bottom: 2rem;
 }
@@ -67,7 +67,8 @@ h2 {
   }
 }
 .adminButton {
-  background-color: #65B891; 
+  flex: 1 1 30%;
+  background-color: #65B891;
   color: #FFFFFF;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -187,15 +188,4 @@ a.downloadLink:hover {
   color: #34568B;
 }
 
-@media (max-width: 768px) {
-  .admin-container {
-    margin: 1rem;
-    padding: 1rem;
-  }
-
-  .adminButton {
-    margin-bottom: 0.5rem;
-    padding: 0.5rem 1rem;
-  }
-}
 }

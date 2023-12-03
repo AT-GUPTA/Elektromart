@@ -4,9 +4,11 @@ import { useLocation } from 'react-router-dom';
 
 const OrderPlaced = () => {
   const location = useLocation();
+  const { isSuccess, deliveryDate, orderId } = location.state; // Destructuring to get the order ID
 
-  const isSuccess = location.state?.isSuccess;
-  const deliveryDate = location.state?.deliveryDate;
+  // const isSuccess = location.state?.isSuccess;
+  // const deliveryDate = location.state?.deliveryDate;
+  // const orderId = location.state?.orderId;
 
   const today = new Date();
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -22,6 +24,7 @@ const OrderPlaced = () => {
           <h2 className="text-success mt-3">Order Successfully Placed!</h2>
           <p className="mt-4">Thank you for your purchase. Here are the details of your order:</p>
           <div className="border p-4 mt-3">
+            <p><strong>Order ID:</strong> {orderId}</p>
             <p><strong>Created Date:</strong> {formattedDate}</p>
             <p><strong>Payment Method:</strong>&nbsp;Cash on delivery</p>
             <p><strong>Estimated Delivery Date:</strong> {deliveryDate}</p>

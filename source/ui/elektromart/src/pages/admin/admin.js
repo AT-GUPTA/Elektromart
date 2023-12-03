@@ -412,6 +412,7 @@ const Admin = () => {
                         'success'
                     );
                     fetchStaffMembers(); // Refetch the staff list to update the UI
+                    fetchCustomers(); // update customer list
                 } else {
                     setErrorMessage('Failed to revoke privileges');
                 }
@@ -459,6 +460,7 @@ const Admin = () => {
             if (response.ok) {
                 Swal.fire('Granted!', `Staff privileges granted to ${username}`, 'success');
                 fetchStaffMembers(); // Update staff list
+                fetchCustomers(); // This call should now include the newly privileged customer as part of the staff
             } else {
                 Swal.fire('Error!', 'Failed to grant privileges', 'error');
             }
