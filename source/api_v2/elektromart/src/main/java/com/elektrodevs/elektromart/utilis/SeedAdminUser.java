@@ -3,12 +3,11 @@ package com.elektrodevs.elektromart.utilis;
 import com.elektrodevs.elektromart.dao.UserDao;
 import com.elektrodevs.elektromart.domain.User;
 import com.elektrodevs.elektromart.service.UserService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor

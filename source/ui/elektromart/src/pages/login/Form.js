@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import "./Login.css";
 
 const Form = ({authentication, setRoleId}) => {
-    const [username, setUsername] = useState("");
+    const [passcode, setUsername] = useState("");
     const navigate = useNavigate();
 
 
@@ -26,12 +26,12 @@ const Form = ({authentication, setRoleId}) => {
         if (isLoggedIn) {
             localStorage.setItem("cart_id", jsonResponse["cartId"]);
             localStorage.setItem("secret", jsonResponse["token"]);
-            localStorage.setItem("username",user.username)
+            localStorage.setItem("username",user.passcode)
             authentication(true, roleId);
             setRoleId(roleId);
             Swal.fire({
                 title: "Login Success!",
-                text: "Hello " + user.username,
+                text: "Hello " + user.passcode,
                 icon: "success",
                 confirmButtonText: "Continue Shopping!",
             }).then((result) => {
@@ -56,7 +56,7 @@ const Form = ({authentication, setRoleId}) => {
 
     const loginHandler = (e) => {
         e.preventDefault();
-        loginVerification({username});
+        loginVerification({passcode});
     };
 
     return (

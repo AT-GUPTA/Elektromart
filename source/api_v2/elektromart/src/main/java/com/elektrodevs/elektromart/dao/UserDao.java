@@ -7,7 +7,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -37,7 +36,8 @@ public class UserDao {
             return user;
         }
     };
-    public Optional<User> findByUsername(String username){
+
+    public Optional<User> findByUsername(String username) {
         User user = getUser(username);
         log.debug("findByUsername: Username {} found in the database.", username);
         return Optional.ofNullable(user);
@@ -57,9 +57,9 @@ public class UserDao {
     }
 
     public User createUser(User newUser) {
-        String cartId = (newUser.getCartId()==null||newUser.getCartId().equalsIgnoreCase("undefined")||Objects.equals(newUser.getCartId(), "0"))?UUID.randomUUID().toString():newUser.getCartId();
+        String cartId = (newUser.getCartId() == null || newUser.getCartId().equalsIgnoreCase("undefined") || Objects.equals(newUser.getCartId(), "0")) ? UUID.randomUUID().toString() : newUser.getCartId();
 
-        if(newUser.getCartId()==null||newUser.getCartId().equalsIgnoreCase("undefined")||Objects.equals(newUser.getCartId(), "0")) {
+        if (newUser.getCartId() == null || newUser.getCartId().equalsIgnoreCase("undefined") || Objects.equals(newUser.getCartId(), "0")) {
             String cartQuery = "INSERT INTO Cart (id) VALUES (?)";
             jdbcTemplate.update(cartQuery, cartId);
         }
@@ -127,6 +127,7 @@ public class UserDao {
             throw e;
         }
     }
+
     public List<User> getAllCustomers() {
         String query = "SELECT * FROM Users WHERE role_id = ?";
         try {

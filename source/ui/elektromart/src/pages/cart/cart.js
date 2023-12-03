@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
 import './cart.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from "sweetalert2";
 
-const Cart = ({isAuth}) => {
+const Cart = ({ isAuth }) => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true); // Added loading state
 
@@ -13,7 +13,7 @@ const Cart = ({isAuth}) => {
     useEffect(() => {
         const cartId = localStorage.getItem("cart_id");
         fetch(`http://localhost:8080/api/cart/get-cart?cartId=${cartId}`)
-            .then(response => 
+            .then(response =>
                 response.json()
             )
             .then(data => {
@@ -71,7 +71,7 @@ const Cart = ({isAuth}) => {
         updateQuantityAPI(cartId, product.urlSlug, product.quantity + 1);
 
         const updatedCartItems = cartItems.map(item =>
-            item.id === product.id ? {...item, quantity: item.quantity + 1} : item
+            item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
         setCartItems(updatedCartItems);
     };
@@ -82,7 +82,7 @@ const Cart = ({isAuth}) => {
             updateQuantityAPI(cartId, product.urlSlug, product.quantity - 1);
 
             const updatedCartItems = cartItems.map(item =>
-                item.id === product.id && item.quantity > 1 ? {...item, quantity: item.quantity - 1} : item
+                item.id === product.id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
             );
             setCartItems(updatedCartItems);
         }
@@ -139,19 +139,7 @@ const Cart = ({isAuth}) => {
     const total = subtotal + taxAmount;
 
     const handleButtonClick = () => {
-        // if (!isAuth) {
-        //     Swal.fire({
-        //         title: "Unauthorized",
-        //         text: "Please log in to access your orders",
-        //         icon: "warning",
-        //         confirmButtonText: "Login"
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             window.location.href = '/login';
-        //         }
-        //     });
-        // } else 
-        if(cartItems.length <= 0) {
+        if (cartItems.length <= 0) {
             Swal.fire({
                 title: "Empty Cart",
                 text: "Please add items to your cart",
@@ -162,10 +150,33 @@ const Cart = ({isAuth}) => {
                     window.location.href = '/products';
                 }
             });
-        } else{
-           
-            const cartId = localStorage.getItem("cart_id");
-            navigate("/checkout", { state: { cartItems, cartId} } );
+        } else {
+            if (isAuth) {
+                const cartId = localStorage.getItem("cart_id");
+                navigate("/checkout", { state: { cartItems, cartId } });
+            } else {
+                Swal.fire({
+                    title: "Not Logged In",
+                    text: "Log in to save your orders and access easily.",
+                    icon: "info",
+                    showCancelButton: true,
+                    showDenyButton: true,
+                    confirmButtonText: "Sign Up",
+                    denyButtonText: "Login",
+                    cancelButtonText: "Continue without Logging In",
+                    denyButtonColor:"#007bff",
+                    confirmButtonColor:"#007bff"
+                
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        navigate("/signup");
+                    } else if (result.isDenied) {
+                        navigate("/login");
+                    }else {
+                       navigate("/checkout", { state: { cartItems, cartId: '0' } });
+                    }
+                });
+            }
         }
     };
     const handleClearCart = () => {
@@ -236,7 +247,7 @@ const Cart = ({isAuth}) => {
                 {cartItems.map((item, index) => (
                     <div className="row mb-3 border-bottom pb-3" key={index}>
                         <div className="col-2">
-                            <img className="img-fluid" src={"../../images/iphone.jpg"} alt={item.name}/>
+                            <img className="img-fluid" src={"../../images/iphone.jpg"} alt={item.name} />
                         </div>
                         <div className="col">
                             <div className="row text-muted">{item.name}</div>
@@ -248,14 +259,14 @@ const Cart = ({isAuth}) => {
                         <div className="col">
                             <div className="d-flex justify-content-center">
                                 <div className="input-group input-group-sm"
-                                     style={{maxWidth: "80px"}}>
+                                    style={{ maxWidth: "80px" }}>
                                     <button className="btn btn-sm" type="button"
-                                            onClick={() => handleDecreaseQty(item)}>-
+                                        onClick={() => handleDecreaseQty(item)}>-
                                     </button>
                                     <input type="text" className="form-control form-control-sm text-center quantity-input"
-                                           value={item.quantity} readOnly/>
+                                        value={item.quantity} readOnly />
                                     <button className="btn btn-sm" type="button"
-                                            onClick={() => handleIncreaseQty(item)}>+
+                                        onClick={() => handleIncreaseQty(item)}>+
                                     </button>
                                 </div>
                             </div>
@@ -305,16 +316,16 @@ const Cart = ({isAuth}) => {
                     </div>
                     <div className="col">
                         <button onClick={handleButtonClick} className="btn btn-primary">
-                           Checkout
+                            Checkout
                         </button>
                     </div>
                 </div>
                 <div className="back-to-shop">
-                    <Link to="/products" style={{textDecoration: 'none'}}>
-            <span className="text-muted">
-              {' '}
-                <i className="bi bi-arrow-left"></i> Back to Products
-            </span>
+                    <Link to="/products" style={{ textDecoration: 'none' }}>
+                        <span className="text-muted">
+                            {' '}
+                            <i className="bi bi-arrow-left"></i> Back to Products
+                        </span>
                     </Link>
                 </div>
             </div>
