@@ -93,7 +93,8 @@ const Form = ({role}) => {
                         required
                     />
                 </div>
-                <div className="fw-light mt-3">
+                { role == '1' &&
+                    <div className="fw-light mt-3">
                     Already have an account?&nbsp;
                     <Link to="/login" className="link">
                         Login here
@@ -107,6 +108,7 @@ const Form = ({role}) => {
                         )
                     }
                 </div>
+                }
 
                 
                 <div className="my-4 text-center">
