@@ -8,8 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -18,40 +17,39 @@ public class OrderService {
 
     private final OrderDao orderDao;
     private final CartDao cartDao;
+
     public List<OrderResult> getAllOrders() {
         List<OrderResult> orders = orderDao.getAllOrders();
         log.debug("getAllOrders: Retrieved {} orders.", orders.size());
         return orders;
     }
-    public String createOrder(String cartId, String deliveryAddress, String userId) {
 
+    public Map<String, String> createOrder(String cartId, String deliveryAddress, String userId) {
         Order order = new Order(cartId, deliveryAddress, userId);
-        boolean orderCreated = orderDao.createOrder(order);
+        Long orderId = orderDao.createOrder(order);
 
-        if (orderCreated) {
-            // Update the user's cart_id with a new UUID
+        if (orderId != null) {
             String newCartId = UUID.randomUUID().toString();
             boolean cartCreated = cartDao.createCart(newCartId);
             boolean cartIdUpdated = orderDao.updateCartIdForUser(userId, newCartId);
 
             if (cartIdUpdated) {
-                log.debug("createOrder: Order created and user's cart_id updated successfully.");
-                return newCartId;
-            } else {
-                log.error("createOrder: Error updating the user's cart_id.");
-                return "";
+                Map<String, String> ids = new HashMap<>();
+                ids.put("newCartId", newCartId);
+                ids.put("orderId", orderId.toString());
+                return ids;
             }
-        } else {
-            log.error("createOrder: Error creating the order.");
-            return "";
         }
+        return Collections.emptyMap();
     }
+
 
     public List<Order> getOrdersByUserId(String userId) {
         List<Order> orders = orderDao.getOrdersByUserId(userId);
         log.debug("getOrdersByUserId: Retrieved {} orders for user with ID '{}'.", orders.size(), userId);
         return orders;
     }
+
     public boolean updateShippingStatus(Long orderId, String newStatus) {
         try {
             // Check if the newStatus is a valid value, e.g., 'PENDING', 'SHIPPED', 'DELIVERED'

@@ -43,23 +43,26 @@ public class OrderDao {
         }
     }
 
-    public boolean createOrder(Order order) {
-        String SQL = "INSERT INTO Orders (user_id, cart_id, createdDate, shippingStatus, shippingAddress, shipping_id, paymentMethod) " +
+    public Long createOrder(Order order) {
+        String insertSQL = "INSERT INTO Orders (user_id, cart_id, createdDate, shippingStatus, shippingAddress, shipping_id, paymentMethod) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String selectSQL = "SELECT order_id FROM Orders WHERE user_id = ? AND cart_id = ? ORDER BY createdDate DESC LIMIT 1";
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String timestamp = dateFormat.format(new Date());
 
         try {
-            jdbcTemplate.update(SQL, order.getUserId(), order.getCartId(), timestamp, order.getShippingStatus(),
+            jdbcTemplate.update(insertSQL, order.getUserId(), order.getCartId(), timestamp, order.getShippingStatus(),
                     order.getShippingAddress(), order.getShippingId(), order.getPaymentMethod());
-            log.debug("createOrder: Order created successfully for user with ID {}.", order.getUserId());
-            return true;
+
+            // Fetch the most recent order ID for this user and cart
+            return jdbcTemplate.queryForObject(selectSQL, new Object[]{order.getUserId(), order.getCartId()}, Long.class);
         } catch (DataAccessException e) {
-            log.error("createOrder: An error occurred while creating an order for user with ID {}.", order.getUserId(), e);
-            return false;
+            log.error("createOrder: An error occurred.", e);
+            return null;
         }
     }
+
 
     public List<Order> getOrdersByUserId(String userId) {
         String SQL = "SELECT * FROM Orders WHERE user_id = ?";

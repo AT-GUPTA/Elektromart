@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controller for order-related operations.
@@ -66,19 +67,16 @@ public class OrderController {
         String cartId = orderRequest.getCartId();
         String deliveryAddress = orderRequest.getDeliveryAddress();
 
-        log.debug("Request to create order for user id: {}", userId);
+        Map<String, String> ids = orderService.createOrder(cartId, deliveryAddress, userId != null ? userId.toString() : null);
 
-
-        String newCardId = orderService.createOrder(cartId, deliveryAddress, userId != null ? userId.toString() : null);
-
-        if (!newCardId.isEmpty()) {
-            log.debug("Order created successfully for user id: {}", userId);
-            return ResponseEntity.ok("{\"newCardId\":\"" + newCardId + "\"}");
+        if (!ids.isEmpty()) {
+            String responseJson = "{\"newCartId\":\"" + ids.get("newCartId") + "\", \"orderId\":\"" + ids.get("orderId") + "\"}";
+            return ResponseEntity.ok(responseJson);
         } else {
-            log.error("Failed to create order for user id: {}", userId);
             return ResponseEntity.badRequest().body("Failed to create the order.");
         }
     }
+
 
     /**
      * Retrieves order history for the current logged-in user.
@@ -144,10 +142,11 @@ public class OrderController {
             return ResponseEntity.badRequest().body("Invalid input for updating shipping status.");
         }
     }
+
     /**
      * Updates the tracking number of an order.
      *
-     * @param orderId   The ID of the order to update.
+     * @param orderId        The ID of the order to update.
      * @param trackingNumber The new tracking number.
      * @return A response entity with success or error message.
      */

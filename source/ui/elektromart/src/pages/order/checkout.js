@@ -52,18 +52,21 @@ const Checkout = () => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({cartId, deliveryAddress: address, userId}),
+        body: JSON.stringify({ cartId, deliveryAddress: address, userId }),
     })
     .then((response) => response.json())
     .then((data) => {
-       const newCartId = data.newCardId;
+       const newCartId = data.newCartId;
+       const orderId = data.orderId;
        localStorage.setItem("cart_id", newCartId);
-      const orderId = data.orderId; // Assuming the response contains the order ID
-      navigate("/order-placed", { state:  { isSuccess: true, deliveryDate,orderId } } ) } )
+       navigate("/order-placed", { state: { isSuccess: true, deliveryDate, orderId } });
+    })
     .catch((error) => {
       console.log(error);
-        navigate("/order-placed", { state:  { isSuccess: false, deliveryDate } } ) } )
-  };
+      navigate("/order-placed", { state: { isSuccess: false, deliveryDate } });
+    });
+};
+
 
   return (
     cartItems && 
