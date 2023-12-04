@@ -1,4 +1,4 @@
-package com.elektrodevs.elektromart;
+package com.elektrodevs.elektromart.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -16,7 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
  * Test class for OrderService specifically for SetOrderOwner
  */
 @ExtendWith(MockitoExtension.class)
-public class OrderServiceTest {
+public class OrderControllerTests {
 
     @Mock
     private OrderDao orderDao;
