@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./admin.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from 'react-router-dom';
@@ -57,22 +57,22 @@ const Admin = () => {
                 'Authorization': `Bearer ${token}`
             }
         })
-        .then((response) => response.json())
-        .then((data) => {
-            const usernames = data.map(order => order.username);
-            setUsernames([...new Set(usernames)]);
-            setOrders(data);
-        })
-        .catch((error) => {
-            setErrorMessage("Could not fetch orders");
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                const usernames = data.map(order => order.username);
+                setUsernames([...new Set(usernames)]);
+                setOrders(data);
+            })
+            .catch((error) => {
+                setErrorMessage("Could not fetch orders");
+            });
     }, []);
 
 
     useEffect(() => {
         // Fetch products from the API endpoint
         const token = localStorage.getItem("secret");
-        fetch("http://localhost:8080/api/products/",{
+        fetch("http://localhost:8080/api/products/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -170,31 +170,31 @@ const Admin = () => {
 
     const handleDownloadClick = async (e) => {
 
-            const token = localStorage.getItem("secret");
-            const response = await fetch('http://localhost:8080/api/products/download',{
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) {
-               setErrorMessage('Download failed');
-            } else {
-                const blob = await response.blob();
-                const blobURL = URL.createObjectURL(blob);
-
-                const a = document.createElement('a');
-                a.href = blobURL;
-                a.download = 'products.json';
-                document.body.appendChild(a);
-                a.click();
-
-                URL.revokeObjectURL(blobURL);
-
-                document.body.removeChild(a);
+        const token = localStorage.getItem("secret");
+        const response = await fetch('http://localhost:8080/api/products/download', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
+        });
+
+        if (!response.ok) {
+            setErrorMessage('Download failed');
+        } else {
+            const blob = await response.blob();
+            const blobURL = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = blobURL;
+            a.download = 'products.json';
+            document.body.appendChild(a);
+            a.click();
+
+            URL.revokeObjectURL(blobURL);
+
+            document.body.removeChild(a);
+        }
 
     };
 
@@ -252,7 +252,7 @@ const Admin = () => {
     };
 
     const handleFormChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setProductData({
             ...productData,
             [name]: name === "isFeatured" ? e.target.checked : value,
@@ -269,7 +269,7 @@ const Admin = () => {
     };
 
     const handleAddAdminChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setAdminData({
             ...adminData,
             [name]: value,
@@ -315,7 +315,7 @@ const Admin = () => {
                     isDelete: false,
                 });
             })
-            .then(()=>{handleViewAllProductClick()})
+            .then(() => { handleViewAllProductClick() })
             .catch((error) => console.error("Error adding product: ", error));
     };
 
@@ -395,30 +395,41 @@ const Admin = () => {
         });
 
         if (isConfirmed.value) {
-            const token = localStorage.getItem("secret");
-            try {
-                const response = await fetch(`http://localhost:8080/api/staff/revoke?username=${username}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
 
-                if (response.ok) {
-                    Swal.fire(
-                        'Revoked!',
-                        'Privileges have been revoked.',
-                        'success'
-                    );
-                    fetchStaffMembers(); // Refetch the staff list to update the UI
-                    fetchCustomers(); // update customer list
-                } else {
-                    setErrorMessage('Failed to revoke privileges');
+            if (username === localStorage.getItem("username")) {
+                Swal.fire({
+                    icon: "info",
+                    title: "Cannot revoke your own access!",
+                    text: "Revoke access failed",
+                });
+                setErrorMessage('Failed to revoke privileges');
+            }
+            else {
+                const token = localStorage.getItem("secret");
+                try {
+                    const response = await fetch(`http://localhost:8080/api/staff/revoke?username=${username}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        Swal.fire(
+                            'Revoked!',
+                            'Privileges have been revoked.',
+                            'success'
+                        );
+                        fetchStaffMembers(); // Refetch the staff list to update the UI
+                        fetchCustomers(); // update customer list
+                    } else {
+                        setErrorMessage('Failed to revoke privileges');
+                    }
+                } catch (error) {
+                    console.error('Error revoking privileges:', error);
+                    setErrorMessage('Error revoking privileges');
                 }
-            } catch (error) {
-                console.error('Error revoking privileges:', error);
-                setErrorMessage('Error revoking privileges');
             }
         }
     };
@@ -483,59 +494,59 @@ const Admin = () => {
                 <button className="adminButton" onClick={handleManageStaffClick}>Manage Staff</button>
             </div>
 
-            {showAllOrders && ( 
-            <div className="container mt-5">
-                <h2 className="mb-4">Your Orders</h2>
+            {showAllOrders && (
+                <div className="container mt-5">
+                    <h2 className="mb-4">Your Orders</h2>
 
-                <div className="mb-4">
-                <label htmlFor="userIdSelect" className="form-label">Select a Username</label>
-                <select 
-                    id="userIdSelect" 
-                    className="form-select"
-                    value={selectedUsername}
-                    onChange={(e) => {
-                    setSelectedUsername(e.target.value)
-                    }}
-                >
-                    <option value="">Select a Username...</option>
-                    {usernames.map(u => (
-                    <option key={u} value={u}>{u}</option>
-                    ))}
-                </select>
-                </div>
-                <div className="card">
-                <div className="card-body">
-                    <div className="table-responsive">
-                    <table className="table table-striped">
-                        <thead>
-                        <tr>
-                            <th scope="col">Order ID</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Payment method</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {orders.filter(e => selectedUsername === "" || e.username === selectedUsername).map(order => (
-                            <tr key={order.orderId} className={order.shippingStatus === 'delivered' ? 'table-success' : ''}>
-                            <td>{order.orderId}</td>
-                            <td>{order.createdDate}</td>
-                            <td>{order.shippingStatus.charAt(0).toUpperCase() + order.shippingStatus.slice(1)}</td>
-                            <td>{order.paymentMethod}</td>
-                            <td>
-                                <button className="btn btn-primary btn-sm button-view-order" onClick={() => navigate(`/orders/${order.orderId}`, { state: { order } })}>
-                                View
-                                </button>
-                            </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                    <div className="mb-4">
+                        <label htmlFor="userIdSelect" className="form-label">Select a Username</label>
+                        <select
+                            id="userIdSelect"
+                            className="form-select"
+                            value={selectedUsername}
+                            onChange={(e) => {
+                                setSelectedUsername(e.target.value)
+                            }}
+                        >
+                            <option value="">Select a Username...</option>
+                            {usernames.map(u => (
+                                <option key={u} value={u}>{u}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="card">
+                        <div className="card-body">
+                            <div className="table-responsive">
+                                <table className="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Order ID</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Payment method</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {orders.filter(e => selectedUsername === "" || e.username === selectedUsername).map(order => (
+                                            <tr key={order.orderId} className={order.shippingStatus === 'delivered' ? 'table-success' : ''}>
+                                                <td>{order.orderId}</td>
+                                                <td>{order.createdDate}</td>
+                                                <td>{order.shippingStatus.charAt(0).toUpperCase() + order.shippingStatus.slice(1)}</td>
+                                                <td>{order.paymentMethod}</td>
+                                                <td>
+                                                    <button className="btn btn-primary btn-sm button-view-order" onClick={() => navigate(`/orders/${order.orderId}`, { state: { order } })}>
+                                                        View
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                </div>
-            </div>
             )}
 
             {showStaffMembers && (
@@ -551,27 +562,27 @@ const Admin = () => {
                             <div className="table-responsive">
                                 <table className="table table-striped">
                                     <thead>
-                                    <tr>
-                                        <th scope="col">User ID</th>
-                                        <th scope="col">Username</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
+                                        <tr>
+                                            <th scope="col">User ID</th>
+                                            <th scope="col">Username</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {staffMembers.map(member => (
-                                        <tr key={member.id}>
-                                            <td>{member.userId}</td>
-                                            <td>{member.username}</td>
-                                            <td>
-                                                <button
-                                                    className="btn btn-sm"
-                                                    style={{width: '25%', backgroundColor: '#d33', color: 'white' }}
-                                                    onClick={() => handleRevokePrivileges(member.username)}>
-                                                    Revoke
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                        {staffMembers.map(member => (
+                                            <tr key={member.id}>
+                                                <td>{member.userId}</td>
+                                                <td>{member.username}</td>
+                                                <td>
+                                                    <button
+                                                        className="btn btn-sm"
+                                                        style={{ width: '25%', backgroundColor: '#d33', color: 'white' }}
+                                                        onClick={() => handleRevokePrivileges(member.username)}>
+                                                        Revoke
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -813,43 +824,43 @@ const Admin = () => {
             {showAllProducts && (
                 <div className="container mt-5">
                     <div>
-                        <h2 className="mb-4">All Products&nbsp;&nbsp; 
-                        <a className="downloadLink" id="downloadLink" href="#">
-                            <button className="btn btn-outline-secondary download-btn">
-                                <i className="bi bi-download me-2"></i>
-                                Download
-                            </button>
+                        <h2 className="mb-4">All Products&nbsp;&nbsp;
+                            <a className="downloadLink" id="downloadLink" href="#">
+                                <button className="btn btn-outline-secondary download-btn">
+                                    <i className="bi bi-download me-2"></i>
+                                    Download
+                                </button>
                             </a>
                         </h2>
                     </div>
-                <div className="card">
-                  <div className="card-body">
-                    <table className="table">
-                      <thead>
-                        <tr>
-                          <th scope="col">ID</th>
-                          <th scope="col">Name</th>
-                          <th scope="col">Description</th>
-                          <th scope="col">Vendor</th>
-                          <th scope="col">SKU</th>
-                          <th scope="col">Price</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {productList.map((product) => (
-                          <tr key={product.id}>
-                            <td>{product.id}</td>
-                            <td>{product.name}</td>
-                            <td>{product.description}</td>
-                            <td>{product.vendor}</td>
-                            <td>{product.sku}</td>
-                            <td>${product.price.toFixed(2)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                    <div className="card">
+                        <div className="card-body">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Vendor</th>
+                                        <th scope="col">SKU</th>
+                                        <th scope="col">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {productList.map((product) => (
+                                        <tr key={product.id}>
+                                            <td>{product.id}</td>
+                                            <td>{product.name}</td>
+                                            <td>{product.description}</td>
+                                            <td>{product.vendor}</td>
+                                            <td>{product.sku}</td>
+                                            <td>${product.price.toFixed(2)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             )}
 
@@ -857,8 +868,8 @@ const Admin = () => {
                 <div>
                     <div className="signup-box-admin container text-bg-light rounded-5">
                         <h3 className="text-center pt-2 mt-2 fw-semibold">Sign Up as Admin</h3>
-                        <hr/>
-                        <Form role="2"/>
+                        <hr />
+                        <Form role="2" />
                     </div>
                 </div>
             )}
