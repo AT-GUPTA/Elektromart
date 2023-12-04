@@ -44,7 +44,7 @@ public class OrderController {
      * @return A response entity with the order.
      */
     @GetMapping("/{orderId}")
-    @PreAuthorize("hasAnyRole('STAFF')")
+    @PreAuthorize("hasAnyRole('STAFF','CUSTOMER')")
     public ResponseEntity<?> getOrderByOrderId(@PathVariable Long orderId) {
         log.debug("Request to get order {}", orderId);
         Order order = orderService.getOrderByOrderId(orderId);
