@@ -46,7 +46,7 @@ public class OrderDao {
     public Long createOrder(Order order) {
         String insertSQL = "INSERT INTO Orders (user_id, cart_id, createdDate, shippingStatus, shippingAddress, shipping_id, paymentMethod) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        String selectSQL = "SELECT order_id FROM Orders WHERE user_id = ? AND cart_id = ? ORDER BY createdDate DESC LIMIT 1";
+        String selectSQL = "SELECT order_id FROM Orders WHERE cart_id = ? ORDER BY createdDate DESC LIMIT 1";
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String timestamp = dateFormat.format(new Date());
@@ -56,7 +56,7 @@ public class OrderDao {
                     order.getShippingAddress(), order.getShippingId(), order.getPaymentMethod());
 
             // Fetch the most recent order ID for this user and cart
-            return jdbcTemplate.queryForObject(selectSQL, new Object[]{order.getUserId(), order.getCartId()}, Long.class);
+            return jdbcTemplate.queryForObject(selectSQL, new Object[]{order.getCartId()}, Long.class);
         } catch (DataAccessException e) {
             log.error("createOrder: An error occurred.", e);
             return null;
