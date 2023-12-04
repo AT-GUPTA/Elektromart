@@ -117,7 +117,7 @@ public class AuthenticationController {
 
     @Data
     static
-    private class PasscodeChangeRequest {
+    public class PasscodeChangeRequest {
         private String oldPasscode;
         private String newPasscode;
         private String newPasscodeConfirmation;
