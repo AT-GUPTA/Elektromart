@@ -35,7 +35,7 @@ function ClaimOrder() {
         })
             .then((response) => {
                 if (response.ok) {
-                    return response.json().then(() => {
+                    return response.text().then(() => {
                         Swal.fire({
                             icon: "success",
                             title: "Success!",
