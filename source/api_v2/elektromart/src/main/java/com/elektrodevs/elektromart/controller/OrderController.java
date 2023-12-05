@@ -77,7 +77,6 @@ public class OrderController {
         }
     }
 
-
     /**
      * Retrieves order history for the current logged-in user.
      *
@@ -85,7 +84,7 @@ public class OrderController {
      * @return A list of orders for the user.
      */
     @GetMapping("/order-history")
-    public ResponseEntity<List<Order>> getOrderHistoryForCurrentUser(@RequestHeader("X-Session-ID") String userId) {
+    public ResponseEntity<List<Order>> getOrderHistoryForCurrentUser(@RequestParam("userId") String userId) {
         log.debug("Request to get order history for user id: {}", userId);
         if (userId != null) {
             List<Order> orders = orderService.getOrdersByUserId(userId);

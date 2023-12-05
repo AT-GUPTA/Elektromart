@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
 
-function Account() {
+function Account({logout}) {
   const [currentPasscode, setCurrentPasscode] = useState('');
   const [newPasscode, setNewPasscode] = useState('');
   const [newPasscodeConfirmation, setNewPasscodeConfirmation] = useState('');
@@ -38,9 +38,7 @@ function Account() {
       });
   
       if (response.ok) {
-        localStorage.setItem("username", newPasscode)
-        document.querySelector("#root > div:nth-child(1) > header > nav > ul > div > div > span").innerHTML = "Hi " + newPasscode;
-
+      
         setCurrentPasscode('');
         setNewPasscode('');
         setNewPasscodeConfirmation('');
@@ -48,8 +46,20 @@ function Account() {
         Swal.fire({
           icon: 'success',
           title: 'Success!',
-          text: 'Password changed successfully',
+          text: 'Password changed successfully. Please login again with your new passcode.',
+          timer: 3000,
+          willClose: () => {
+            localStorage.removeItem("isAuth");
+            localStorage.removeItem("roleId");
+            localStorage.removeItem("cart_id");
+            localStorage.removeItem("id");
+            localStorage.removeItem("secret");
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = "/login";
+          }
         });
+       // logout();
       } else {
         const data = await response.json();
         throw new Error(data.message || 'Failed to change passcode.');

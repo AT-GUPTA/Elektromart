@@ -15,10 +15,9 @@ function Orders({isAdmin}) {
     useEffect(() => {
         const userId = localStorage.getItem("id");
         const token = localStorage.getItem("secret");
-        fetch('http://localhost:8080/api/orders/order-history', {
+        fetch(`http://localhost:8080/api/orders/order-history?userId=${userId}`, {
             method: 'GET',
             headers: {
-                'X-Session-ID': userId,
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
