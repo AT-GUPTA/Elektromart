@@ -105,10 +105,10 @@ public class UserDao {
 
     public boolean updateUserPasscode(String oldPasscode, String newPasscode) {
         String query = "UPDATE Users SET username = ? WHERE username = ?";
-        int updatedRows = jdbcTemplate.update(query, oldPasscode, newPasscode);
+        int updatedRows = jdbcTemplate.update(query, newPasscode, oldPasscode);
 
         if (updatedRows > 0) {
-            log.info("User passcode updated for user {}. New Pascode: {}", oldPasscode, newPasscode);
+            log.info("User passcode updated for user {}. New Passcode: {}", oldPasscode, newPasscode);
             return true;
         } else {
             log.warn("No rows updated for user {}. Passcode not changed.", oldPasscode);

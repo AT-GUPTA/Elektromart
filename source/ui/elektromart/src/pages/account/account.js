@@ -39,6 +39,7 @@ function Account() {
   
       if (response.ok) {
         localStorage.setItem("username", newPasscode)
+        document.querySelector("#root > div:nth-child(1) > header > nav > ul > div > div > span").innerHTML = "Hi " + newPasscode;
 
         setCurrentPasscode('');
         setNewPasscode('');
@@ -57,7 +58,7 @@ function Account() {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'The old passcode does not exists.',
+        text: 'An error occurred. The new passcode is probably taken already, or the old passcode provided is incorrect.',
       });
     }
   };

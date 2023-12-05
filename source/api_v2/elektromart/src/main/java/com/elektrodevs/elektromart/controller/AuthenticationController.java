@@ -78,7 +78,7 @@ public class AuthenticationController {
      */
     @PostMapping("/passcode")
     public ResponseEntity<?> ChangePasscode(@RequestBody AuthenticationController.PasscodeChangeRequest request) {
-        log.info("Received request to change passcodeprivileges to {}", request.getOldPasscode());
+        log.info("Received request to change passcode to {}", request.getOldPasscode());
 
         if (!request.getNewPasscode().equals(request.getNewPasscodeConfirmation())) {
             log.error("New passcode and new passcode confirmation do not match.");
