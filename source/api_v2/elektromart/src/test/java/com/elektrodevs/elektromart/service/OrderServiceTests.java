@@ -10,9 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -55,12 +53,13 @@ public class OrderServiceTests {
         String userId = "1";
         Order order = new Order(cartId, deliveryAddress, userId);
 
-        when(orderDao.createOrder(order)).thenReturn(false);
+        when(orderDao.createOrder(order)).thenReturn(null);
 
         // Act
-        String newCartId = orderService.createOrder(cartId, deliveryAddress, userId);
+        Map<String, String> results = orderService.createOrder(cartId, deliveryAddress, userId);
 
         // Assert
-        assertTrue(newCartId.isEmpty());
+        assertNull(results.get("newCartId"));
+        assertNull(results.get("orderId"));
     }
 }
